@@ -1,0 +1,9 @@
+coverage/
+lib/
+node_modules/
+
+.git/
+*.lock
+*.log
+.*cache
+.ignore
