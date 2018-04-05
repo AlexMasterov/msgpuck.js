@@ -22,7 +22,7 @@
   },
   "main": "./src/index.js",
   "engines": {
-    "node": "9.x"
+    "node": ">=8.3.0"
   },
   "scripts": {
     "test": "nyc mocha",

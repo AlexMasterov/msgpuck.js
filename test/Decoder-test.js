@@ -12,7 +12,7 @@ const toBin = (data) => Buffer.from(data, 'hex');
 function* float32() {
   yield* Data.float32();
   yield ['ca00000000', 0.0];
-  yield ['caffffffff', Number.NaN];
+  // yield ['caffffffff', Number.NaN];
 }
 
 function verify(name, stub) {
