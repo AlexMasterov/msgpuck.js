@@ -12,11 +12,9 @@ class RegExpCodec extends Codec {
   }
 
   encode(value) {
-    if (value.flags) {
-      return [value.source, value.flags];
-    }
-
-    return [value.source];
+    return value.flags
+      ? [value.source, value.flags]
+      : [value.source];
   }
 
   decode(data) {

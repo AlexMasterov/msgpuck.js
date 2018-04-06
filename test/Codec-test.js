@@ -29,6 +29,7 @@ function* codecs() {
   yield [BooleanCodec.make(), new Boolean(true), new Boolean(true)];
   yield [BooleanCodec.withValueOf(), new Boolean(true), true];
   yield [RegExpCodec.make(), /xyz/i, new RegExp(/xyz/i)];
+  yield [RegExpCodec.make(), /xyz/, new RegExp(/xyz/)];
   yield [SymbolCodec.make(), Symbol('xyz'), Symbol('xyz')];
   yield [SymbolCodec.withFor(), Symbol('xyz'), Symbol('xyz')];
   yield [ErrorCodec.make(), new Error('xyz', 'Error'), new Error('xyz', 'Error')];
