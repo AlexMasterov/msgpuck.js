@@ -186,9 +186,7 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 1);
     }
 
-    const num = this.buffer[this.offset++];
-
-    return num & 0x80 ? num - 0x100 : num;
+    return this.buffer[this.offset++] - 0x100;
   }
 
   decodeInt16() {
@@ -196,10 +194,8 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 2);
     }
 
-    const num = this.buffer[this.offset++] << 8
-      | this.buffer[this.offset++];
-
-    return num & 0x8000 ? num - 0x10000 : num;
+    return (this.buffer[this.offset++] << 8
+      | this.buffer[this.offset++]) - 0x10000;
   }
 
   decodeInt32() {
