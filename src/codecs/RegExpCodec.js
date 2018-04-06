@@ -2,8 +2,6 @@
 
 const Codec = require('../Codec');
 
-const RegExpToString = RegExp.prototype.toString;
-
 class RegExpCodec extends Codec {
   static get type() {
     return 0x0b;
@@ -14,10 +12,11 @@ class RegExpCodec extends Codec {
   }
 
   encode(value) {
-    // /xyz/i => ['pattern', 'flags']
-    const [, ...regExp] = RegExpToString.call(value).split('/');
+    if (value.flags) {
+      return [value.source, value.flags];
+    }
 
-    return regExp;
+    return [value.source];
   }
 
   decode(data) {

@@ -12,7 +12,14 @@ class SetCodec extends Codec {
   }
 
   encode(value) {
-    return [...value];
+    const array = new Array(value.size);
+
+    let i = 0;
+    for (const arr of value) {
+      array[i++] = arr;
+    }
+
+    return array;
   }
 
   decode(data) {
