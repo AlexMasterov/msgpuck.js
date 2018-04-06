@@ -9,6 +9,7 @@ const ObjectKeys = Object.keys;
 const isArray = Array.isArray;
 const FastBuffer = Buffer[Symbol.species];
 
+const DEFAULT_OPTIONS = { codecs: [], float32: false };
 const ALLOC_BYTES = 1024;
 
 function encodeUint64(num) {
@@ -40,10 +41,10 @@ function encodeInt64(num) {
 }
 
 class Encoder {
-  constructor(options = {}) {
+  constructor(options = DEFAULT_OPTIONS) {
     this.alloc = 0;
     this.buffer = null;
-    this.codecs = options.codecs || [];
+    this.codecs = options.codecs;
     if (options.float32) this.encodeFloat64 = this.encodeFloat32;
   }
 
