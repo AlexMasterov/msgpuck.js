@@ -7,7 +7,7 @@ const SymbolToString = Symbol.prototype.toString;
 
 class SymbolCodec extends CanWithFor(Codec) {
   static get type() {
-    return 0x0c;
+    return 0x0a;
   }
 
   supports(value) {
