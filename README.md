@@ -29,6 +29,7 @@ A fast and memory-efficient [MessagePack](https://msgpack.org) serialization lib
   * [Decoding](#decoding)
 * [Extensions](#extensions)
 * [Custom types (Codecs)](#custom-types-codecs)
+  * [Built-in Codecs](#built-in-codecs)
 * [Errors](#errors)
 * [Tests](#tests)
 * Benchmarks
@@ -128,6 +129,30 @@ const encoded = encoder.encode(new Map([[1, 'bar']]));
 
 const buffer = Buffer.from(encoded, 'binary');
 decoder.decode(buffer); // Map { 1 => 'bar' }
+```
+
+## Built-in Codecs
+
+ Name              | Type           | Option      | Name             | Type   |
+-------------------|----------------|-------------|------------------|--------|
+BooleanCodec       | `0x01`         | withValueOf | RegExpCodec      | `0x0b` |
+NumberCodec        | `0x02`         | withValueOf | MapCodec         | `0x0c` |
+StringCodec        | `0x03`         | withValueOf | SetCodec         | `0x0d` |
+BigIntCodec        | `0x04`         | withValueOf | ErrorCodec       | `0x0e` |
+SymbolCodec        | `0x0a`         | withFor     | UndefinedCodec   | `0x0f` |
+
+Example:
+```javascript
+const {
+  Decoder,
+  Encoder,
+  codecs: { StringCodec, MapCodec },
+} = require('msgpuck');
+
+const codecs = [StringCodec.withValueOf(), MapCodec.make(0x05)];
+
+const encoder = new Encoder({ codecs });
+const decoder = new Decoder({ codecs });
 ```
 
 ## Errors
