@@ -1,6 +1,6 @@
 # msgpuck
 
-[![npm](https://img.shields.io/npm/v/msgpuck.svg)](https://github.com/AlexMasterov/msgpuck.js)
+[![npm](https://img.shields.io/npm/v/msgpuck.svg)](https://www.npmjs.com/package/msgpuck)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Build Status](https://travis-ci.org/AlexMasterov/msgpuck.js.svg)](https://travis-ci.org/AlexMasterov/msgpuck.js)
 [![Coverage Status](https://coveralls.io/repos/github/AlexMasterov/msgpuck.js/badge.svg?branch=master)](https://coveralls.io/github/AlexMasterov/msgpuck.js?branch=master)
@@ -18,6 +18,7 @@ A fast and memory-efficient [MessagePack](https://msgpack.org) serialization lib
 ## Future works (not implemented yet)
 
 * Native/Node.js streaming encoding and decoding interface
+* TypeScript type definitions
 * Command Line Interface
 * Web browsers
 
