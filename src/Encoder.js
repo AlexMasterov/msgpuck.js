@@ -51,7 +51,7 @@ class Encoder {
   encode(value) {
     switch (typeof value) {
       case 'number':
-        return value % 1 ? this.encodeFloat64(value) : this.encodeInt(value);
+        return value % 1 === 0 ? this.encodeInt(value) : this.encodeFloat64(value);
       case 'string':
         return this.encodeStr(value);
       case 'boolean':
