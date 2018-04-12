@@ -114,10 +114,12 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 4);
     }
 
-    const hi = this.buffer[this.offset++] * 0x1000000
-        | this.buffer[this.offset++] << 16
-        | this.buffer[this.offset++] << 8
-        | this.buffer[this.offset++];
+    const hi = this.buffer[this.offset] * 0x1000000
+        | this.buffer[this.offset + 1] << 16
+        | this.buffer[this.offset + 2] << 8
+        | this.buffer[this.offset + 3];
+
+    this.offset += 4;
 
     return toFloat(hi);
   }
@@ -127,15 +129,17 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 8);
     }
 
-    const hi = this.buffer[this.offset++] * 0x1000000
-        | this.buffer[this.offset++] << 16
-        | this.buffer[this.offset++] << 8
-        | this.buffer[this.offset++];
+    const hi = this.buffer[this.offset] * 0x1000000
+        | this.buffer[this.offset + 1] << 16
+        | this.buffer[this.offset + 2] << 8
+        | this.buffer[this.offset + 3];
 
-    const lo = this.buffer[this.offset++] * 0x1000000
-        | this.buffer[this.offset++] << 16
-        | this.buffer[this.offset++] << 8
-        | this.buffer[this.offset++];
+    const lo = this.buffer[this.offset + 4] * 0x1000000
+        | this.buffer[this.offset + 5] << 16
+        | this.buffer[this.offset + 6] << 8
+        | this.buffer[this.offset + 7];
+
+    this.offset += 8;
 
     return toDouble(lo, hi);
   }
@@ -153,8 +157,12 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 2);
     }
 
-    return this.buffer[this.offset++] << 8
-      | this.buffer[this.offset++];
+    const num = this.buffer[this.offset] << 8
+      | this.buffer[this.offset + 1];
+
+    this.offset += 2;
+
+    return num;
   }
 
   decodeUint32() {
@@ -162,10 +170,14 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 4);
     }
 
-    return this.buffer[this.offset++] * 0x1000000
-      + (this.buffer[this.offset++] << 16
-        | this.buffer[this.offset++] << 8
-        | this.buffer[this.offset++]);
+    const num = this.buffer[this.offset] * 0x1000000
+      + (this.buffer[this.offset + 1] << 16
+        | this.buffer[this.offset + 2] << 8
+        | this.buffer[this.offset + 3]);
+
+    this.offset += 4;
+
+    return num;
   }
 
   decodeUint64() {
@@ -173,14 +185,18 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 8);
     }
 
-    return this.buffer[this.offset++] * 0x1000000
-      + (this.buffer[this.offset++] << 16
-        | this.buffer[this.offset++] << 8
-        | this.buffer[this.offset++]) * 0x100000000
-      + this.buffer[this.offset++] * 0x1000000
-      + (this.buffer[this.offset++] << 16
-        | this.buffer[this.offset++] << 8
-        | this.buffer[this.offset++]);
+    const num = this.buffer[this.offset] * 0x1000000
+      + (this.buffer[this.offset + 1] << 16
+        | this.buffer[this.offset + 2] << 8
+        | this.buffer[this.offset + 3]) * 0x100000000
+      + this.buffer[this.offset + 4] * 0x1000000
+      + (this.buffer[this.offset + 5] << 16
+        | this.buffer[this.offset + 6] << 8
+        | this.buffer[this.offset + 7]);
+
+    this.offset += 8;
+
+    return num;
   }
 
   decodeInt8() {
@@ -196,8 +212,12 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 2);
     }
 
-    return (this.buffer[this.offset++] << 8
-      | this.buffer[this.offset++]) - 0x10000;
+    const num = (this.buffer[this.offset] << 8
+      | this.buffer[this.offset + 1]) - 0x10000;
+
+    this.offset += 2;
+
+    return num;
   }
 
   decodeInt32() {
@@ -205,10 +225,14 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 4);
     }
 
-    return this.buffer[this.offset++] << 24
-      | this.buffer[this.offset++] << 16
-      | this.buffer[this.offset++] << 8
-      | this.buffer[this.offset++];
+    const num = this.buffer[this.offset] << 24
+      | this.buffer[this.offset + 1] << 16
+      | this.buffer[this.offset + 2] << 8
+      | this.buffer[this.offset + 3];
+
+    this.offset += 4;
+
+    return num;
   }
 
   decodeInt64() {
@@ -216,14 +240,18 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, 8);
     }
 
-    return (this.buffer[this.offset++] << 24
-      | this.buffer[this.offset++] << 16
-      | this.buffer[this.offset++] << 8
-      | this.buffer[this.offset++]) * 0x100000000
-      + this.buffer[this.offset++] * 0x1000000
-      + (this.buffer[this.offset++] << 16
-        | this.buffer[this.offset++] << 8
-        | this.buffer[this.offset++]);
+    const num = (this.buffer[this.offset] << 24
+      | this.buffer[this.offset + 1] << 16
+      | this.buffer[this.offset + 2] << 8
+      | this.buffer[this.offset + 3]) * 0x100000000
+      + this.buffer[this.offset + 4] * 0x1000000
+      + (this.buffer[this.offset + 5] << 16
+        | this.buffer[this.offset + 6] << 8
+        | this.buffer[this.offset + 7]);
+
+    this.offset += 8;
+
+    return num;
   }
 
   decodeBin(length) {
