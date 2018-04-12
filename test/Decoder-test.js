@@ -82,8 +82,11 @@ describe('Decoder', () => {
     yield ['empty', '', 0, 1];
     yield ['str', 'a1', 0, 1];
     yield ['bin8', 'c4', 0, 1];
+    yield ['bin8 (data)', 'c420', 0, 32];
     yield ['bin16', 'c5', 0, 2];
+    yield ['bin16 (data)', 'c50100', 0, 256];
     yield ['bin32', 'c6', 0, 4];
+    yield ['bin32 (data)', 'c600010000', 0, 65536];
     yield ['float32', 'ca', 0, 4];
     yield ['float64', 'cb', 0, 8];
     yield ['uint8', 'cc', 0, 1];

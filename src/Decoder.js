@@ -227,6 +227,10 @@ class Decoder {
   }
 
   decodeBin(length) {
+    if (this.length < this.offset + length) {
+      throw InsufficientData.fromOffset(this.buffer, this.offset, length);
+    }
+
     const start = this.buffer.byteOffset + this.offset++;
     this.offset += length;
 
