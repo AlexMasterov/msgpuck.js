@@ -11,15 +11,15 @@ const DEFAULT_OPTIONS = { codecs: [] };
 class Decoder {
   constructor(options = DEFAULT_OPTIONS) {
     this.buffer = null;
-    this.length = 0;
     this.offset = 0;
+    this.length = 0;
     this.codecs = options.codecs;
   }
 
-  decode(buffer) {
+  decode(buffer, start = 0, length = buffer.length) {
     this.buffer = buffer;
-    this.length = buffer.length;
-    this.offset = 0;
+    this.offset = start;
+    this.length = length;
 
     return this.parse();
   }
@@ -47,7 +47,6 @@ class Decoder {
       // fixstr
       return byte & 0x1f ? this.decodeStr(byte & 0x1f) : '';
     }
-
     // negative fixint
     if (byte > 0xdf) {
       return byte - 0x100;
@@ -259,7 +258,7 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, length);
     }
 
-    const start = this.buffer.byteOffset + this.offset++;
+    const start = this.buffer.byteOffset + this.offset;
     this.offset += length;
 
     return new FastBuffer(this.buffer.buffer, start, length);

@@ -76,6 +76,14 @@ describe('Decoder', () => {
   verify('object', Data.object);
   verify('ext', Data.ext);
 
+  it('decode with an offset', () => {
+    const data = 'ce00010000c3';
+    const decoder = new Decoder();
+
+    assertSame(decoder.decode(toBin(data), 0, 5), 65536);
+    assertSame(decoder.decode(toBin(data), 5), true);
+  });
+
   verifyThrowDecodingFailed('\xc1');
 
   function* insufficientData() {
