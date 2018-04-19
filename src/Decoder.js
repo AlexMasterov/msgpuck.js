@@ -16,10 +16,10 @@ class Decoder {
     this.codecs = options.codecs;
   }
 
-  decode(buffer, start = 0, length = buffer.length) {
+  decode(buffer, start = 0, end = buffer.length) {
     this.buffer = buffer;
     this.offset = start;
-    this.length = length;
+    this.length = start + end;
 
     return this.parse();
   }
