@@ -1,7 +1,7 @@
 function toFloat(x) {
   const frac = x & 0x7fffff;
   const expt = x >> 23 & 0xff;
-  const sign = x >> 31 ? -1 : 1;
+  const sign = x >> 31 === 0 ? 1 : -1;
 
   if (expt === 0) {
     return frac === 0
@@ -20,7 +20,7 @@ function toFloat(x) {
 function toDouble(x, y) {
   const frac = x + 0x100000000 * (y & 0xfffff);
   const expt = y >> 20 & 0x7ff;
-  const sign = y >> 31 ? -1 : 1;
+  const sign = y >> 31 === 0 ? 1 : -1;
 
   if (expt === 0) {
     return frac === 0
