@@ -3,11 +3,14 @@
 const Ext = require('./Ext');
 const { EncodingFailed } = require('./errors');
 const { utf8toBin, CHR } = require('./utf8');
-const { writeDoubleBE, writeFloatBE } = process.binding('buffer');
 
 const ObjectKeys = Object.keys;
 const isArray = Array.isArray;
+const float32Array = new Float32Array(1);
+const float64Array = new Float64Array(1);
 const FastBuffer = Buffer[Symbol.species];
+const Float32Buffer = new FastBuffer(float32Array.buffer);
+const Float64Buffer = new FastBuffer(float64Array.buffer);
 
 const DEFAULT_OPTIONS = { codecs: [], float32: false };
 const ALLOC_BYTES = 1024;
@@ -89,27 +92,17 @@ class Encoder {
   }
 
   encodeFloat32(num) {
-    if (4 > this.alloc) {
-      this.alloc = ALLOC_BYTES;
-      this.buffer = new FastBuffer(ALLOC_BYTES);
-    }
-
-    writeFloatBE(this.buffer, num);
+    float32Array[0] = num;
 
     return '\xca'
-      + this.buffer.latin1Slice(0, 4);
+      + Float32Buffer.reverse().latin1Slice(0, 4);
   }
 
   encodeFloat64(num) {
-    if (8 > this.alloc) {
-      this.alloc = ALLOC_BYTES;
-      this.buffer = new FastBuffer(ALLOC_BYTES);
-    }
-
-    writeDoubleBE(this.buffer, num);
+    float64Array[0] = num;
 
     return '\xcb'
-      + this.buffer.latin1Slice(0, 8);
+      + Float64Buffer.reverse().latin1Slice(0, 8);
   }
 
   encodeInt(num) {
