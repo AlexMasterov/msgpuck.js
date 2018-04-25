@@ -9,8 +9,8 @@ const isArray = Array.isArray;
 const float32Array = new Float32Array(1);
 const float64Array = new Float64Array(1);
 const FastBuffer = Buffer[Symbol.species];
-const Float32Buffer = new FastBuffer(float32Array.buffer);
-const Float64Buffer = new FastBuffer(float64Array.buffer);
+const Uint8Float32Array = new Uint8Array(float32Array.buffer);
+const Uint8Float64Array = new Uint8Array(float64Array.buffer);
 
 const DEFAULT_OPTIONS = { codecs: [], float32: false };
 const ALLOC_BYTES = 1024;
@@ -95,14 +95,24 @@ class Encoder {
     float32Array[0] = num;
 
     return '\xca'
-      + Float32Buffer.reverse().latin1Slice(0, 4);
+      + CHR[Uint8Float32Array[3]]
+      + CHR[Uint8Float32Array[2]]
+      + CHR[Uint8Float32Array[1]]
+      + CHR[Uint8Float32Array[0]];
   }
 
   encodeFloat64(num) {
     float64Array[0] = num;
 
     return '\xcb'
-      + Float64Buffer.reverse().latin1Slice(0, 8);
+      + CHR[Uint8Float64Array[7]]
+      + CHR[Uint8Float64Array[6]]
+      + CHR[Uint8Float64Array[5]]
+      + CHR[Uint8Float64Array[4]]
+      + CHR[Uint8Float64Array[3]]
+      + CHR[Uint8Float64Array[2]]
+      + CHR[Uint8Float64Array[1]]
+      + CHR[Uint8Float64Array[0]];
   }
 
   encodeInt(num) {
