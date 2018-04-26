@@ -1,6 +1,6 @@
 {
   "name": "msgpuck",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A fast and memory-efficient MessagePack serialization library",
   "keywords": [
     "msgpack",
@@ -25,8 +25,8 @@
     "node": ">=8.3.0"
   },
   "scripts": {
-    "test": "nyc mocha",
-    "test:coverage": "nyc --reporter=html --reporter=text mocha",
+    "test": "nyc mocha test/**/*-test.js",
+    "test-report": "nyc --reporter=html --reporter=text mocha test/**/*-test.js",
     "coverage": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls"
   },
   "devDependencies": {
@@ -36,5 +36,10 @@
   },
   "directories": {
     "test": "test/"
+  },
+  "nyc": {
+    "cache": false,
+    "reporter": [],
+    "include": ["src/**/*.js"]
   }
 }

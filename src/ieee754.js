@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 function toFloat(x) {
   const frac = x & 0x7fffff;
   const expt = x >> 23 & 0xff;
