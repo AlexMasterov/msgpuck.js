@@ -6,14 +6,12 @@ const Ext = require('./Ext');
 
 const FastBuffer = Buffer[Symbol.species];
 
-const DEFAULT_OPTIONS = { codecs: [] };
-
 class Decoder {
-  constructor(options = DEFAULT_OPTIONS) {
+  constructor({ codecs=[] } = {}) {
     this.buffer = null;
     this.offset = 0;
     this.length = 0;
-    this.codecs = options.codecs;
+    this.codecs = codecs;
   }
 
   decode(buffer, start = 0, end = buffer.length) {

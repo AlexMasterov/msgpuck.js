@@ -4,16 +4,15 @@ const Ext = require('./Ext');
 const { EncodingFailed } = require('./errors');
 const { utf8toBin, CHR } = require('./utf8');
 
-const ObjectKeys = Object.keys;
 const isArray = Array.isArray;
+const ObjectKeys = Object.keys;
+const FastBuffer = Buffer[Symbol.species];
 const float32Array = new Float32Array(1);
 const float64Array = new Float64Array(1);
-const FastBuffer = Buffer[Symbol.species];
 const Uint8Float32Array = new Uint8Array(float32Array.buffer);
 const Uint8Float64Array = new Uint8Array(float64Array.buffer);
 
-const DEFAULT_OPTIONS = { codecs: [], float32: false };
-const ALLOC_BYTES = 1024;
+const ALLOC_BYTES = 2048;
 
 function encodeUint64(num) {
   const hi = num / 0x100000000 >> 0;
@@ -44,11 +43,11 @@ function encodeInt64(num) {
 }
 
 class Encoder {
-  constructor(options = DEFAULT_OPTIONS) {
+  constructor({ codecs=[], float32=false } = {}) {
     this.alloc = 0;
     this.buffer = null;
-    this.codecs = options.codecs;
-    if (options.float32) this.encodeFloat64 = this.encodeFloat32;
+    this.codecs = codecs;
+    if (float32) this.encodeFloat64 = this.encodeFloat32;
   }
 
   encode(value) {
