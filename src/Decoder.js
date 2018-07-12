@@ -6,11 +6,24 @@ const Ext = require('./Ext');
 
 const FastBuffer = Buffer[Symbol.species];
 
+function packCodecs(codecs) {
+  const pack = new Map();
+
+  let codec, i = codecs.length;
+  while (i--) {
+    codec = codecs[i];
+    pack.set(codec.type, codec);
+  }
+
+  return pack;
+}
+
 class Decoder {
   constructor({ codecs=[] } = {}) {
     this.buffer = null;
     this.offset = 0;
     this.length = 0;
+    if (codecs) codecs = packCodecs(codecs);
     this.codecs = codecs;
   }
 
@@ -299,10 +312,9 @@ class Decoder {
     const type = this.buffer[this.offset++];
 
     if (this.codecs) {
-      for (let codec, i = 0; i < this.codecs.length; i++) {
-        if (codec = this.codecs[i], codec.type === type) {
-          return codec.decode(this.parse());
-        }
+      const codec = this.codecs.get(type);
+      if (codec !== undefined) {
+        return codec.decode(this.parse());
       }
     }
 
