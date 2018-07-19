@@ -1,6 +1,6 @@
 {
   "name": "msgpuck",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "A fast and memory-efficient MessagePack serialization library",
   "keywords": [
     "msgpack",
@@ -15,7 +15,7 @@
   "homepage": "https://github.com/AlexMasterov/msgpuck.js#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlexMasterov/msgpuck.js.git"
+    "url": "https://github.com/AlexMasterov/msgpuck.js.git"
   },
   "bugs": {
     "url": "https://github.com/AlexMasterov/msgpuck.js/issues"
@@ -30,9 +30,9 @@
     "coverage": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls"
   },
   "devDependencies": {
-    "coveralls": "3.0.0",
-    "mocha": "5.1.1",
-    "nyc": "11.7.1"
+    "coveralls": "3.0.2",
+    "mocha": "5.2.0",
+    "nyc": "12.0.2"
   },
   "directories": {
     "test": "test/"
@@ -40,6 +40,8 @@
   "nyc": {
     "cache": false,
     "reporter": [],
-    "include": ["src/**/*.js"]
+    "include": [
+      "src/**/*.js"
+    ]
   }
 }
