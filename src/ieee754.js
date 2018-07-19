@@ -38,5 +38,7 @@ function toDouble(x, y) {
   return (sign << expt - 1023) * (1 + frac * 2 ** -52);
 }
 
-exports.toFloat = toFloat;
-exports.toDouble = toDouble;
+module.exports = {
+  toFloat,
+  toDouble,
+};
