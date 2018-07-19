@@ -7,7 +7,7 @@ class InsufficientData extends DecodingFailed {
     const actualLength = data.length - offset;
     const message = `Not enough data to decode: expected length ${expectedLength}, got ${actualLength}`;
 
-    return new InsufficientData(data, message);
+    return new this(data, message);
   }
 }
 

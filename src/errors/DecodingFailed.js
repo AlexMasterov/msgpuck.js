@@ -10,7 +10,7 @@ class DecodingFailed extends MsgPackError {
   static fromOffset(byte, offset) {
     const message = `Can't decode data with byte-header ${decToHex(byte)} in position ${offset}`;
 
-    return new DecodingFailed(byte, message);
+    return new this(byte, message);
   }
 }
 
