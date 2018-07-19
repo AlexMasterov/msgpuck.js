@@ -23,8 +23,7 @@ class Decoder {
     this.buffer = null;
     this.offset = 0;
     this.length = 0;
-    if (codecs) codecs = packCodecs(codecs);
-    this.codecs = codecs;
+    this.codecs = codecs ? packCodecs(codecs): false;
   }
 
   decode(buffer, start = 0, end = buffer.length) {
