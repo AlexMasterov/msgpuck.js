@@ -6,7 +6,7 @@ function required(name) {
 
 class Ext {
   static make(type, data) {
-    return new Ext(type, data);
+    return new this(type, data);
   }
 
   constructor(
