@@ -59,7 +59,7 @@ class Encoder {
       case 'boolean':
         return value ? '\xc3' : '\xc2';
       case 'undefined':
-        value = { _isUndefined: true };
+        value = { __isUndefined__: true };
       case 'symbol':
       case 'object':
         if (value === null) return '\xc0';
