@@ -13,6 +13,11 @@ git:
 cache:
   directories:
     - node_modules
+    - ~/.npm
+
+matrix:
+  allow_failures:
+    - node_js: 8
 
 script:
   - npm run test
