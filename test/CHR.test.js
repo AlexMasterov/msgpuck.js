@@ -9,7 +9,7 @@ function genASCII() {
   return table;
 }
 
-describe('ASCII', () => {
+describe('CHR ASCII', () => {
   const ascii = genASCII();
 
   it('valid length', () => {

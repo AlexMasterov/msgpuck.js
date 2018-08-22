@@ -28,6 +28,9 @@ describe('Decoder', () => {
     'uint Infinity cb',
     'int NaN cb',
     'bigint64 cf',
+    'fixmap 80-8f (Map)',
+    'map16 de (Map)',
+    'map32 df (Map)',
   ];
 
   const tests = Object.entries(types)

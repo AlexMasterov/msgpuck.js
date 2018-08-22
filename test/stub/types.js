@@ -16,6 +16,7 @@ const bytesStrN = (value, increment) => {
 };
 const strN = (value, repeat) => value.repeat(repeat);
 const arrN = (value, repeat) => new Array(repeat).fill(value);
+const mapN = (value, repeat) => new Map(arrN(value, repeat).map((k, v) => [String(v), k]));
 const objN = (value, increment, obj = {}) => {
   while (--increment >= 0) obj[increment] = value;
   return obj;
@@ -168,6 +169,20 @@ const types = {
   ],
   'map32 df': [
     { name: 'min (65536)', value: objN(1, 65536),
+      bin: Buffer.from([0xdf, 0x00, 0x01, 0x00, 0x00, ...bytesStrN('\x01', 65536)]) },
+  ],
+  'fixmap 80-8f (Map)': [
+    { name: 'min (0)', value: new Map(), bin: bytes(0x80) },
+    { name: 'min (15)', value: mapN(1, 15), bin: bytes(0x8f, ...bytesStrN('\x01', 15)) },
+  ],
+  'map16 de (Map)': [
+    { name: 'min (16)', value: mapN(1, 16),
+      bin: bytes(0xde, 0x00, 0x10, ...bytesStrN('\x01', 16)) },
+    { name: 'min (65535)', value: mapN(1, 65535),
+      bin: Buffer.from([0xde, 0xff, 0xff, ...bytesStrN('\x01', 65535)]) },
+  ],
+  'map32 df (Map)': [
+    { name: 'min (65536)', value: mapN(1, 65536),
       bin: Buffer.from([0xdf, 0x00, 0x01, 0x00, 0x00, ...bytesStrN('\x01', 65536)]) },
   ],
   'fixext d4/d5/d6/d7/d8': [
