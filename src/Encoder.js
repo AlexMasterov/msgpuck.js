@@ -140,7 +140,7 @@ class Encoder {
           + CHR[num & 0xff];
       }
       // uint 64
-      if (num !== (num + 1)) {
+      if (num <= 0x1fffffffffffff) {
         return encodeUint64(num);
       }
       // Infinity
@@ -174,11 +174,7 @@ class Encoder {
       return encodeInt64(num);
     }
     // -Infinity
-    if (num === Number.NEGATIVE_INFINITY) {
-      return '\xcb\xff\xf0\x00\x00\x00\x00\x00\x00';
-    }
-    // NaN
-    return '\xcb\x7f\xf8\x00\x00\x00\x00\x00\x00';
+    return '\xcb\xff\xf0\x00\x00\x00\x00\x00\x00';
   }
 
   encodeStr(str) {

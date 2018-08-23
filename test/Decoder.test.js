@@ -26,7 +26,7 @@ function testThrowsDecodingFailed(byte) {
 describe('Decoder', () => {
   const skip = [
     'uint Infinity cb',
-    'int NaN cb',
+    'int -Infinity cb',
     'bigint64 cf',
     'fixmap 80-8f (Map)',
     'map16 de (Map)',
