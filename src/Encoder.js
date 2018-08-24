@@ -64,7 +64,7 @@ class Encoder {
       case 'object':
         if (value === null) return '\xc0';
         if (isArray(value)) return this.encodeArray(value);
-        if (value instanceof Buffer || value instanceof ArrayBuffer) {
+        if (value.constructor === Buffer || value.constructor === ArrayBuffer) {
           return this.encodeBin(value);
         }
         if (value.constructor === Ext) return this.encodeExt(value);
