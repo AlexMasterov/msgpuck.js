@@ -31,7 +31,10 @@ function testEncodeMethod(method, type) {
 function testThrowEncodingFailed(value) {
   it(`throws when '${value}' could not encode`, () => {
     const encoder = new Encoder();
-    assert.throws(() => { encoder.encode(value); }, EncodingFailed);
+    assert.throws(() => encoder.encode(value), {
+      name: 'EncodingFailed',
+      value,
+    });
   });
 }
 
