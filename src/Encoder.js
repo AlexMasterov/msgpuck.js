@@ -115,66 +115,66 @@ class Encoder {
   }
 
   encodeInt(num) {
-    if (num >= 0) {
-      // positive fixint
-      if (num <= 0x7f) {
-        return CHR[num];
+    if (num < 0) {
+      // negative fixint
+      if (num > -0x21) {
+        return CHR[num & 0xff];
       }
-      // uint 8
-      if (num <= 0xff) {
-        return '\xcc'
-          + CHR[num];
-      }
-      // uint 16
-      if (num <= 0xffff) {
-        return '\xcd'
-          + CHR[num >> 8]
+      // int 8
+      if (num > -0x81) {
+        return '\xd0'
           + CHR[num & 0xff];
       }
-      // uint 32
-      if (num <= 0xffffffff) {
-        return '\xce'
+      // int 16
+      if (num > -0x8001) {
+        return '\xd1'
+          + CHR[num >> 8 & 0xff]
+          + CHR[num & 0xff];
+      }
+      // int 32
+      if (num > -0x80000001) {
+        return '\xd2'
           + CHR[num >> 24 & 0xff]
           + CHR[num >> 16 & 0xff]
           + CHR[num >> 8 & 0xff]
           + CHR[num & 0xff];
       }
-      // uint 64
-      if (num <= 0x1fffffffffffff) {
-        return encodeUint64(num);
+      // int 64
+      if (num > -0x20000000000001) {
+        return encodeInt64(num);
       }
-      // Infinity
-      return '\xcb\x7f\xf0\x00\x00\x00\x00\x00\x00';
+      // -Infinity
+      return '\xcb\xff\xf0\x00\x00\x00\x00\x00\x00';
     }
-    // negative fixint
-    if (num >= -0x20) {
-      return CHR[num & 0xff];
+    // positive fixint
+    if (num < 0x80) {
+      return CHR[num];
     }
-    // int 8
-    if (num >= -0x80) {
-      return '\xd0'
+    // uint 8
+    if (num < 0x100) {
+      return '\xcc'
+        + CHR[num];
+    }
+    // uint 16
+    if (num < 0x10000) {
+      return '\xcd'
+        + CHR[num >> 8]
         + CHR[num & 0xff];
     }
-    // int 16
-    if (num >= -0x8000) {
-      return '\xd1'
-        + CHR[num >> 8 & 0xff]
-        + CHR[num & 0xff];
-    }
-    // int 32
-    if (num >= -0x80000000) {
-      return '\xd2'
+    // uint 32
+    if (num < 0x100000000) {
+      return '\xce'
         + CHR[num >> 24 & 0xff]
         + CHR[num >> 16 & 0xff]
         + CHR[num >> 8 & 0xff]
         + CHR[num & 0xff];
     }
-    // int 64
-    if (num >= -0x1fffffffffffff) {
-      return encodeInt64(num);
+    // uint 64
+    if (num < 0x20000000000000) {
+      return encodeUint64(num);
     }
-    // -Infinity
-    return '\xcb\xff\xf0\x00\x00\x00\x00\x00\x00';
+    // Infinity
+    return '\xcb\x7f\xf0\x00\x00\x00\x00\x00\x00';
   }
 
   encodeStr(str) {
@@ -199,13 +199,13 @@ class Encoder {
         + bin;
     }
     // str 8
-    if (len <= 0xff) {
+    if (len < 0x100) {
       return '\xd9'
         + CHR[len]
         + bin;
     }
     // str 16
-    if (len <= 0xffff) {
+    if (len < 0x10000) {
       return '\xda'
         + CHR[len >> 8]
         + CHR[len & 0xff]
@@ -225,13 +225,13 @@ class Encoder {
     if (len === 0) return '\xc4\x00';
 
     // bin 8
-    if (len <= 0xff) {
+    if (len < 0x100) {
       return '\xc4'
         + CHR[len]
         + bin.latin1Slice(0, len);
     }
     // bin 16
-    if (len <= 0xffff) {
+    if (len < 0x10000) {
       return '\xc5'
         + CHR[len >> 8]
         + CHR[len & 0xff]
@@ -251,9 +251,9 @@ class Encoder {
     if (len === 0) return '\x90';
 
     let data;
-    if (len <= 0xf) { // fixarray
+    if (len < 0x10) { // fixarray
       data = CHR[0x90 | len];
-    } else if (len <= 0xffff) { // array 16
+    } else if (len < 0x10000) { // array 16
       data = '\xdc'
         + CHR[len >> 8]
         + CHR[len & 0xff];
@@ -278,9 +278,9 @@ class Encoder {
     if (len === 0) return '\x80';
 
     let data;
-    if (len <= 0xf) { // fixmap
+    if (len < 0x10) { // fixmap
       data = CHR[0x80 | len];
-    } else if (len <= 0xffff) { // map 16
+    } else if (len < 0x10000) { // map 16
       data = '\xde'
         + CHR[len >> 8]
         + CHR[len & 0xff];
@@ -306,9 +306,9 @@ class Encoder {
     if (size === 0) return '\x80';
 
     let data;
-    if (size <= 0xf) { // fixmap
+    if (size < 0x10) { // fixmap
       data = CHR[0x80 | size];
-    } else if (size <= 0xffff) { // map 16
+    } else if (size < 0x10000) { // map 16
       data = '\xde'
         + CHR[size >> 8]
         + CHR[size & 0xff];
@@ -342,13 +342,13 @@ class Encoder {
       case 16: return '\xd8' + type + data;
     }
     // ext 8
-    if (len <= 0xff) {
+    if (len < 0x100) {
       return '\xc7'
         + CHR[len]
         + type + data;
     }
     // ext 16
-    if (len <= 0xffff) {
+    if (len < 0x10000) {
       return '\xc8'
         + CHR[len >> 8]
         + CHR[len & 0xff]

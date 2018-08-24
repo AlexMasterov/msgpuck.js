@@ -49,20 +49,20 @@ const types = {
       bin: bytes(0xcb, 0x7f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00) },
   ],
   'int5 ff-e0': [
-    { name: 'min (-1)', value: -1, bin: bytes(0xff) },
-    { name: 'max (-32)', value: -32, bin: bytes(0xe0) },
+    { name: 'min (-32)', value: -32, bin: bytes(0xe0) },
+    { name: 'max (-1)', value: -1, bin: bytes(0xff) },
   ],
   'int8 d0': [
-    { name: 'min (-33)', value: -33, bin: bytes(0xd0, 0xdf) },
-    { name: 'max (-128)', value: -128, bin: bytes(0xd0, 0x80) },
+    { name: 'min (-128)', value: -128, bin: bytes(0xd0, 0x80) },
+    { name: 'max (-33)', value: -33, bin: bytes(0xd0, 0xdf) },
   ],
   'int16 d1': [
-    { name: 'min (-129)', value: -129, bin: bytes(0xd1, 0xff, 0x7f) },
-    { name: 'max (-32768)', value: -32768, bin: bytes(0xd1, 0x80, 0x00) },
+    { name: 'min (-32768)', value: -32768, bin: bytes(0xd1, 0x80, 0x00) },
+    { name: 'max (-129)', value: -129, bin: bytes(0xd1, 0xff, 0x7f) },
   ],
   'int32 d2': [
-    { name: 'min (-32769)', value: -32769, bin: bytes(0xd2, 0xff, 0xff, 0x7f, 0xff) },
-    { name: 'max (-2147483648)', value: -2147483648, bin: bytes(0xd2, 0x80, 0x00, 0x00, 0x00) },
+    { name: 'min (-2147483648)', value: -2147483648, bin: bytes(0xd2, 0x80, 0x00, 0x00, 0x00) },
+    { name: 'max (-32769)', value: -32769, bin: bytes(0xd2, 0xff, 0xff, 0x7f, 0xff) },
   ],
   'int64 d3': [
     { name: 'min safe integer', value: -Number.MAX_SAFE_INTEGER,
