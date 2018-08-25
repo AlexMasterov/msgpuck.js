@@ -11,7 +11,7 @@ class NumberCodec extends CanValueOf(Codec) {
   }
 
   supports(value) {
-    return value instanceof Number;
+    return value.constructor === Number;
   }
 
   encode(value) {

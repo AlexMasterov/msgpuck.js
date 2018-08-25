@@ -11,7 +11,7 @@ class StringCodec extends CanValueOf(Codec) {
   }
 
   supports(value) {
-    return value instanceof String;
+    return value.constructor === String;
   }
 
   encode(value) {

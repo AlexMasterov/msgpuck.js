@@ -11,7 +11,7 @@ class BooleanCodec extends CanValueOf(Codec) {
   }
 
   supports(value) {
-    return value instanceof Boolean;
+    return value.constructor === Boolean;
   }
 
   encode(value) {
