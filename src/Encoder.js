@@ -2,9 +2,10 @@
 
 const Ext = require('./Ext');
 const { EncodingFailed } = require('./errors');
-const { utf8toBin, CHR } = require('./utf8');
+const { CHR, bufToBin, utf8toBin } = require('./utf8');
 
 const isArray = Array.isArray;
+const isView = ArrayBuffer.isView;
 const ObjectKeys = Object.keys;
 const FastBuffer = Buffer[Symbol.species];
 const float32Array = new Float32Array(1);
@@ -64,9 +65,7 @@ class Encoder {
       case 'object':
         if (value === null) return '\xc0';
         if (isArray(value)) return this.encodeArray(value);
-        if (value.constructor === Buffer || value.constructor === ArrayBuffer) {
-          return this.encodeBin(value);
-        }
+        if (value.constructor === Buffer) return this.encodeBin(value);
         if (value.constructor === Ext) return this.encodeExt(value);
         if (this.codecs) {
           for (let codec, i = 0; i < this.codecs.length; i++) {
@@ -220,22 +219,26 @@ class Encoder {
       + bin;
   }
 
-  encodeBin(bin) {
-    const len = bin.length;
+  encodeBin(buf) {
+    const len = buf.length;
     if (len === 0) return '\xc4\x00';
+
+    const bin = len < 7
+      ? bufToBin(buf, len)
+      : buf.latin1Slice(0, len);
 
     // bin 8
     if (len < 0x100) {
       return '\xc4'
         + CHR[len]
-        + bin.latin1Slice(0, len);
+        + bin;
     }
     // bin 16
     if (len < 0x10000) {
       return '\xc5'
         + CHR[len >> 8]
         + CHR[len & 0xff]
-        + bin.latin1Slice(0, len);
+        + bin;
     }
     // bin 32
     return '\xc6'
@@ -243,7 +246,7 @@ class Encoder {
       + CHR[len >> 16]
       + CHR[len >> 8]
       + CHR[len & 0xff]
-      + bin.latin1Slice(0, len);
+      + bin;
   }
 
   encodeArray(arr) {
