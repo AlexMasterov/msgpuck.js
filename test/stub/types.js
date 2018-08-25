@@ -126,6 +126,7 @@ const types = {
   ],
   'bin8 c4': [
     { name: 'min (0)', value: Buffer.allocUnsafe(0), bin: bytes(0xc4, 0x00) },
+    { name: 'opt (6)', value: bytesN(1, 6), bin: bytes(0xc4, 0x06, ...bytesN(1, 6)) },
     { name: 'max (255)', value: bytesN(1, 255), bin: bytes(0xc4, 0xff, ...bytesN(1, 255)) },
   ],
   'bin16 c5': [
