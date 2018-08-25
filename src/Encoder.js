@@ -180,7 +180,7 @@ class Encoder {
     let len = str.length, bin = '\xa0';
     if (len === 0) return bin;
 
-    if (len < 10) {
+    if (len < 17) {
       bin = utf8toBin(str);
       len = bin.length;
     } else {
