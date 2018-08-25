@@ -5,7 +5,6 @@ const { EncodingFailed } = require('./errors');
 const { CHR, bufToBin, utf8toBin } = require('./utf8');
 
 const isArray = Array.isArray;
-const isView = ArrayBuffer.isView;
 const ObjectKeys = Object.keys;
 const FastBuffer = Buffer[Symbol.species];
 const float32Array = new Float32Array(1);
@@ -297,7 +296,7 @@ class Encoder {
 
     for (let key, i = 0; i < len; i++) {
       key = keys[i];
-      data += this.encode(key);
+      data += this.encodeStr(key);
       data += this.encode(obj[key]);
     }
 
