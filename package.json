@@ -21,9 +21,13 @@
   "bugs": {
     "url": "https://github.com/AlexMasterov/msgpuck.js/issues"
   },
-  "main": "./src/index.js",
   "engines": {
     "node": ">=8.3.0"
+  },
+  "main": "./src/index.js",
+  "types": "./types/index.d.ts",
+  "directories": {
+    "test": "test/"
   },
   "scripts": {
     "test": "c8 mocha test/**/*.test.js",
@@ -31,11 +35,9 @@
     "coverage": "c8 report --reporter=text-lcov | ./node_modules/.bin/coveralls"
   },
   "devDependencies": {
+    "@types/node": "10.11.3",
     "c8": "3.2.0",
     "coveralls": "3.0.2",
     "mocha": "5.2.0"
-  },
-  "directories": {
-    "test": "test/"
   }
 }

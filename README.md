@@ -18,7 +18,6 @@ A fast and memory-efficient [MessagePack](https://msgpack.org) serialization lib
 ## Future works (not implemented yet)
 
 * Native/Node.js streaming encoding and decoding interface
-* TypeScript type definitions
 * Command Line Interface
 * Web browsers
 

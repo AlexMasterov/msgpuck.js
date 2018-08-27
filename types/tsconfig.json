@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es2015",
+    "lib": ["es5", "es2015.collection"],
+    "types": ["node"],
+    "module": "commonjs",
+    "noEmit": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true
+  },
+  "files": ["index.d.ts"]
+}
