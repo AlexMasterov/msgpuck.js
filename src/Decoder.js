@@ -1,10 +1,8 @@
 'use strict';
 
+const { toFloat, toDouble, bufToUtf8, FastBuffer } = require('./optimizers');
 const { DecodingFailed, InsufficientData } = require('./errors');
-const { toFloat, toDouble } = require('./ieee754');
 const Ext = require('./Ext');
-
-const FastBuffer = Buffer[Symbol.species];
 
 function packCodecs(codecs) {
   const pack = new Map();
@@ -19,11 +17,12 @@ function packCodecs(codecs) {
 }
 
 class Decoder {
-  constructor({ codecs=[] } = {}) {
+  constructor({ codecs=[], bufferMinlen=6 } = {}) {
     this.buffer = null;
     this.offset = 0;
     this.length = 0;
     this.codecs = codecs ? packCodecs(codecs): false;
+    this.bufferMinlen = bufferMinlen >>> 0;
   }
 
   decode(buffer, start = 0, end = buffer.length) {
@@ -279,10 +278,9 @@ class Decoder {
       throw InsufficientData.fromOffset(this.buffer, this.offset, length);
     }
 
-    return this.buffer.utf8Slice(
-      this.offset++,
-      this.offset += length - 1
-    );
+    return length < this.bufferMinlen
+      ? bufToUtf8(this.buffer, this.offset, this.offset += length)
+      : this.buffer.utf8Slice(this.offset, this.offset += length);
   }
 
   decodeArray(size) {

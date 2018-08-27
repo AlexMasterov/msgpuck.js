@@ -1,12 +1,11 @@
 'use strict';
 
-const Ext = require('./Ext');
+const { CHR, bufToBin, utf8toBin, FastBuffer } = require('./optimizers');
 const { EncodingFailed } = require('./errors');
-const { CHR, bufToBin, utf8toBin } = require('./utf8');
+const Ext = require('./Ext');
 
 const isArray = Array.isArray;
 const ObjectKeys = Object.keys;
-const FastBuffer = Buffer[Symbol.species];
 const float32Array = new Float32Array(1);
 const float64Array = new Float64Array(1);
 const Uint8Float32Array = new Uint8Array(float32Array.buffer);

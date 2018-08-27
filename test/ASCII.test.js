@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const { CHR } = require('../src/utf8');
+const { CHR } = require('../src/optimizers');
 
 function genASCII() {
   let table = '';

@@ -1,6 +1,6 @@
 'use strict';
 
-const { utf8toBin, CHR } = require('../../src/utf8');
+const { utf8toBin, CHR } = require('../../src/optimizers');
 const Ext = require('../../src/Ext');
 
 const ext = (type, value) => new Ext(type, value);
