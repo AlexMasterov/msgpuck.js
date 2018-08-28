@@ -21,7 +21,7 @@ class Codec {
     throw new Error('The encode() method not implemented');
   }
 
-  decode(data) {
+  decode(value) {
     throw new Error('The decode() method not implemented');
   }
 }

@@ -15,7 +15,7 @@ class UndefinedCodec extends Codec {
     return null;
   }
 
-  decode(data) {
+  decode(value) {
     return undefined;
   }
 }

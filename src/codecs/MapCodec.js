@@ -22,8 +22,8 @@ class MapCodec extends Codec {
     return array;
   }
 
-  decode(data) {
-    return new Map(data);
+  decode(value) {
+    return new Map(value);
   }
 }
 

@@ -18,8 +18,8 @@ class BooleanCodec extends CanValueOf(Codec) {
     return BooleanValueOf.call(value);
   }
 
-  decode(data) {
-    return this.valueOf ? data : new Boolean(data);
+  decode(value) {
+    return this.valueOf ? value : new Boolean(value);
   }
 }
 

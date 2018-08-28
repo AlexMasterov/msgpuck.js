@@ -18,8 +18,8 @@ class StringCodec extends CanValueOf(Codec) {
     return StringValueOf.call(value);
   }
 
-  decode(data) {
-    return this.valueOf ? data : new String(data);
+  decode(value) {
+    return this.valueOf ? value : new String(value);
   }
 }
 

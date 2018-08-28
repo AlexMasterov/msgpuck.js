@@ -114,7 +114,7 @@ class MapCodec extends Codec {
     return [...value]; // array destructuring uses an iterator
   }
 
-  decode(data) { // required
+  decode(value) { // required
     return new Map(data);
   }
 }

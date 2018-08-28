@@ -22,8 +22,8 @@ class SetCodec extends Codec {
     return array;
   }
 
-  decode(data) {
-    return new Set(data);
+  decode(value) {
+    return new Set(value);
   }
 }
 

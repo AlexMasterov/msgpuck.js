@@ -19,8 +19,8 @@ class SymbolCodec extends CanWithFor(Codec) {
     return SymbolToString.call(value).slice(7, -1);
   }
 
-  decode(data) {
-    return this.withFor ? Symbol.for(data) : Symbol(data);
+  decode(value) {
+    return this.withFor ? Symbol.for(value) : Symbol(value);
   }
 }
 

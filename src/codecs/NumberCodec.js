@@ -18,8 +18,8 @@ class NumberCodec extends CanValueOf(Codec) {
     return NumberValueOf.call(value);
   }
 
-  decode(data) {
-    return this.valueOf ? data : new Number(data);
+  decode(value) {
+    return this.valueOf ? value : new Number(value);
   }
 }
 

@@ -17,8 +17,8 @@ class RegExpCodec extends Codec {
       : [value.source];
   }
 
-  decode(data) {
-    return new RegExp(...data);
+  decode(value) {
+    return new RegExp(...value);
   }
 }
 
