@@ -47,14 +47,14 @@ class Decoder {
       }
       // fixmap
       if (byte < 0x90) {
-        return (byte & 0xf) === 0 ? {} : this.decodeMap(byte & 0xf);
+        return byte === 0x80 ? {} : this.decodeMap(byte & 0xf);
       }
       // fixarray
       if (byte < 0xa0) {
-        return (byte & 0x0f) === 0 ? [] : this.decodeArray(byte & 0x0f);
+        return byte === 0x90 ? [] : this.decodeArray(byte & 0x0f);
       }
       // fixstr
-      return (byte & 0x1f) === 0 ? '' : this.decodeStr(byte & 0x1f);
+      return byte === 0xa0 ? '' : this.decodeStr(byte & 0x1f);
     }
     // negative fixint
     if (byte > 0xdf) {
