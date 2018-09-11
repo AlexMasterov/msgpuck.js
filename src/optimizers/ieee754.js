@@ -1,3 +1,4 @@
+'use strict';
 /* istanbul ignore file */
 
 function toFloat(x) {
