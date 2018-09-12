@@ -104,25 +104,19 @@ const types = {
     { name: 'max (65536)', value: strN('a', 65536),
       bin: bytes(0xdb, 0x00, 0x01, 0x00, 0x00, ...bytesN(0x61, 65536)) },
   ],
-  'unicode a1/a2/a3/a4': [
+  'utf8 a1/a2/a3/a4': [
     // 1 byte
     { name: '1 byte (u0000)', value: '\u0000', bin: bytes(0xa1, 0x00) },
-    // 2 byte
-    { name: '2 byte (u00ff)', value: '\u00ff', bin: bytes(0xa2, 0xc3, 0xbf) },
+    { name: '1 byte (u007f)', value: '\u007f', bin: bytes(0xa1, 0x7f) },
+    // 2 bytes
+    { name: '2 byte (u0080)', value: '\u0080', bin: bytes(0xa2, 0xc2, 0x80) },
     { name: '2 byte (u07ff)', value: '\u07ff', bin: bytes(0xa2, 0xdf, 0xbf) },
-    { name: '2 byte (u05Ca)', value: '\u05Ca', bin: bytes(0xa2, 0xd7, 0x8a) },
-    { name: '2 byte (u05Ca)', value: '\u05Ca', bin: bytes(0xa2, 0xd7, 0x8a) },
-    // 3 byte
+    // 3 bytes
     { name: '3 byte (u0800)', value: '\u0800', bin: bytes(0xa3, 0xe0, 0xa0, 0x80) },
-    { name: '3 byte (u2047)', value: '\u2047', bin: bytes(0xa3, 0xe2, 0x81, 0x87) },
-    { name: '3 byte (u2665)', value: '\u2665', bin: bytes(0xa3, 0xe2, 0x99, 0xa5) },
-    { name: '3 byte (u2c3c)', value: '\u2c3c', bin: bytes(0xa3, 0xe2, 0xb0, 0xbc) },
-    { name: '3 byte (u9999)', value: '\u9999', bin: bytes(0xa3, 0xe9, 0xa6, 0x99) },
     { name: '3 byte (uffff)', value: '\uffff', bin: bytes(0xa3, 0xef, 0xbf, 0xbf) },
-    // 4 byte
+    // 4 bytes
     { name: '4 byte (u010000)', value: '\u010000', bin: bytes(0xa4, 0xc4,0x80, 0x30, 0x30) },
     { name: '4 byte (u10fff)', value: '\u10fff', bin: bytes(0xa4, 0xe1, 0x83,0xbf, 0x66) },
-    { name: '4 byte (u1d306)', value: '\u1d306', bin: bytes(0xa4, 0xe1, 0xb4, 0xb0, 0x36) },
   ],
   'bin8 c4': [
     { name: 'min (0)', value: Buffer.allocUnsafe(0), bin: bytes(0xc4, 0x00) },
