@@ -4,12 +4,10 @@ class MsgPackError extends Error {
   constructor(value, message) {
     super(message);
 
-    this.name = new.target.name;
-    this.value = value;
+    Error.captureStackTrace(this, this.constructor);
 
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.name);
-    }
+    this.name = this.constructor.name;
+    this.value = value;
   }
 }
 
