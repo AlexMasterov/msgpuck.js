@@ -42,7 +42,7 @@ function encodeInt64(num) {
 }
 
 class Encoder {
-  constructor({ codecs=[], bufferMinlen=15, float32=false } = {}) {
+  constructor({ codecs=false, bufferMinlen=15, float32=false } = {}) {
     this.alloc = 0;
     this.buffer = null;
     this.codecs = codecs;

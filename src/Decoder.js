@@ -17,11 +17,11 @@ function packCodecs(codecs) {
 }
 
 class Decoder {
-  constructor({ codecs=[], bufferMinlen=6 } = {}) {
+  constructor({ codecs=false, bufferMinlen=6 } = {}) {
     this.buffer = null;
     this.offset = 0;
     this.length = 0;
-    this.codecs = codecs ? packCodecs(codecs): false;
+    this.codecs = codecs ? packCodecs(codecs) : false;
     this.bufferMinlen = bufferMinlen >>> 0;
   }
 
