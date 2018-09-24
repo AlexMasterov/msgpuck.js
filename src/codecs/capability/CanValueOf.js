@@ -1,6 +1,6 @@
 'use strict';
 
-const CanValueOf = (Codec) => class extends Codec {
+const CanValueOf = Codec => class extends Codec {
   static withValueOf(type) {
     const canValueOf = new this(type);
 

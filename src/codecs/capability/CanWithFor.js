@@ -1,6 +1,6 @@
 'use strict';
 
-const CanWithFor = (Codec) => class extends Codec {
+const CanWithFor = Codec => class extends Codec {
   static withFor(type) {
     const codec = new this(type);
 
