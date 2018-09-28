@@ -4,8 +4,16 @@ const assert = require('assert');
 const Ext = require('../src/Ext');
 
 describe('Ext', () => {
-  it('throws when parameters is missing', () => {
-    assert.throws(() => { Ext.make(); }, Error);
-    assert.throws(() => { Ext.make(1); }, Error);
+  const requireParams = 2;
+  const missingParams = [
+    [],
+    [1],
+  ];
+
+  missingParams.forEach(params => {
+    const count = requireParams - params.length;
+    it(`throws when ${count} parameters is missing`, () => {
+      assert.throws(() => Ext.make(...params), Error);
+    });
   });
 });

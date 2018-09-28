@@ -3,21 +3,24 @@
 const assert = require('assert');
 const { CHR } = require('../src/optimizers');
 
-function genASCII() {
-  let table = '';
-  for (let i = 0; i <= 256; i++) table += String.fromCharCode(i);
+const TABLE_LENGTH = 256;
+
+function genAsciiTable() {
+  const table = new Array(TABLE_LENGTH);
+  let i = TABLE_LENGTH + 1; // reverse 0
+  while (i--) table[i] = String.fromCharCode(i);
   return table;
 }
 
-describe('CHR ASCII', () => {
-  const ascii = genASCII();
+describe('ASCII', () => {
+  const ascii = genAsciiTable();
 
-  it('valid length', () => {
+  it(`CHR table has valid length (${ascii.length})`, () => {
     assert.deepStrictEqual(CHR.length, ascii.length);
   });
 
-  it('valid character codes', () => {
-    let i = 256;
+  it('CHR table has valid character codes', () => {
+    let i = TABLE_LENGTH;
     while (i--) assert.deepStrictEqual(CHR[i], ascii[i]);
   });
 });
