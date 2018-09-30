@@ -4,9 +4,7 @@ const MsgPackError = require('../MsgPackError');
 
 class EncodingFailed extends MsgPackError {
   static withValue(value) {
-    const message = `Could not encode: ${value} (${typeof value})`;
-
-    return new this(value, message);
+    return new this(`Could not encode: ${value} (${typeof value})`, value);
   }
 }
 

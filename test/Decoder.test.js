@@ -5,6 +5,9 @@ const { Decoder, errors: { DecodingFailed, InsufficientData } } = require('../sr
 
 const types = require('./stub/types');
 
+// assets module v8.x can't compare NaN and exceptions
+const isNode8 = process.version[1] === '8';
+
 function testDecode(type) {
   type.forEach(({ name, value: expected, bin }) => {
     const decoder = new Decoder();
@@ -17,12 +20,21 @@ function testDecode(type) {
   });
 }
 
+function testThrowsNoData(buffer) {
+  it(`throws when no data`, () => {
+    const decoder = new Decoder();
+    assert.throws(() => decoder.decode(buffer), {
+      name: 'DecodingFailed',
+      message: 'No data to decode',
+    });
+  });
+}
+
 function testThrowsDecodingFailed(byte) {
   it(`throws when decode unknown byte (${byte})`, () => {
     const decoder = new Decoder();
     assert.throws(() => decoder.decode(byte), {
       name: 'DecodingFailed',
-      value: byte,
     });
   });
 }
@@ -33,19 +45,26 @@ function testThrowsInsufficientData(name, buffer, actualLength, expectedLength) 
     assert.throws(() => decoder.decode(buffer), {
       name: 'InsufficientData',
       message: `Not enough data to decode: expected length ${expectedLength}, got ${actualLength}`,
-      value: buffer,
     });
   });
 }
 
 describe('Decoder', () => {
+  if (isNode8) {
+    const excludeNaN = type => type.name !== 'NaN';
+    types.float32 = types.float32.filter(excludeNaN);
+    types.float64 = types.float64.filter(excludeNaN);
+  }
+
+  const excludeOverflow = type => !type.name.includes('overflow');
+  types.uint64 = types.uint64.filter(excludeOverflow);
+  types.int64 = types.int64.filter(excludeOverflow);
+
   const skip = [
-    'uint Infinity cb',
-    'int -Infinity cb',
-    'bigint64 cf',
-    'fixmap 80-8f (Map)',
-    'map16 de (Map)',
-    'map32 df (Map)',
+    'bigint64',
+    'fixmap map',
+    'map16 map',
+    'map32 map',
   ];
 
   const tests = Object.entries(types)
@@ -55,11 +74,12 @@ describe('Decoder', () => {
     describe(name, () => testDecode(type));
   }
 
-  testThrowsDecodingFailed('\xc1');
+  if (isNode8) return;
 
   const bytes = (...bytes) => Buffer.from(bytes);
 
-  testThrowsInsufficientData('empty', bytes(), 0, 1);
+  testThrowsNoData(bytes());
+  testThrowsDecodingFailed('\xc1');
   testThrowsInsufficientData('float32', bytes(0xca), 0, 4);
   testThrowsInsufficientData('float64', bytes(0xcb), 0, 8);
   testThrowsInsufficientData('int8', bytes(0xd0), 0, 1);

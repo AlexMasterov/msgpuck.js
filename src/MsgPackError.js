@@ -1,13 +1,13 @@
 'use strict';
 
 class MsgPackError extends Error {
-  constructor(value, message) {
+  constructor(message) {
     super(message);
 
-    Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace(this, new.target);
 
-    this.name = this.constructor.name;
-    this.value = value;
+    this.name = new.target.name;
+    this.message = message;
   }
 }
 

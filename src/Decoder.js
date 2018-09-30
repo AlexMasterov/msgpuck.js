@@ -1,7 +1,7 @@
 'use strict';
 
 const { toFloat, toDouble, bufToUtf8, FastBuffer } = require('./optimizers');
-const { DecodingFailed, InsufficientData } = require('./errors');
+const { throwHandler } = require('./handlers');
 const Ext = require('./Ext');
 
 function packCodecs(codecs) {
@@ -17,15 +17,20 @@ function packCodecs(codecs) {
 }
 
 class Decoder {
-  constructor({ codecs=false, bufferMinlen=6 } = {}) {
+  constructor({
+    bufferMinLen=6,
+    handler=throwHandler,
+    codecs=false,
+  } = {}) {
     this.buffer = null;
     this.offset = 0;
     this.length = 0;
+    this.bufferMinLen = bufferMinLen >>> 0;
+    this.handler = handler.bind(this);
     this.codecs = codecs ? packCodecs(codecs) : false;
-    this.bufferMinlen = bufferMinlen >>> 0;
   }
 
-  decode(buffer, start = 0, end = buffer.length) {
+  decode(buffer, start=0, end=buffer.length) {
     this.buffer = buffer;
     this.offset = start;
     this.length = start + end;
@@ -35,7 +40,7 @@ class Decoder {
 
   parse() {
     if (this.length < this.offset + 1) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 1);
+      return this.handler(0xc1, 1);
     }
 
     const byte = this.buffer[this.offset++];
@@ -112,14 +117,13 @@ class Decoder {
       case 0xc8: return this.decodeExt(this.decodeUint16());
       case 0xc9: return this.decodeExt(this.decodeUint32());
 
-      default:
-        throw DecodingFailed.fromOffset(byte, this.offset);
+      default: return this.handler(0xc1, 0);
     }
   }
 
   decodeFloat32() {
     if (this.length < this.offset + 4) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 4);
+      return this.handler(0xca, 4);
     }
 
     const hi = this.buffer[this.offset] * 0x1000000
@@ -134,7 +138,7 @@ class Decoder {
 
   decodeFloat64() {
     if (this.length < this.offset + 8) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 8);
+      return this.handler(0xcb, 8);
     }
 
     const hi = this.buffer[this.offset] * 0x1000000
@@ -154,7 +158,7 @@ class Decoder {
 
   decodeUint8() {
     if (this.length < this.offset + 1) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 1);
+      return this.handler(0xcc, 1);
     }
 
     return this.buffer[this.offset++];
@@ -162,7 +166,7 @@ class Decoder {
 
   decodeUint16() {
     if (this.length < this.offset + 2) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 2);
+      return this.handler(0xcd, 2);
     }
 
     const num = this.buffer[this.offset] << 8
@@ -175,7 +179,7 @@ class Decoder {
 
   decodeUint32() {
     if (this.length < this.offset + 4) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 4);
+      return this.handler(0xce, 4);
     }
 
     const num = this.buffer[this.offset] * 0x1000000
@@ -190,7 +194,7 @@ class Decoder {
 
   decodeUint64() {
     if (this.length < this.offset + 8) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 8);
+      return this.handler(0xcf, 8);
     }
 
     const num = this.buffer[this.offset] * 0x1000000
@@ -209,7 +213,7 @@ class Decoder {
 
   decodeInt8() {
     if (this.length < this.offset + 1) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 1);
+      return this.handler(0xd0, 1);
     }
 
     return this.buffer[this.offset++] - 0x100;
@@ -217,7 +221,7 @@ class Decoder {
 
   decodeInt16() {
     if (this.length < this.offset + 2) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 2);
+      return this.handler(0xd2, 2);
     }
 
     const num = (this.buffer[this.offset] << 8
@@ -230,7 +234,7 @@ class Decoder {
 
   decodeInt32() {
     if (this.length < this.offset + 4) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 4);
+      return this.handler(0xd2, 4);
     }
 
     const num = this.buffer[this.offset] << 24
@@ -245,7 +249,7 @@ class Decoder {
 
   decodeInt64() {
     if (this.length < this.offset + 8) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, 8);
+      return this.handler(0xd3, 8);
     }
 
     const num = (this.buffer[this.offset] << 24
@@ -264,7 +268,7 @@ class Decoder {
 
   decodeBin(length) {
     if (this.length < this.offset + length) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, length);
+      return this.handler(0xc4, length);
     }
 
     const start = this.buffer.byteOffset + this.offset;
@@ -275,10 +279,10 @@ class Decoder {
 
   decodeStr(length) {
     if (this.length < this.offset + length) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, length);
+      return this.handler(0xd9, length);
     }
 
-    return length < this.bufferMinlen
+    return length < this.bufferMinLen
       ? bufToUtf8(this.buffer, this.offset, this.offset += length)
       : this.buffer.utf8Slice(this.offset, this.offset += length);
   }
@@ -303,7 +307,7 @@ class Decoder {
 
   decodeExt(length) {
     if (this.length < this.offset + length) {
-      throw InsufficientData.fromOffset(this.buffer, this.offset, length);
+      return this.handler(0xc7, length);
     }
 
     const type = this.buffer[this.offset++];

@@ -2,15 +2,13 @@
 
 const MsgPackError = require('../MsgPackError');
 
-function decToHex(num) {
-  return (num | 0x10000).toString(16).slice(-2);
-}
-
 class DecodingFailed extends MsgPackError {
-  static fromOffset(byte, offset) {
-    const message = `Can't decode data with byte-header ${decToHex(byte)} in position ${offset}`;
+  static noData() {
+    return new this('No data to decode');
+  }
 
-    return new this(byte, message);
+  static fromOffset(offset) {
+    return new this(`Cannot decode data with byte-header in position ${offset}`);
   }
 }
 

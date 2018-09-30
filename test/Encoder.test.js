@@ -28,24 +28,26 @@ function testEncodeMethod(method, type) {
   });
 }
 
-function testThrowEncodingFailed(value) {
-  it(`throws when '${value}' could not encode`, () => {
-    const encoder = new Encoder();
-    assert.throws(() => encoder.encode(value), {
-      name: 'EncodingFailed',
-      value,
+describe('Encoder', () => {
+  const encoder = new Encoder();
+
+  const unsupportedTypes = [
+    () => {},
+  ];
+
+  unsupportedTypes.forEach(type => {
+    it(`throws when ${typeof type} '${type}' could not encode`, () => {
+      assert.throws(() => encoder.encode(type), EncodingFailed );
     });
   });
-}
 
-describe('Encoder', () => {
   const tests = Object.entries(types);
 
   const skip = [
-    'bigint64 cf',
-    'fixmap 80-8f (Map)',
-    'map16 de (Map)',
-    'map32 df (Map)',
+    'bigint64',
+    'fixmap map',
+    'map16 map',
+    'map32 map',
   ];
 
   const toEncode = tests
@@ -53,16 +55,16 @@ describe('Encoder', () => {
 
   for (const [name, type] of toEncode) {
     let options = {};
-    if (name === 'float32 ca') options = { float32: true };
+    if (name === 'float32') options = { float32: true };
     describe(name, () => testEncode(type, options));
   }
 
   const methods = new Map([
-    ['null c0', 'encodeNil'],
-    ['boolean c2/c3', 'encodeBool'],
-    ['fixmap 80-8f (Map)', 'encodeMap'],
-    ['map16 de (Map)', 'encodeMap'],
-    ['map32 df (Map)', 'encodeMap'],
+    ['null', 'encodeNil'],
+    ['boolean', 'encodeBool'],
+    ['fixmap map', 'encodeMap'],
+    ['map16 map', 'encodeMap'],
+    ['map32 map', 'encodeMap'],
   ]);
 
   describe('low level API', () => {
@@ -72,6 +74,4 @@ describe('Encoder', () => {
       }
     }
   });
-
-  testThrowEncodingFailed(() => {});
 });
