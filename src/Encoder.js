@@ -42,11 +42,15 @@ function encodeInt64(num) {
 }
 
 class Encoder {
-  constructor({ codecs=false, bufferMinlen=15, float32=false } = {}) {
+  constructor({
+    bufferMinLen=15,
+    float32=false,
+    codecs=false,
+  } = {}) {
     this.alloc = 0;
     this.buffer = null;
+    this.bufferMinLen = bufferMinLen >>> 0;
     this.codecs = codecs;
-    this.bufferMinlen = bufferMinlen >>> 0;
     if (float32) this.encodeFloat64 = this.encodeFloat32;
   }
 
@@ -179,7 +183,7 @@ class Encoder {
     let len = str.length, bin = '\xa0';
     if (len === 0) return bin;
 
-    if (len < this.bufferMinlen) {
+    if (len < this.bufferMinLen) {
       bin = utf8toBin(str);
       len = bin.length;
     } else {
