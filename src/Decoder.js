@@ -315,11 +315,14 @@ class Decoder {
     if (this.codecs) {
       const codec = this.codecs.get(type);
       if (codec !== undefined) {
-        return codec.decode(this.parse());
+        return codec.decode(this, length);
       }
     }
 
-    return new Ext(type, this.parse());
+    return new Ext(
+      type,
+      this.buffer.latin1Slice(this.offset, this.offset += length)
+    );
   }
 }
 

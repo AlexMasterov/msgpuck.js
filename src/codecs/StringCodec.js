@@ -1,11 +1,8 @@
 'use strict';
 
 const Codec = require('../Codec');
-const CanValueOf = require('./capability/CanValueOf');
 
-const StringValueOf = String.prototype.valueOf;
-
-class StringCodec extends CanValueOf(Codec) {
+class StringCodec extends Codec {
   static get type() {
     return 0x03;
   }
@@ -14,12 +11,12 @@ class StringCodec extends CanValueOf(Codec) {
     return value.constructor === String;
   }
 
-  encode(value) {
-    return StringValueOf.call(value);
+  encode(encoder, value) {
+    return encoder.encodeStr(value);
   }
 
-  decode(value) {
-    return this.valueOf ? value : new String(value);
+  decode(decoder, length) {
+    return decoder.parse();
   }
 }
 

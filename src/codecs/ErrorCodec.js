@@ -11,12 +11,12 @@ class ErrorCodec extends Codec {
     return value.constructor === Error;
   }
 
-  encode({ message, name }) {
-    return { message, name };
+  encode(encoder, value) {
+    return encoder.encodeArray([value.message, value.name]);
   }
 
-  decode({ message, name }) {
-    return new Error(message, name);
+  decode(decoder, length) {
+    return new Error(...decoder.parse());
   }
 }
 

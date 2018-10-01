@@ -3,12 +3,12 @@ sudo: false
 language: node_js
 
 node_js:
-  - 8.3
-  - 9
+  - '8.3'
+  - '9'
 
 matrix:
   include:
-    - node_js: 10
+    - node_js: '10'
       env: COVERAGE_TESTS=true
 
 branches:

@@ -11,7 +11,7 @@ class SetCodec extends Codec {
     return value.constructor === Set;
   }
 
-  encode(value) {
+  encode(encoder, value) {
     const array = new Array(value.size);
 
     let i = 0;
@@ -19,11 +19,11 @@ class SetCodec extends Codec {
       array[i++] = arr;
     }
 
-    return array;
+    return encoder.encodeArray(array);
   }
 
-  decode(value) {
-    return new Set(value);
+  decode(decoder, length) {
+    return new Set(decoder.parse());
   }
 }
 

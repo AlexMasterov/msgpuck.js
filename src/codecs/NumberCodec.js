@@ -1,11 +1,8 @@
 'use strict';
 
 const Codec = require('../Codec');
-const CanValueOf = require('./capability/CanValueOf');
 
-const NumberValueOf = Number.prototype.valueOf;
-
-class NumberCodec extends CanValueOf(Codec) {
+class NumberCodec extends Codec {
   static get type() {
     return 0x02;
   }
@@ -14,12 +11,12 @@ class NumberCodec extends CanValueOf(Codec) {
     return value.constructor === Number;
   }
 
-  encode(value) {
-    return NumberValueOf.call(value);
+  encode(encoder, value) {
+    return encoder.encodeInt(value);
   }
 
-  decode(value) {
-    return this.valueOf ? value : new Number(value);
+  decode(decoder, length) {
+    return decoder.parse();
   }
 }
 

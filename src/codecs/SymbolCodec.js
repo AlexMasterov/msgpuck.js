@@ -14,13 +14,15 @@ class SymbolCodec extends CanWithFor(Codec) {
     return typeof value === 'symbol';
   }
 
-  encode(value) {
+  encode(encoder, value) {
     // Symbol(value) => value
-    return SymbolToString.call(value).slice(7, -1);
+    return encoder.encodeStr(SymbolToString.call(value).slice(7, -1));
   }
 
-  decode(value) {
-    return this.withFor ? Symbol.for(value) : Symbol(value);
+  decode(decoder, length) {
+    return this.withFor
+      ? Symbol.for(decoder.parse())
+      : Symbol(decoder.parse());
   }
 }
 

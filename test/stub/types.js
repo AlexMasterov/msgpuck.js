@@ -146,24 +146,23 @@ const types = {
     type('min (65536)', mapN(1, 65536), Buffer.from([0xdf, 0x00, 0x01, 0x00, 0x00, ...bytesStrN('\x01', 65536)])),
   ],
 
-  // trim (1) type byte
   'fixext': [
-    type('1', ext(1, 'a'), bytes(0xd4, 0x01, 0xa1, 0x61)),
-    type('2', ext(1, strN('a', 2)), bytes(0xd5, 0x01, 0xa2, ...bytesN(0x61, 2))),
-    type('4', ext(1, strN('a', 4)), bytes(0xd6, 0x01, 0xa4, ...bytesN(0x61, 4))),
-    type('8', ext(1, strN('a', 8)), bytes(0xd7, 0x01, 0xa8, ...bytesN(0x61, 8))),
-    type('16', ext(1, strN('a', 16)), bytes(0xd8, 0x01, 0xb0, ...bytesN(0x61, 16))),
+    type('1', ext(1, '\xc0'), bytes(0xd4, 0x01, 0xc0)),
+    type('2', ext(1, strN('\xc0', 2)), bytes(0xd5, 0x01, ...bytesN(0xc0, 2))),
+    type('4', ext(1, strN('\xc0', 4)), bytes(0xd6, 0x01, ...bytesN(0xc0, 4))),
+    type('8', ext(1, strN('\xc0', 8)), bytes(0xd7, 0x01, ...bytesN(0xc0, 8))),
+    type('16', ext(1, strN('\xc0', 16)), bytes(0xd8, 0x01, ...bytesN(0xc0, 16))),
   ],
   'ext8': [
-    type('min (17)', ext(1, strN('a', 17)), bytes(0xc7, 0x11, 0x01, 0xb1, ...bytesN(0x61, 17))),
-    type('max (254)', ext(1, strN('a', 254)), bytes(0xc7, 0xff, 0x01, 0xd9, 0xfe, ...bytesN(0x61, 254))),
+    type('min (17)', ext(1, strN('\xc0', 17)), bytes(0xc7, 0x11, 0x01, ...bytesN(0xc0, 17))),
+    type('max (255)', ext(1, strN('\xc0', 255)), bytes(0xc7, 0xff, 0x01, ...bytesN(0xc0, 255))),
   ],
   'ext16': [
-    type('min (255)', ext(1, strN('a', 255)), bytes(0xc8, 0x01, 0x00, 0x01, 0xd9, 0xff, ...bytesN(0x61, 255))),
-    type('max (65533)', ext(1, strN('a', 65533)), bytes(0xc8, 0xff, 0xff, 0x01, 0xda, 0xff, 0xfd, ...bytesN(0x61, 65533))),
+    type('min (256)', ext(1, strN('\xc0', 256)), bytes(0xc8, 0x01, 0x00, 0x01, ...bytesN(0xc0, 256))),
+    type('max (65535)', ext(1, strN('\xc0', 65535)), bytes(0xc8, 0xff, 0xff, 0x01, ...bytesN(0xc0, 65535))),
   ],
   'ext32': [
-    type('max (65534)', ext(1, strN('a', 65534)), bytes(0xc9, 0x00, 0x01, 0x00, 0x00, 0x01, 0xda, 0xff, 0xfe, ...bytesN(0x61, 65534))),
+    type('max (65536)', ext(1, strN('\xc0', 65536)), bytes(0xc9, 0x00, 0x01, 0x00, 0x00, 0x01, ...bytesN(0xc0, 65536))),
   ],
 };
 

@@ -11,11 +11,11 @@ class UndefinedCodec extends Codec {
     return value.__isUndefined__ === true;
   }
 
-  encode(value) {
-    return null;
+  encode(encoder, value) {
+    return '\xc0';
   }
 
-  decode(value) {
+  decode(decoder, length) {
     return undefined;
   }
 }

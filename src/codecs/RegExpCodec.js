@@ -11,14 +11,16 @@ class RegExpCodec extends Codec {
     return value.constructor === RegExp;
   }
 
-  encode(value) {
-    return value.flags
+  encode(encoder, value) {
+    const data = value.flags
       ? [value.source, value.flags]
       : [value.source];
+
+    return encoder.encodeArray(data);
   }
 
-  decode(value) {
-    return new RegExp(...value);
+  decode(decoder, length) {
+    return new RegExp(...decoder.parse());
   }
 }
 

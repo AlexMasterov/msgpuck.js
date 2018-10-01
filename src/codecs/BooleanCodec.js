@@ -1,11 +1,8 @@
 'use strict';
 
 const Codec = require('../Codec');
-const CanValueOf = require('./capability/CanValueOf');
 
-const BooleanValueOf = Boolean.prototype.valueOf;
-
-class BooleanCodec extends CanValueOf(Codec) {
+class BooleanCodec extends Codec {
   static get type() {
     return 0x01;
   }
@@ -14,12 +11,12 @@ class BooleanCodec extends CanValueOf(Codec) {
     return value.constructor === Boolean;
   }
 
-  encode(value) {
-    return BooleanValueOf.call(value);
+  encode(encoder, value) {
+    return value ? '\xc3' : '\xc2';
   }
 
-  decode(value) {
-    return this.valueOf ? value : new Boolean(value);
+  decode(decoder, length) {
+    return decoder.parse();
   }
 }
 

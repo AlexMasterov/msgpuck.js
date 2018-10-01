@@ -2,6 +2,8 @@
 
 const Codec = require('../Codec');
 
+const ObjectEntries = Object.entries;
+
 class MapCodec extends Codec {
   static get type() {
     return 0x0c;
@@ -11,19 +13,12 @@ class MapCodec extends Codec {
     return value.constructor === Map;
   }
 
-  encode(value) {
-    const array = new Array(value.size);
-
-    let i = 0;
-    for (const arr of value) {
-      array[i++] = arr;
-    }
-
-    return array;
+  encode(encoder, value) {
+    return encoder.encodeMap(value);
   }
 
-  decode(value) {
-    return new Map(value);
+  decode(decoder, length) {
+    return new Map(ObjectEntries(decoder.parse()));
   }
 }
 

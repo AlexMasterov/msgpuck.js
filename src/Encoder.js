@@ -69,11 +69,14 @@ class Encoder {
         if (value === null) return '\xc0';
         if (isArray(value)) return this.encodeArray(value);
         if (value.constructor === Buffer) return this.encodeBin(value);
-        if (value.constructor === Ext) return this.encodeExt(value);
+        if (value.constructor === Ext) {
+          return this.encodeExt(value.type, value.data);
+        }
         if (this.codecs) {
           for (let codec, i = 0; i < this.codecs.length; i++) {
-            if (codec = this.codecs[i], codec.supports(value)) {
-              return this.encodeExt(new Ext(codec.type, codec.encode(value)));
+            codec = this.codecs[i];
+            if (codec.supports(value)) {
+              return this.encodeExt(codec.type, codec.encode(this, value));
             }
           }
         }
@@ -334,31 +337,30 @@ class Encoder {
     return data;
   }
 
-  encodeExt(ext) {
-    const type = CHR[ext.type & 0x7f];
-    const data = this.encode(ext.data);
-    const len = data.length - 1; // trim type byte
+  encodeExt(type, data) {
+    const ext = CHR[type & 0x7f] + data;
+    const len = data.length;
 
     // fixext 1/2/4/8/16
     switch (len) {
-      case 1: return '\xd4' + type + data;
-      case 2: return '\xd5' + type + data;
-      case 4: return '\xd6' + type + data;
-      case 8: return '\xd7' + type + data;
-      case 16: return '\xd8' + type + data;
+      case 1: return '\xd4' + ext;
+      case 2: return '\xd5' + ext;
+      case 4: return '\xd6' + ext;
+      case 8: return '\xd7' + ext;
+      case 16: return '\xd8' + ext;
     }
     // ext 8
     if (len < 0x100) {
       return '\xc7'
         + CHR[len]
-        + type + data;
+        + ext;
     }
     // ext 16
     if (len < 0x10000) {
       return '\xc8'
         + CHR[len >> 8]
         + CHR[len & 0xff]
-        + type + data;
+        + ext;
     }
     // ext 32
     return '\xc9'
@@ -366,7 +368,7 @@ class Encoder {
       + CHR[len >> 16 & 0xff]
       + CHR[len >> 8 & 0xff]
       + CHR[len & 0xff]
-      + type + data;
+      + ext;
   }
 }
 

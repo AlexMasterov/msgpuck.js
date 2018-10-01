@@ -25,18 +25,15 @@ const codecs = {
   ],
 
   'String': [
-    codec('StringCodec', StringCodec.make(), new String('xyz'), new String('xyz')),
-    codec('StringCodec valueOf', StringCodec.withValueOf(), new String('xyz'), 'xyz'),
+    codec('StringCodec', StringCodec.make(), new String('xyz'), 'xyz'),
   ],
 
   'Number': [
-    codec('NumberCodec', NumberCodec.make(), new Number(42), new Number(42)),
-    codec('NumberCodec valueOf', NumberCodec.withValueOf(), new Number(42), 42),
+    codec('NumberCodec', NumberCodec.make(), new Number(42), 42),
   ],
 
   'Boolean': [
-    codec('BooleanCodec', BooleanCodec.make(), new Boolean(true), new Boolean(true)),
-    codec('BooleanCodec valueOf', BooleanCodec.withValueOf(), new Boolean(true), true),
+    codec('BooleanCodec', BooleanCodec.make(), new Boolean(true), true),
   ],
 
   'RegExp': [
