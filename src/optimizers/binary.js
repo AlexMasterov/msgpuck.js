@@ -2,7 +2,7 @@
 
 const CHR = require('./ascii');
 
-function bufToBin(buf, len=buf.length) {
+function bufToBin(buf, len) {
   let bin = '';
   for (let i = 0; i < len; i++) {
     bin += CHR[buf[i]];
