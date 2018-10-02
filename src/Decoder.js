@@ -8,7 +8,8 @@ function packCodecs(codecs) {
   const pack = new Map();
 
   let codec, i = codecs.length;
-  while (i--) {
+  while (i > 0) {
+    i -= 1;
     codec = codecs[i];
     pack.set(codec.type, codec);
   }
@@ -298,7 +299,8 @@ class Decoder {
 
   decodeMap(size) {
     const map = {};
-    while (size--) {
+    while (size > 0) {
+      size -= 1;
       map[this.parse()] = this.parse();
     }
 
