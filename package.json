@@ -6,7 +6,8 @@
     "msgpack",
     "messagepack",
     "serialization",
-    "binary"
+    "binary",
+    "typescript"
   ],
   "license": "MIT",
   "author": {
@@ -30,8 +31,8 @@
     "test": "test/"
   },
   "scripts": {
-    "test": "c8 mocha test/**/*.test.js",
-    "test-report": "c8 --reporter=html --reporter=text mocha test/**/*.test.js",
+    "test": "c8 mocha test/*.test.js",
+    "test-report": "c8 --reporter=html --reporter=text mocha test/*.test.js",
     "coverage": "c8 report --reporter=text-lcov | ./node_modules/.bin/coveralls"
   },
   "devDependencies": {

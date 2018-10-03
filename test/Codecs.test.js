@@ -1,32 +1,29 @@
 'use strict';
 
 const assert = require('assert');
-const { Encoder, Decoder } = require('../src');
-const codecs = require('./stub/codecs');
+const Encoder = require('../src/Encoder');
+const Decoder = require('../src/Decoder');
 
-function test(type) {
-  type.forEach(({ name, codec, encode, decode: expected }) => {
-    const options = { codecs: [codec] };
-    const encoder = new Encoder(options);
-    const decoder = new Decoder(options);
-
-    it(name, () => {
-      const encoded = encoder.encode(encode);
-      let decoded = decoder.decode(Buffer.from(encoded, 'binary'));
-
-      if (typeof expected === 'symbol') {
-        decoded = decoded.toString();
-        expected = expected.toString();
-      }
-
-      assert.deepStrictEqual(decoded, expected);
-    });
-  });
-}
+const codecs = Object.entries(require('./stub/codecs'));
 
 describe('Codecs', () => {
-  const tests = Object.entries(codecs);
-  for (const [name, type] of tests) {
-    describe(name, () => test(type));
-  }
+  codecs.forEach(([typeName, tests]) => {
+    describe(typeName, () => tests.forEach(({ name, codec, encode, decode }) => {
+      const options = { codecs: [codec] };
+      const encoder = new Encoder(options);
+      const decoder = new Decoder(options);
+
+      it(name, () => {
+        const encoded = encoder.encode(encode);
+        let actual = decoder.decode(Buffer.from(encoded, 'binary'));
+
+        if (typeof decode === 'symbol') {
+          actual = actual.toString();
+          decode = decode.toString();
+        }
+
+        assert.deepStrictEqual(actual, decode);
+      });
+    }));
+  });
 });

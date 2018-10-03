@@ -1,77 +1,39 @@
 'use strict';
 
 const assert = require('assert');
-const { Encoder, errors: { EncodingFailed } } = require('../src');
-const types = require('./stub/types');
+const Encoder = require('../src/Encoder');
+const EncodingFailed = require('../src/errors/EncodingFailed');
 
-function testEncode(type, options) {
-  const encoder = new Encoder(options);
-  type.forEach(({ name, value, bin }) => {
-    it(name, () => {
-      const actual = encoder.encode(value);
-      const expected = Buffer.from(bin).latin1Slice();
+const stubs = Object.entries(require('./stub/types'));
+const stub = (...types) => stubs.filter(([name]) => types.indexOf(name) !== -1);
 
-      assert.deepStrictEqual(actual, expected);
-    });
-  });
-}
-
-function testEncodeMethod(method, type) {
-  const encoder = new Encoder();
-  type.forEach(({ value, bin }) => {
-    it(`encoder.${method}`, () => {
-      const actual = encoder[method](value);
-      const expected = Buffer.from(bin).latin1Slice();
-
-      assert.deepStrictEqual(actual, expected);
-    });
-  });
-}
+const test = (stubs, handle) => stubs.forEach(([typeName, tests]) => {
+  describe(typeName, () => tests.forEach(({ name, value, bin }) => {
+    it(name, () => assert.deepStrictEqual(handle(value), bin.latin1Slice()));
+  }));
+});
 
 describe('Encoder', () => {
   const encoder = new Encoder();
 
-  const unsupportedTypes = [
-    () => {},
-  ];
+  const exclude = ['bigint64', 'float32', 'fixmap', 'map16', 'map32'];
+  const encodeStub = stubs.filter(([name]) => exclude.indexOf(name) === -1);
 
-  unsupportedTypes.forEach(type => {
-    it(`throws when ${typeof type} '${type}' could not encode`, () => {
-      assert.throws(() => encoder.encode(type), EncodingFailed );
-    });
-  });
-
-  const tests = Object.entries(types);
-
-  const skip = [
-    'bigint64',
-    'fixmap map',
-    'map16 map',
-    'map32 map',
-  ];
-
-  const toEncode = tests
-    .filter(([name]) => skip.indexOf(name) === -1);
-
-  for (const [name, type] of toEncode) {
-    let options = {};
-    if (name === 'float32') options = { float32: true };
-    describe(name, () => testEncode(type, options));
-  }
-
-  const methods = new Map([
-    ['null', 'encodeNil'],
-    ['boolean', 'encodeBool'],
-    ['fixmap map', 'encodeMap'],
-    ['map16 map', 'encodeMap'],
-    ['map32 map', 'encodeMap'],
-  ]);
+  test(encodeStub, encoder.encode.bind(encoder));
 
   describe('low level API', () => {
-    for (const [name, type] of tests) {
-      if (methods.has(name)) {
-        describe(name, () => testEncodeMethod(methods.get(name), type));
-      }
-    }
+    test(stub('nil'), encoder.encodeNil.bind(encoder));
+    test(stub('boolean'), encoder.encodeBool.bind(encoder));
+    test(stub('float32'), encoder.encodeFloat32.bind(encoder));
+    test(stub('fixmap', 'map16', 'map32'), encoder.encodeMap.bind(encoder));
+  });
+
+  describe('throws', () => {
+    const unsupportedTypes = [() => {}];
+
+    unsupportedTypes.forEach(type => {
+      it(`${typeof type} '${type}' could not encode`, () =>
+        assert.throws(() => encoder.encode(type), EncodingFailed ));
+    });
   });
 });
