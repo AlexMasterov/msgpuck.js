@@ -62,9 +62,9 @@ describe('Decoder', () => {
 
   const skip = [
     'bigint64',
-    'fixmap map',
-    'map16 map',
-    'map32 map',
+    'fixmap',
+    'map16',
+    'map32',
   ];
 
   const tests = Object.entries(types)

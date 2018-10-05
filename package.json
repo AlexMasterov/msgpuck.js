@@ -35,6 +35,9 @@
     "test-report": "c8 --reporter=html --reporter=text mocha test/*.test.js",
     "coverage": "c8 report --reporter=text-lcov | ./node_modules/.bin/coveralls"
   },
+  "dependencies": {
+    "ascii-chr": "0.1.0"
+  },
   "devDependencies": {
     "c8": "3.2.0",
     "coveralls": "3.0.2",

@@ -1,4 +1,3 @@
-exports.CHR = require('./ascii');
 exports.toFloat = require('./ieee754').toFloat;
 exports.toDouble = require('./ieee754').toDouble;
 exports.utf8toBin = require('./utf8').utf8toBin;

@@ -1,6 +1,6 @@
 'use strict';
 
-const CHR = require('./ascii');
+const CHR = require('ascii-chr');
 
 const fromCodePoint = String.fromCodePoint;
 const CHAR_CONTROL = '\u0080';

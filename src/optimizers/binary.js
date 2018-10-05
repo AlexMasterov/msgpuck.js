@@ -1,6 +1,6 @@
 'use strict';
 
-const CHR = require('./ascii');
+const CHR = require('ascii-chr');
 
 function bufToBin(buf, len) {
   let bin = '';
