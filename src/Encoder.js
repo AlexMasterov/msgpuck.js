@@ -2,7 +2,7 @@
 
 const CHR = require('ascii-chr');
 const { bufToBin, utf8toBin, FastBuffer } = require('./optimizers');
-const { EncodingFailed } = require('./errors');
+const { throwsEncoderHandler } = require('./handlers');
 const Ext = require('./Ext');
 
 const isArray = Array.isArray;
@@ -45,12 +45,14 @@ function encodeInt64(num) {
 class Encoder {
   constructor({
     bufferMinLen=15,
+    handler=throwsEncoderHandler,
     float32=false,
     codecs=false,
   } = {}) {
     this.alloc = 0;
     this.buffer = null;
     this.bufferMinLen = bufferMinLen >>> 0;
+    this.handler = handler;
     this.codecs = codecs;
     if (float32) this.encodeFloat64 = this.encodeFloat32;
   }
@@ -84,7 +86,7 @@ class Encoder {
         return this.encodeObject(value);
 
       default:
-        throw EncodingFailed.withValue(value);
+        return this.handler(value);
     }
   }
 

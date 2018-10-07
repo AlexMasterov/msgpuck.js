@@ -1,7 +1,7 @@
 'use strict';
 
 const { toFloat, toDouble, bufToUtf8, FastBuffer } = require('./optimizers');
-const { throwHandler } = require('./handlers');
+const { throwsDecoderHandler } = require('./handlers');
 const Ext = require('./Ext');
 
 function packCodecs(codecs) {
@@ -20,7 +20,7 @@ function packCodecs(codecs) {
 class Decoder {
   constructor({
     bufferMinLen=6,
-    handler=throwHandler,
+    handler=throwsDecoderHandler,
     codecs=false,
   } = {}) {
     this.buffer = null;

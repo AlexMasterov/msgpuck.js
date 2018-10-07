@@ -2,7 +2,7 @@
 
 const { DecodingFailed, InsufficientData } = require('../errors');
 
-function throwHandler(byte, expectedLength) {
+function throwsDecoderHandler(byte, expectedLength) {
   if (byte === 0xc1) {
     if (this.length === 0) {
       throw DecodingFailed.noData();
@@ -14,4 +14,4 @@ function throwHandler(byte, expectedLength) {
   throw InsufficientData.unexpectedLength(expectedLength, this.length - this.offset);
 }
 
-module.exports = throwHandler;
+module.exports = throwsDecoderHandler;

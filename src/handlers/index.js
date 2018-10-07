@@ -1,1 +1,5 @@
-exports.throwHandler = require('./throwHandler');
+module.exports = {
+  throwsEncoderHandler: require('./throwsEncoderHandler'),
+  throwsDecoderHandler: require('./throwsDecoderHandler'),
+};
+
