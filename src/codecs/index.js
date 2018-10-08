@@ -1,9 +1,11 @@
-exports.BooleanCodec = require('./BooleanCodec');
-exports.ErrorCodec = require('./ErrorCodec');
-exports.MapCodec = require('./MapCodec');
-exports.NumberCodec = require('./NumberCodec');
-exports.RegExpCodec = require('./RegExpCodec');
-exports.SetCodec = require('./SetCodec');
-exports.StringCodec = require('./StringCodec');
-exports.SymbolCodec = require('./SymbolCodec');
-exports.UndefinedCodec = require('./UndefinedCodec');
+module.exports = class Codecs {
+  static get BooleanCodec() { return require('./BooleanCodec'); }
+  static get ErrorCodec() { return require('./ErrorCodec'); }
+  static get MapCodec() { return require('./MapCodec'); }
+  static get NumberCodec() { return require('./NumberCodec'); }
+  static get RegExpCodec() { return require('./RegExpCodec'); }
+  static get SetCodec() { return require('./SetCodec'); }
+  static get StringCodec() { return require('./StringCodec'); }
+  static get SymbolCodec() { return require('./SymbolCodec'); }
+  static get UndefinedCodec() { return require('./UndefinedCodec'); }
+};

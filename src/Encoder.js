@@ -1,7 +1,6 @@
 'use strict';
 
-const CHR = require('ascii-chr');
-const { bufToBin, utf8toBin, FastBuffer } = require('./optimizers');
+const { CHR, FastBuffer, bufToBin, utf8toBin } = require('./optimizers');
 const { throwsEncoderHandler } = require('./handlers');
 const Ext = require('./Ext');
 

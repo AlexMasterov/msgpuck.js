@@ -39,7 +39,7 @@ function toDouble(x, y) {
   return (sign << expt - 1023) * (1 + frac * 2 ** -52);
 }
 
-module.exports = {
-  toFloat,
-  toDouble,
+module.exports = class ieee754 {
+  static get toFloat() { return toFloat; }
+  static get toDouble() { return toDouble; }
 };

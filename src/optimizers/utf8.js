@@ -48,7 +48,7 @@ function bufToUtf8(buf, offset, length) {
   return str;
 }
 
-module.exports = {
-  bufToUtf8,
-  utf8toBin,
+module.exports = class utf8 {
+  static get bufToUtf8() { return bufToUtf8; }
+  static get utf8toBin() { return utf8toBin; }
 };

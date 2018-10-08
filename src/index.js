@@ -1,8 +1,10 @@
-exports.Codec = require('./Codec');
-exports.Decoder = require('./Decoder');
-exports.Encoder = require('./Encoder');
-exports.Ext = require('./Ext');
-exports.MsgPackError = require('./MsgPackError');
+module.exports = class MsgPuck {
+  static get Codec() { return require('./Codec'); }
+  static get Decoder() { return require('./Decoder'); }
+  static get Encoder() { return require('./Encoder'); }
+  static get Ext() { return require('./Ext'); }
+  static get MsgPackError() { return require('./MsgPackError'); }
 
-exports.codecs = require('./codecs');
-exports.errors = require('./errors');
+  static get codecs() { return require('./codecs'); }
+  static get errors() { return require('./errors'); }
+};
