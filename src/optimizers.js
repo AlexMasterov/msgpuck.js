@@ -48,7 +48,9 @@ function bufToUtf8(buf, offset, length) {
   return str;
 }
 
-module.exports = class utf8 {
+module.exports = class Optimizers {
+  static get CHR() { return CHR; }
+  static get FastBuffer() { return Buffer[Symbol.species]; }
   static get bufToUtf8() { return bufToUtf8; }
   static get utf8toBin() { return utf8toBin; }
 };

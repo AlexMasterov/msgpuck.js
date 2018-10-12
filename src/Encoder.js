@@ -1,6 +1,6 @@
 'use strict';
 
-const { CHR, FastBuffer, bufToBin, utf8toBin } = require('./optimizers');
+const { CHR, FastBuffer, utf8toBin } = require('./optimizers');
 const { throwsEncoderHandler } = require('./handlers');
 const Ext = require('./Ext');
 
@@ -231,9 +231,15 @@ class Encoder {
     const len = buf.length;
     if (len === 0) return '\xc4\x00';
 
-    const bin = len < 7
-      ? bufToBin(buf, len)
-      : buf.latin1Slice(0, len);
+    let bin;
+    if (len < 7) {
+      bin = '';
+      for (let i = 0; i < len; i++) {
+        bin += CHR[buf[i]];
+      }
+    } else {
+      bin = buf.latin1Slice(0, len);
+    }
 
     // bin 8
     if (len < 0x100) {
