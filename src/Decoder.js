@@ -1,8 +1,13 @@
 'use strict';
 
-const { toFloat, toDouble, bufToUtf8, FastBuffer } = require('./optimizers');
+const { bufToUtf8, FastBuffer } = require('./optimizers');
 const { throwsDecoderHandler } = require('./handlers');
 const Ext = require('./Ext');
+
+const f32 = new Float32Array(1);
+const f64 = new Float64Array(1);
+const u32f32 = new Uint32Array(f32.buffer);
+const u32f64 = new Uint32Array(f64.buffer);
 
 function packCodecs(codecs) {
   const pack = new Map();
@@ -127,14 +132,14 @@ class Decoder {
       return this.handler(0xca, 4);
     }
 
-    const hi = this.buffer[this.offset] * 0x1000000
-        | this.buffer[this.offset + 1] << 16
-        | this.buffer[this.offset + 2] << 8
-        | this.buffer[this.offset + 3];
+    u32f32[0] = this.buffer[this.offset] * 0x1000000
+      | this.buffer[this.offset + 1] << 16
+      | this.buffer[this.offset + 2] << 8
+      | this.buffer[this.offset + 3];
 
     this.offset += 4;
 
-    return toFloat(hi);
+    return f32[0];
   }
 
   decodeFloat64() {
@@ -142,19 +147,19 @@ class Decoder {
       return this.handler(0xcb, 8);
     }
 
-    const hi = this.buffer[this.offset] * 0x1000000
+    u32f64[1] = this.buffer[this.offset] * 0x1000000
         | this.buffer[this.offset + 1] << 16
         | this.buffer[this.offset + 2] << 8
         | this.buffer[this.offset + 3];
 
-    const lo = this.buffer[this.offset + 4] * 0x1000000
+    u32f64[0] = this.buffer[this.offset + 4] * 0x1000000
         | this.buffer[this.offset + 5] << 16
         | this.buffer[this.offset + 6] << 8
         | this.buffer[this.offset + 7];
 
     this.offset += 8;
 
-    return toDouble(lo, hi);
+    return f64[0];
   }
 
   decodeUint8() {
