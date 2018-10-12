@@ -4,7 +4,7 @@ const assert = require('assert');
 const Encoder = require('../src/Encoder');
 const EncodingFailed = require('../src/errors/EncodingFailed');
 
-const stubs = Object.entries(require('./stub/types'));
+const stubs = Object.entries(require('./stub'));
 const stub = (...types) => stubs.filter(([name]) => types.indexOf(name) !== -1);
 
 const test = (stubs, handle) => stubs.forEach(([typeName, tests]) => {
