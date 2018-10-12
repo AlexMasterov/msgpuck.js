@@ -1,6 +1,6 @@
 {
   "name": "msgpuck",
-  "version": "0.5.7",
+  "version": "0.6.0",
   "description": "A fast and memory-efficient MessagePack serialization library",
   "keywords": [
     "msgpack",
@@ -22,25 +22,32 @@
   "bugs": {
     "url": "https://github.com/AlexMasterov/msgpuck.js/issues"
   },
+  "main": "./src/index.js",
+  "types": "./types/index.d.ts",
+  "scripts": {
+    "test": "nyc mocha test/**/*.test.js",
+    "test-report": "nyc --reporter=html --reporter=text mocha test/**/*.test.js",
+    "coverage": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls"
+  },
   "engines": {
     "node": ">=8.3.0"
   },
-  "main": "./src/index.js",
-  "types": "./types/index.d.ts",
   "directories": {
     "test": "test/"
   },
-  "scripts": {
-    "test": "c8 mocha test/*.test.js",
-    "test-report": "c8 --reporter=html --reporter=text mocha test/*.test.js",
-    "coverage": "c8 report --reporter=text-lcov | ./node_modules/.bin/coveralls"
-  },
   "dependencies": {
-    "ascii-chr": "0.1.0"
+    "ascii-chr": "0.2.1"
   },
   "devDependencies": {
-    "c8": "3.2.0",
+    "nyc": "13.0.1",
     "coveralls": "3.0.2",
     "mocha": "5.2.0"
+  },
+  "nyc": {
+    "cache": false,
+    "reporter": [],
+    "include": [
+      "src/**/*.js"
+    ]
   }
 }

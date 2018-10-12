@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 module.exports = class MsgPuck {
   static get Codec() { return require('./Codec'); }
   static get Decoder() { return require('./Decoder'); }
