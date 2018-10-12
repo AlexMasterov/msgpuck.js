@@ -6,10 +6,10 @@ const Ext = require('./Ext');
 
 const isArray = Array.isArray;
 const ObjectKeys = Object.keys;
-const float32Array = new Float32Array(1);
-const float64Array = new Float64Array(1);
-const Uint8Float32Array = new Uint8Array(float32Array.buffer);
-const Uint8Float64Array = new Uint8Array(float64Array.buffer);
+const f32 = new Float32Array(1);
+const f64 = new Float64Array(1);
+const u8f32 = new Uint8Array(f32.buffer);
+const u8f64 = new Uint8Array(f64.buffer);
 
 const ALLOC_BYTES = 2048;
 
@@ -98,27 +98,27 @@ class Encoder {
   }
 
   encodeFloat32(num) {
-    float32Array[0] = num;
+    f32[0] = num;
 
     return '\xca'
-      + CHR[Uint8Float32Array[3]]
-      + CHR[Uint8Float32Array[2]]
-      + CHR[Uint8Float32Array[1]]
-      + CHR[Uint8Float32Array[0]];
+      + CHR[u8f32[3]]
+      + CHR[u8f32[2]]
+      + CHR[u8f32[1]]
+      + CHR[u8f32[0]];
   }
 
   encodeFloat64(num) {
-    float64Array[0] = num;
+    f64[0] = num;
 
     return '\xcb'
-      + CHR[Uint8Float64Array[7]]
-      + CHR[Uint8Float64Array[6]]
-      + CHR[Uint8Float64Array[5]]
-      + CHR[Uint8Float64Array[4]]
-      + CHR[Uint8Float64Array[3]]
-      + CHR[Uint8Float64Array[2]]
-      + CHR[Uint8Float64Array[1]]
-      + CHR[Uint8Float64Array[0]];
+      + CHR[u8f64[7]]
+      + CHR[u8f64[6]]
+      + CHR[u8f64[5]]
+      + CHR[u8f64[4]]
+      + CHR[u8f64[3]]
+      + CHR[u8f64[2]]
+      + CHR[u8f64[1]]
+      + CHR[u8f64[0]];
   }
 
   encodeInt(num) {
