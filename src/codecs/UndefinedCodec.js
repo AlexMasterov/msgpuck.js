@@ -16,7 +16,7 @@ class UndefinedCodec extends Codec {
   }
 
   decode(decoder, length) {
-    return undefined;
+    return void 0;
   }
 }
 
