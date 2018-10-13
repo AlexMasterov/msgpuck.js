@@ -9,7 +9,7 @@ const MAX_SAFE_INT_OVERFLOW = MAX_SAFE_INT + 1;
 
 const type = (name, value, bin) => ({ name, value, bin });
 
-const types = {
+const stub = {
   'nil': [
     type('null', null, byte(0xc0)),
   ],
@@ -168,4 +168,4 @@ const types = {
   ],
 };
 
-module.exports = types;
+module.exports = stub;
