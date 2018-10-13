@@ -75,8 +75,14 @@ describe('Codecs', () => {
   });
 
   describe('Boolean', () => {
-    it('BooleanCodec', () => {
+    it('BooleanCodec true', () => {
       const value = new Boolean(true);
+      const actual = process(value, BooleanCodec.make());
+      assert.deepStrictEqual(actual, value.valueOf());
+    });
+
+    it('BooleanCodec false', () => {
+      const value = new Boolean(false);
       const actual = process(value, BooleanCodec.make());
       assert.deepStrictEqual(actual, value.valueOf());
     });

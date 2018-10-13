@@ -2,6 +2,8 @@
 
 const Codec = require('../Codec');
 
+const BooleanValueOf = Boolean.prototype.valueOf;
+
 class BooleanCodec extends Codec {
   static get type() {
     return 0x01;
@@ -12,7 +14,7 @@ class BooleanCodec extends Codec {
   }
 
   encode(encoder, value) {
-    return value ? '\xc3' : '\xc2';
+    return BooleanValueOf.call(value) ? '\xc3' : '\xc2';
   }
 
   decode(decoder, length) {
