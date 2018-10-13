@@ -14,8 +14,7 @@ function packCodecs(codecs) {
 
   let codec, i = codecs.length;
   while (i > 0) {
-    i -= 1;
-    codec = codecs[i];
+    codec = codecs[i -= 1];
     pack.set(codec.type, codec);
   }
 
@@ -148,14 +147,14 @@ class Decoder {
     }
 
     u32f64[1] = this.buffer[this.offset] * 0x1000000
-        | this.buffer[this.offset + 1] << 16
-        | this.buffer[this.offset + 2] << 8
-        | this.buffer[this.offset + 3];
+      | this.buffer[this.offset + 1] << 16
+      | this.buffer[this.offset + 2] << 8
+      | this.buffer[this.offset + 3];
 
     u32f64[0] = this.buffer[this.offset + 4] * 0x1000000
-        | this.buffer[this.offset + 5] << 16
-        | this.buffer[this.offset + 6] << 8
-        | this.buffer[this.offset + 7];
+      | this.buffer[this.offset + 5] << 16
+      | this.buffer[this.offset + 6] << 8
+      | this.buffer[this.offset + 7];
 
     this.offset += 8;
 
@@ -321,7 +320,7 @@ class Decoder {
 
     if (this.codecs) {
       const codec = this.codecs.get(type);
-      if (codec !== undefined) {
+      if (codec !== void 0) {
         return codec.decode(this, length);
       }
     }

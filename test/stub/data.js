@@ -19,10 +19,7 @@ const arrN = (value, repeat) => new Array(repeat).fill(value);
 const mapN = (value, repeat) => new Map(arrN(value, repeat).map((k, v) => [String(v), k]));
 const objN = (value, size) => {
   const obj = {};
-  while (size > 0) {
-    size -= 1;
-    obj[size] = value;
-  }
+  while (size > 0) obj[size -= 1] = value;
   return obj;
 };
 
