@@ -5,30 +5,25 @@ language: node_js
 node_js:
   - "8.3"
   - "9"
+  - "10"
 
 matrix:
   include:
-    - node_js: "10"
-      env: COVERAGE_TESTS=true
     - name: "Node.js: nightly"
       node_js: "node"
       env:
-        - NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly
         - NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly
     - name: "Node.js: canary"
       node_js: "node"
       env:
-        - NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/v8-canary
         - NODEJS_ORG_MIRROR=https://nodejs.org/download/v8-canary
 
   allow_failures:
     - node_js: "node"
       env:
-        - NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly
         - NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly
     - node_js: "node"
       env:
-        - NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/v8-canary
         - NODEJS_ORG_MIRROR=https://nodejs.org/download/v8-canary
 
 branches:
@@ -47,4 +42,4 @@ script:
   - npm run test
 
 after_success:
-  - env $COVERAGE_TESTS npm run coverage
+  - npm run coverage
