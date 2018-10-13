@@ -151,7 +151,7 @@ class Encoder {
         return encodeInt64(num);
       }
       // -Infinity
-      return '\xcb\xff\xf0\x00\x00\x00\x00\x00\x00';
+      return '\xd3\xff\xdf\xff\xff\xff\xff\xff\xff';
     }
     // positive fixint
     if (num < 0x80) {
@@ -181,7 +181,7 @@ class Encoder {
       return encodeUint64(num);
     }
     // Infinity
-    return '\xcb\x7f\xf0\x00\x00\x00\x00\x00\x00';
+    return '\xcf\x00\x20\x00\x00\x00\x00\x00\x00';
   }
 
   encodeStr(str) {
