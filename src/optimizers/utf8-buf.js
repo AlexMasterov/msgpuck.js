@@ -1,5 +1,8 @@
 'use strict';
 
+const CHR2 = require('./utf8-chr2');
+
+const fromCharCode = String.fromCharCode;
 const fromCodePoint = String.fromCodePoint;
 
 function bufToUtf8(buf, offset, length) {
@@ -8,9 +11,9 @@ function bufToUtf8(buf, offset, length) {
     c = buf[i];
 
     if (c < 0x80) { // 1 byte
-      str += fromCodePoint(c);
+      str += CHR2[c];
     } else if (c < 0xe0) { // 2 bytes
-      str += fromCodePoint(
+      str += fromCharCode(
         (c & 0x1f) << 6
         | buf[++i] & 0x3f);
     } else { // 3-4 bytes
