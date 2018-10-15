@@ -1,6 +1,6 @@
 {
   "name": "msgpuck",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "A fast and memory-efficient MessagePack serialization library",
   "keywords": [
     "messagepack",
