@@ -1,6 +1,6 @@
 'use strict';
 
-const { bufToUtf8, FastBuffer } = require('./optimizers');
+const { binToUtf8 } = require('utf8-binary');
 const { throwsDecoderHandler } = require('./handlers');
 const Ext = require('./Ext');
 
@@ -8,6 +8,7 @@ const f32 = new Float32Array(1);
 const f64 = new Float64Array(1);
 const u32f32 = new Uint32Array(f32.buffer);
 const u32f64 = new Uint32Array(f64.buffer);
+const FastBuffer = Buffer[Symbol.species];
 
 function packCodecs(codecs) {
   const pack = new Map();
@@ -288,7 +289,7 @@ class Decoder {
     }
 
     return length < this.bufferMinLen
-      ? bufToUtf8(this.buffer, this.offset, this.offset += length)
+      ? binToUtf8(this.buffer, this.offset, this.offset += length)
       : this.buffer.utf8Slice(this.offset, this.offset += length);
   }
 
