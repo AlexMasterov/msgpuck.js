@@ -7,6 +7,9 @@ const MAX_SAFE_INT = Number.MAX_SAFE_INTEGER;
 const MIN_SAFE_INT_OVERFLOW = MIN_SAFE_INT - 1;
 const MAX_SAFE_INT_OVERFLOW = MAX_SAFE_INT + 1;
 
+const MIN_FLOAT32 = 1 / 2 ** (127 - 1);
+const MIN_FLOAT64 = 2 ** -(1023 - 1);
+
 const type = (name, value, bin) => ({ name, value, bin });
 
 const stub = {
@@ -19,6 +22,10 @@ const stub = {
     type('true', true, byte(0xc3)),
   ],
 
+  'float': [
+    type('32 (1.1754943508222875e-38)', MIN_FLOAT32, byte(0xca, 0x00, 0x80, 0x00, 0x00)),
+    type('64 (2.2250738585072014e-308)', MIN_FLOAT64, byte(0xcb, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+  ],
   'float32': [
     type('-Infinity', -Infinity, byte(0xca, 0xff, 0x80, 0x00, 0x00)),
     type('Infinity', Infinity, byte(0xca, 0x7f, 0x80, 0x00, 0x00)),

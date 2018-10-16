@@ -1,4 +1,4 @@
-// Type definitions for msgpuck 0.6.0
+// Type definitions for msgpuck 0.7.0
 // Project: https://github.com/AlexMasterov/msgpuck.js
 // Definitions by: Alex Masterov <https://github.com/AlexMasterov>
 // TypeScript Version: 3.1
@@ -124,9 +124,15 @@ declare module 'msgpuck' {
     public decode(buffer: Buffer): DecodedResult;
   }
 
+  type EncoderFloat = (num: number) => EncodedBinary;
   type CodecOption = ReadonlyArray<Codec> | false;
 
   interface EncoderOption {
+    /**
+     * @default '64'
+     */
+    float?: '32' | '64' | 'auto';
+
     /**
      * @default 15
      */
@@ -140,15 +146,11 @@ declare module 'msgpuck' {
     /**
      * @default false
      */
-    float32?: boolean;
-
-    /**
-     * @default false
-     */
     codecs?: CodecOption;
   }
 
   class Encoder {
+    private encodeFloat: EncoderFloat;
     private alloc: number;
     private buffer: null | Buffer;
     private bufferMinLen: number;
@@ -160,8 +162,6 @@ declare module 'msgpuck' {
     public encode(value: any): EncodedResult;
     public encodeNil(): EncodedBinary;
     public encodeBool(bool: boolean): EncodedBinary;
-    public encodeFloat32(num: number): EncodedBinary;
-    public encodeFloat64(num: number): EncodedBinary;
     public encodeInt(num: number): EncodedBinary;
     public encodeStr(str: string): EncodedBinary;
     public encodeBin(bin: Buffer): EncodedBinary;

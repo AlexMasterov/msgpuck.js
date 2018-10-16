@@ -32,16 +32,22 @@ describe('Encoder', () => {
     assert.deepStrictEqual(encoder.encodeBool(value), expected);
   });
 
-  test('float32')((value, expected) => {
-    const encoder = new Encoder({ float32: true });
+  test('float')((value, expected) => {
+    const encoder = new Encoder({ float: 'auto' });
     assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeFloat32(value), expected);
+    assert.deepStrictEqual(encoder.encodeFloat(value), expected);
+  });
+
+  test('float32')((value, expected) => {
+    const encoder = new Encoder({ float: '32' });
+    assert.deepStrictEqual(encoder.encode(value), expected);
+    assert.deepStrictEqual(encoder.encodeFloat(value), expected);
   });
 
   test('float64')((value, expected) => {
-    const encoder = new Encoder();
+    const encoder = new Encoder({ float: '64' });
     assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeFloat64(value), expected);
+    assert.deepStrictEqual(encoder.encodeFloat(value), expected);
   });
 
   test(

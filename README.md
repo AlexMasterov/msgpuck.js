@@ -39,8 +39,7 @@ A list of all low-level encoder methods:
 encoder.encodeNil();                    // MP nil
 encoder.encodeBool(true);               // MP bool
 encoder.encodeInt(42);                  // MP int
-encoder.encodeFloat32(Math.PI);         // MP float 32
-encoder.encodeFloat64(Math.PI);         // MP float 64
+encoder.encodeFloat(Math.PI);           // MP float
 encoder.encodeStr('foo');               // MP str
 encoder.encodeBin(Buffer.from([0x2a])); // MP bin
 encoder.encodeArray([1, 2]);            // MP array
