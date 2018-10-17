@@ -83,10 +83,14 @@ function encodeInt64(num) {
     + CHR[lo & 0xff];
 }
 
+function selectEncoderFloat(type) {
+  if (type === '64') return encodeFloat64;
+  if (type === '32') return encodeFloat32;
+  return encodeFloat;
+}
+
 module.exports = {
-  encodeFloat,
-  encodeFloat32,
-  encodeFloat64,
-  encodeUint64,
   encodeInt64,
+  encodeUint64,
+  selectEncoderFloat,
 };

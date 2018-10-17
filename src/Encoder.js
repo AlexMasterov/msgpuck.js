@@ -3,26 +3,14 @@
 const CHR = require('ascii-chr');
 const { utf8toBin } = require('utf8-binary');
 const { throwsEncoderHandler } = require('./handlers');
+const { encodeInt64, encodeUint64, selectEncoderFloat } = require('./encoders');
 const Ext = require('./Ext');
-const {
-  encodeFloat,
-  encodeFloat32,
-  encodeFloat64,
-  encodeInt64,
-  encodeUint64,
-} = require('./encoders');
 
 const isArray = Array.isArray;
 const ObjectKeys = Object.keys;
 const FastBuffer = Buffer[Symbol.species];
 
 const ALLOC_BYTES = 2048;
-
-function selectEncoderFloat(type) {
-  if (type === '64') return encodeFloat64;
-  if (type === '32') return encodeFloat32;
-  return encodeFloat;
-}
 
 class Encoder {
   constructor({
