@@ -24,7 +24,7 @@ class Encoder {
     this.alloc = 0;
     this.buffer = null;
     this.bufferMinLen = bufferMinLen >>> 0;
-    this.handler = handler;
+    this.handler = handler.bind(this);
     this.codecs = codecs;
   }
 
@@ -95,11 +95,7 @@ class Encoder {
           + CHR[num & 0xff];
       }
       // int 64
-      if (num > -0x20000000000001) {
-        return encodeInt64(num);
-      }
-      // -Infinity
-      return '\xd3\xff\xdf\xff\xff\xff\xff\xff\xff';
+      return encodeInt64(num);
     }
     // positive fixint
     if (num < 0x80) {
@@ -125,11 +121,7 @@ class Encoder {
         + CHR[num & 0xff];
     }
     // uint 64
-    if (num < 0x20000000000000) {
-      return encodeUint64(num);
-    }
-    // Infinity
-    return '\xcf\x00\x20\x00\x00\x00\x00\x00\x00';
+    return encodeUint64(num);
   }
 
   encodeStr(str) {

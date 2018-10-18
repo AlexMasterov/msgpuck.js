@@ -56,20 +56,27 @@ function encodeFloat64(num) {
 }
 
 function encodeUint64(num) {
-  const hi = num / 0x100000000 >> 0;
-  const lo = num >>> 0;
+  if (num > 0x1fffffffffffff) { // Infinity
+    return '\xcf\x00\x20\x00\x00\x00\x00\x00\x00';
+  }
+
+  const hi = num >>> 11 | 1;
   return '\xcf'
     + CHR[hi >> 24 & 0xff]
     + CHR[hi >> 16 & 0xff]
     + CHR[hi >> 8 & 0xff]
     + CHR[hi & 0xff]
-    + CHR[lo >> 24 & 0xff]
-    + CHR[lo >> 16 & 0xff]
-    + CHR[lo >> 8 & 0xff]
-    + CHR[lo & 0xff];
+    + CHR[num >> 24 & 0xff]
+    + CHR[num >> 16 & 0xff]
+    + CHR[num >> 8 & 0xff]
+    + CHR[num & 0xff];
 }
 
 function encodeInt64(num) {
+  if (num < -0x1fffffffffffff) { // -Infinity
+    return '\xd3\xff\xdf\xff\xff\xff\xff\xff\xff';
+  }
+
   const hi = (num / 0x100000000 >> 0) - 1;
   const lo = num >>> 0;
   return '\xd3'
