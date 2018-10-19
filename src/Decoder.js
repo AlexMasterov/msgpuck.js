@@ -2,6 +2,7 @@
 
 const { binToUtf8 } = require('utf8-binary');
 const { throwsDecoderHandler } = require('./handlers');
+const { getDecoderInt64, getDecoderUint64 } = require('./methods');
 const Ext = require('./Ext');
 
 const f32 = new Float32Array(1);
@@ -28,12 +29,15 @@ class Decoder {
     handler=throwsDecoderHandler,
     codecs=false,
   } = {}) {
+    this.handler = null; // avoid function tracking on the hidden class
+    this.handler = handler.bind(this);
+    this.decodeUint64 = getDecoderUint64();
+    this.decodeInt64 = getDecoderInt64();
+    this.codecs = codecs ? packCodecs(codecs) : false;
     this.buffer = null;
+    this.bufferMinLen = bufferMinLen >>> 0;
     this.offset = 0;
     this.length = 0;
-    this.bufferMinLen = bufferMinLen >>> 0;
-    this.handler = handler.bind(this);
-    this.codecs = codecs ? packCodecs(codecs) : false;
   }
 
   decode(buffer, start=0, end=buffer.length) {
@@ -198,25 +202,6 @@ class Decoder {
     return num;
   }
 
-  decodeUint64() {
-    if (this.length < this.offset + 8) {
-      return this.handler(0xcf, 8);
-    }
-
-    const num = this.buffer[this.offset] * 0x1000000
-      + (this.buffer[this.offset + 1] << 16
-        | this.buffer[this.offset + 2] << 8
-        | this.buffer[this.offset + 3]) * 0x100000000
-      + this.buffer[this.offset + 4] * 0x1000000
-      + (this.buffer[this.offset + 5] << 16
-        | this.buffer[this.offset + 6] << 8
-        | this.buffer[this.offset + 7]);
-
-    this.offset += 8;
-
-    return num;
-  }
-
   decodeInt8() {
     if (this.length < this.offset + 1) {
       return this.handler(0xd0, 1);
@@ -249,25 +234,6 @@ class Decoder {
       | this.buffer[this.offset + 3];
 
     this.offset += 4;
-
-    return num;
-  }
-
-  decodeInt64() {
-    if (this.length < this.offset + 8) {
-      return this.handler(0xd3, 8);
-    }
-
-    const num = (this.buffer[this.offset] << 24
-      | this.buffer[this.offset + 1] << 16
-      | this.buffer[this.offset + 2] << 8
-      | this.buffer[this.offset + 3]) * 0x100000000
-      + this.buffer[this.offset + 4] * 0x1000000
-      + (this.buffer[this.offset + 5] << 16
-        | this.buffer[this.offset + 6] << 8
-        | this.buffer[this.offset + 7]);
-
-    this.offset += 8;
 
     return num;
   }

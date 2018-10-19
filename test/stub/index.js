@@ -1,6 +1,6 @@
 'use strict';
 
-const { byte, byteStrN, strN, byteN, arrN, objN, mapN, ext } = require('./data');
+const { arrN, bint, byte, byteN, byteStrN, ext, mapN, objN, strN } = require('./data');
 
 const MIN_SAFE_INT = Number.MIN_SAFE_INTEGER;
 const MAX_SAFE_INT = Number.MAX_SAFE_INTEGER;
@@ -80,6 +80,14 @@ const stub = {
     type('max (-9007199254740991)', MIN_SAFE_INT, byte(0xd3, 0xff, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01)),
     type('overflow (-9007199254740992)', MIN_SAFE_INT_OVERFLOW, byte(0xd3, 0xff, 0xdf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
   ],
+
+  'bigint': global.BigInt ? [
+    type('s_uint64 overflow (9007199254740993n)', bint('9007199254740993'), byte(0xcf, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01)),
+    type('min uint64 (0n)', bint('0'), byte(0xcf, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+    type('max uint64 (18446744073709551615n)', bint('18446744073709551615'), byte(0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
+    type('s_int64 overflow (-9007199254740993)', bint('-9007199254740993'), byte(0xd3, 0xff, 0xdf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
+    type('min int64 (-9223372036854775808n)', bint('-9223372036854775808'), byte(0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+  ] : [],
 
   'fixstr': [
     type('min (0)', '', byte(0xa0)),

@@ -1,3 +1,4 @@
+'use strict';
 /* istanbul ignore file */
 
 module.exports = class MsgPuck {

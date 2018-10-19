@@ -2,8 +2,8 @@
 
 const CHR = require('ascii-chr');
 const { utf8toBin } = require('utf8-binary');
+const { selectEncoderFloat, getEncoderInt64 } = require('./methods');
 const { throwsEncoderHandler } = require('./handlers');
-const { encodeInt64, encodeUint64, selectEncoderFloat } = require('./encoders');
 const Ext = require('./Ext');
 
 const isArray = Array.isArray;
@@ -12,6 +12,33 @@ const FastBuffer = Buffer[Symbol.species];
 
 const ALLOC_BYTES = 2048;
 
+function encodeUint64(num) {
+  const hi = num >>> 11 | 1;
+  return '\xcf'
+    + CHR[hi >> 24 & 0xff]
+    + CHR[hi >> 16 & 0xff]
+    + CHR[hi >> 8 & 0xff]
+    + CHR[hi & 0xff]
+    + CHR[num >> 24 & 0xff]
+    + CHR[num >> 16 & 0xff]
+    + CHR[num >> 8 & 0xff]
+    + CHR[num & 0xff];
+}
+
+function encodeInt64(num) {
+  const hi = (num / 0x100000000 >> 0) - 1;
+  const lo = num >>> 0;
+  return '\xd3'
+    + CHR[hi >> 24 & 0xff]
+    + CHR[hi >> 16 & 0xff]
+    + CHR[hi >> 8 & 0xff]
+    + CHR[hi & 0xff]
+    + CHR[lo >> 24 & 0xff]
+    + CHR[lo >> 16 & 0xff]
+    + CHR[lo >> 8 & 0xff]
+    + CHR[lo & 0xff];
+}
+
 class Encoder {
   constructor({
     float='64',
@@ -19,13 +46,14 @@ class Encoder {
     handler=throwsEncoderHandler,
     codecs=false,
   } = {}) {
-    this.encodeFloat = null; // avoid function tracking on the hidden class
+    this.handler = null; // avoid function tracking on the hidden class
+    this.handler = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
+    this.encodeBigInt = getEncoderInt64();
+    this.codecs = codecs;
     this.alloc = 0;
     this.buffer = null;
     this.bufferMinLen = bufferMinLen >>> 0;
-    this.handler = handler.bind(this);
-    this.codecs = codecs;
   }
 
   encode(value) {
@@ -55,6 +83,8 @@ class Encoder {
           }
         }
         return this.encodeObject(value);
+      case 'bigint':
+        return this.encodeBigInt(value);
 
       default:
         return this.handler(value);
@@ -94,8 +124,12 @@ class Encoder {
           + CHR[num >> 8 & 0xff]
           + CHR[num & 0xff];
       }
-      // int 64
-      return encodeInt64(num);
+      // s_int 64
+      if (num > -0x20000000000001) {
+        return encodeInt64(num);
+      }
+      // -Infinity
+      return '\xd3\xff\xdf\xff\xff\xff\xff\xff\xff';
     }
     // positive fixint
     if (num < 0x80) {
@@ -120,8 +154,12 @@ class Encoder {
         + CHR[num >> 8 & 0xff]
         + CHR[num & 0xff];
     }
-    // uint 64
-    return encodeUint64(num);
+    // s_uint 64
+    if (num < 0x20000000000000) {
+      return encodeUint64(num);
+    }
+    // Infinity
+    return '\xcf\x00\x20\x00\x00\x00\x00\x00\x00';
   }
 
   encodeStr(str) {

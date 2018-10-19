@@ -39,6 +39,11 @@ describe('Decoder', () => {
     assert.deepStrictEqual(decoder.decode(buffer), expected);
   });
 
+  test('float')((buffer, expected) => {
+    const decoder = new Decoder();
+    assertDeepStrictEqualNode8(decoder.decode(buffer), expected);
+  });
+
   test('float32')((buffer, expected) => {
     const decoder = new Decoder();
     assertDeepStrictEqualNode8(decoder.decode(buffer), expected);
@@ -54,12 +59,12 @@ describe('Decoder', () => {
     'uint8',
     'uint16',
     'uint32',
-    'uint64',
+    (global.BigInt ? 'bigint' : 'uint64'),
     '-fixint',
     'int8',
     'int16',
     'int32',
-    'int64',
+    (global.BigInt ? 'bigint' : 'int64'),
   )((buffer, expected) => {
     const decoder = new Decoder();
     assert.deepStrictEqual(decoder.decode(buffer), expected);

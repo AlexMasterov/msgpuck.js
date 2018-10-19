@@ -7,6 +7,20 @@
 
 A fast and memory-efficient [MessagePack](https://msgpack.org) serialization library.
 
+## Features
+
+- Fully compliant with the latest [MessagePack specification](https://github.com/msgpack/msgpack/blob/master/spec.md#messagepack-specification)
+- Supports low-level methods
+- Supports safe/big 64-bit integers handling
+- Supports custom Extension Types (Serialization Codecs)
+- [Fully tested](https://travis-ci.org/AlexMasterov/msgpuck.js), including V8 JIT optimizations
+
+## Future works (not implemented yet)
+
+- Decoder low-level methods
+- Zero-copy stream handler
+- Web browsers, WebAssembly, Bundler plugins
+
 ## Installation
 
 ```sh
@@ -39,6 +53,7 @@ A list of all low-level encoder methods:
 encoder.encodeNil();                    // MP nil
 encoder.encodeBool(true);               // MP bool
 encoder.encodeInt(42);                  // MP int
+encoder.encodeBigInt(42n);              // MP int64
 encoder.encodeFloat(Math.PI);           // MP float
 encoder.encodeStr('foo');               // MP str
 encoder.encodeBin(Buffer.from([0x2a])); // MP bin
