@@ -69,8 +69,15 @@ describe('Encoder', () => {
 
   test('bigint')((value, expected) => {
     const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encode(value), expected);
     assert.deepStrictEqual(encoder.encodeBigInt(value), expected);
+  });
+
+  test(
+    'u_bigint',
+    'i_bigint',
+  )((value, expected) => {
+    const encoder = new Encoder();
+    assert.deepStrictEqual(encoder.encode(value), expected);
   });
 
   test(

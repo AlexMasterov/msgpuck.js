@@ -59,12 +59,12 @@ describe('Decoder', () => {
     'uint8',
     'uint16',
     'uint32',
-    (global.BigInt ? 'bigint' : 'uint64'),
+    (global.BigInt ? 'u_bigint' : 'uint64'),
     '-fixint',
     'int8',
     'int16',
     'int32',
-    (global.BigInt ? 'bigint' : 'int64'),
+    (global.BigInt ? 'i_bigint' : 'int64'),
   )((buffer, expected) => {
     const decoder = new Decoder();
     assert.deepStrictEqual(decoder.decode(buffer), expected);

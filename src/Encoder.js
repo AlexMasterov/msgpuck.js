@@ -84,7 +84,9 @@ class Encoder {
         }
         return this.encodeObject(value);
       case 'bigint':
-        return this.encodeBigInt(value);
+        return (value > 0xffffffff || value < -0x80000000)
+          ? this.encodeBigInt(value)
+          : this.encodeInt(Number(value));
 
       default:
         return this.handler(value);

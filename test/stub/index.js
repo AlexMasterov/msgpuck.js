@@ -2,14 +2,14 @@
 
 const { arrN, bint, byte, byteN, byteStrN, ext, mapN, objN, strN } = require('./data');
 
+const MIN_FLOAT32 = 1 / 2 ** (127 - 1);
+const MIN_FLOAT64 = 2 ** -(1023 - 1);
 const MIN_SAFE_INT = Number.MIN_SAFE_INTEGER;
 const MAX_SAFE_INT = Number.MAX_SAFE_INTEGER;
 const MIN_SAFE_INT_OVERFLOW = MIN_SAFE_INT - 1;
 const MAX_SAFE_INT_OVERFLOW = MAX_SAFE_INT + 1;
 
-const MIN_FLOAT32 = 1 / 2 ** (127 - 1);
-const MIN_FLOAT64 = 2 ** -(1023 - 1);
-
+const hasBigInt = global.BigInt !== void 0;
 const type = (name, value, bin) => ({ name, value, bin });
 
 const stub = {
@@ -81,12 +81,20 @@ const stub = {
     type('overflow (-9007199254740992)', MIN_SAFE_INT_OVERFLOW, byte(0xd3, 0xff, 0xdf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
   ],
 
-  'bigint': global.BigInt ? [
-    type('s_uint64 overflow (9007199254740993n)', bint('9007199254740993'), byte(0xcf, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01)),
+  'bigint': hasBigInt ? [
     type('min uint64 (0n)', bint('0'), byte(0xcf, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
     type('max uint64 (18446744073709551615n)', bint('18446744073709551615'), byte(0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
-    type('s_int64 overflow (-9007199254740993)', bint('-9007199254740993'), byte(0xd3, 0xff, 0xdf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
-    type('min int64 (-9223372036854775808n)', bint('-9223372036854775808'), byte(0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+    type('max int64 (-9223372036854775808n)', bint('-9223372036854775808'), byte(0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+  ] : [],
+  'u_bigint': hasBigInt ? [
+    type('min (4294967296)', bint('4294967296'), byte(0xcf, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00)),
+    type('s_uint64 overflow (9007199254740993n)', bint('9007199254740993'), byte(0xcf, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01)),
+    type('max (18446744073709551615n)', bint('18446744073709551615'), byte(0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
+  ] : [],
+  'i_bigint': hasBigInt ? [
+    type('min (-2147483649n)', bint('-2147483649'), byte(0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff)),
+    type('s_int64 overflow (-9007199254740993n)', bint('-9007199254740993'), byte(0xd3, 0xff, 0xdf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
+    type('max int64 (-9223372036854775808n)', bint('-9223372036854775808'), byte(0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
   ] : [],
 
   'fixstr': [
