@@ -26,7 +26,7 @@ const objN = (value, size) => {
   return obj;
 };
 
-const ext = (type, value) => new Ext(type, value);
+const ext = (type, bin) => new Ext(type, bin);
 
 module.exports = {
   arrN,

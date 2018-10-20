@@ -1,5 +1,4 @@
 'use strict';
-/* istanbul ignore file */
 
 const Float = require('./float');
 

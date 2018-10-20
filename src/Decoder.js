@@ -81,11 +81,6 @@ class Decoder {
       case 0xc2: return false;
       case 0xc3: return true;
 
-      // bin 8/16/32
-      case 0xc4: return this.decodeBin(this.decodeUint8());
-      case 0xc5: return this.decodeBin(this.decodeUint16());
-      case 0xc6: return this.decodeBin(this.decodeUint32());
-
       // float 32/64
       case 0xca: return this.decodeFloat32();
       case 0xcb: return this.decodeFloat64();
@@ -114,6 +109,11 @@ class Decoder {
       // map 16/32
       case 0xde: return this.decodeMap(this.decodeUint16());
       case 0xdf: return this.decodeMap(this.decodeUint32());
+
+      // bin 8/16/32
+      case 0xc4: return this.decodeBin(this.decodeUint8());
+      case 0xc5: return this.decodeBin(this.decodeUint16());
+      case 0xc6: return this.decodeBin(this.decodeUint32());
 
       // fixext 1/2/4/8/16
       case 0xd4: return this.decodeExt(1);

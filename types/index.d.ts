@@ -94,6 +94,8 @@ declare module 'msgpuck' {
   type EncoderHandler = (value: any) => EncodedResult;
   type DecoderHandler = (byte: number, expectedLength: number) => DecodedResult;
 
+  // type DecodeInt64 = () => number | BigInt;
+
   interface DecoderOption {
     /**
      * @default 6
@@ -112,12 +114,14 @@ declare module 'msgpuck' {
   }
 
   class Decoder {
+    private handler: DecoderHandler;
+    // private decodeUint64: DecodeInt64;
+    // private decodeInt64: DecodeInt64;
+    private codecs: CodecOption;
     private buffer: null | Buffer;
     private offset: number;
     private length: number;
     private bufferMinLen: number;
-    private handler: DecoderHandler;
-    private codecs: CodecOption;
 
     constructor(options?: DecoderOption);
 
@@ -125,6 +129,7 @@ declare module 'msgpuck' {
   }
 
   type EncoderFloat = (num: number) => EncodedBinary;
+  // type EncoderBigInt = (bignum: BigInt) => EncodedBinary;
   type CodecOption = ReadonlyArray<Codec> | false;
 
   interface EncoderOption {
@@ -150,12 +155,13 @@ declare module 'msgpuck' {
   }
 
   class Encoder {
+    private handler: EncoderHandler;
     private encodeFloat: EncoderFloat;
+    // private encodeBigInt: EncoderBigInt;
+    private codecs: CodecOption;
     private alloc: number;
     private buffer: null | Buffer;
     private bufferMinLen: number;
-    private handler: EncoderHandler;
-    private codecs: CodecOption;
 
     constructor(options?: EncoderOption);
 
@@ -163,20 +169,21 @@ declare module 'msgpuck' {
     public encodeNil(): EncodedBinary;
     public encodeBool(bool: boolean): EncodedBinary;
     public encodeInt(num: number): EncodedBinary;
+    // public encodeBigInt(bignum: BigInt): EncodedBinary;
     public encodeStr(str: string): EncodedBinary;
     public encodeBin(bin: Buffer): EncodedBinary;
     public encodeArray(arr: ArrayLike<any>): EncodedBinary;
     public encodeObject(obj: object): EncodedBinary;
     public encodeMap(map: Map<any, any>): EncodedBinary;
-    public encodeExt(type: number, data: EncodedBinary): EncodedBinary;
+    public encodeExt(type: number, bin: EncodedBinary): EncodedBinary;
   }
 
   class Ext {
     readonly type: number;
-    readonly data: EncodedBinary;
+    readonly bin: EncodedBinary;
 
-    public static make(type: number, data: EncodedBinary): Ext;
+    public static make(type: number, bin: EncodedBinary): Ext;
 
-    constructor(type: number, data: EncodedBinary);
+    constructor(type: number, bin: EncodedBinary);
   }
 }

@@ -132,7 +132,7 @@ describe('Encoder', () => {
   )((value, expected) => {
     const encoder = new Encoder();
     assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeExt(value.type, value.data), expected);
+    assert.deepStrictEqual(encoder.encodeExt(value.type, value.bin), expected);
   });
 
   [

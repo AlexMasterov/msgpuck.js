@@ -49,9 +49,9 @@ function decodeBigInt64() {
   return i64[0];
 }
 
-function encodeBigInt(num) {
-  if (num < 0) {
-    i64[0] = num;
+function encodeBigInt(bignum) {
+  if (bignum < 0) {
+    i64[0] = bignum;
 
     return '\xd3'
       + CHR[i8i64[7] & 0xff]
@@ -64,7 +64,7 @@ function encodeBigInt(num) {
       + CHR[i8i64[0] & 0xff];
   }
 
-  u64[0] = num;
+  u64[0] = bignum;
   return '\xcf'
     + CHR[u8u64[7]]
     + CHR[u8u64[6]]

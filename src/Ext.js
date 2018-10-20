@@ -5,16 +5,16 @@ function required(name) {
 }
 
 class Ext {
-  static make(type, data) {
-    return new this(type, data);
+  static make(type, bin) {
+    return new this(type, bin);
   }
 
   constructor(
     type = required('type'),
-    data = required('data')
+    bin = required('bin')
   ) {
     this.type = type;
-    this.data = data;
+    this.bin = bin;
   }
 }
 

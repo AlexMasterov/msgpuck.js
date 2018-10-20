@@ -72,7 +72,7 @@ class Encoder {
         if (isArray(value)) return this.encodeArray(value);
         if (value.constructor === Buffer) return this.encodeBin(value);
         if (value.constructor === Ext) {
-          return this.encodeExt(value.type, value.data);
+          return this.encodeExt(value.type, value.bin);
         }
         if (this.codecs) {
           for (let codec, i = 0; i < this.codecs.length; i++) {
@@ -95,8 +95,8 @@ class Encoder {
     return '\xc0';
   }
 
-  encodeBool(value) {
-    return value ? '\xc3' : '\xc2';
+  encodeBool(bool) {
+    return bool ? '\xc3' : '\xc2';
   }
 
   encodeInt(num) {
@@ -245,15 +245,15 @@ class Encoder {
     const len = arr.length;
     if (len === 0) return '\x90';
 
-    let data;
+    let bin;
     if (len < 0x10) { // fixarray
-      data = CHR[0x90 | len];
+      bin = CHR[0x90 | len];
     } else if (len < 0x10000) { // array 16
-      data = '\xdc'
+      bin = '\xdc'
         + CHR[len >> 8]
         + CHR[len & 0xff];
     } else { // array 32
-      data = '\xdd'
+      bin = '\xdd'
         + CHR[len >> 24]
         + CHR[len >> 16]
         + CHR[len >> 8]
@@ -261,10 +261,10 @@ class Encoder {
     }
 
     for (let i = 0; i < len; i++) {
-      data += this.encode(arr[i]);
+      bin += this.encode(arr[i]);
     }
 
-    return data;
+    return bin;
   }
 
   encodeObject(obj) {
@@ -272,15 +272,15 @@ class Encoder {
     const len = keys.length;
     if (len === 0) return '\x80';
 
-    let data;
+    let bin;
     if (len < 0x10) { // fixmap
-      data = CHR[0x80 | len];
+      bin = CHR[0x80 | len];
     } else if (len < 0x10000) { // map 16
-      data = '\xde'
+      bin = '\xde'
         + CHR[len >> 8]
         + CHR[len & 0xff];
     } else { // map 32
-      data = '\xdf'
+      bin = '\xdf'
         + CHR[len >> 24]
         + CHR[len >> 16]
         + CHR[len >> 8]
@@ -289,26 +289,26 @@ class Encoder {
 
     for (let key, i = 0; i < len; i++) {
       key = keys[i];
-      data += this.encodeStr(key);
-      data += this.encode(obj[key]);
+      bin += this.encodeStr(key);
+      bin += this.encode(obj[key]);
     }
 
-    return data;
+    return bin;
   }
 
   encodeMap(map) {
     const size = map.size;
     if (size === 0) return '\x80';
 
-    let data;
+    let bin;
     if (size < 0x10) { // fixmap
-      data = CHR[0x80 | size];
+      bin = CHR[0x80 | size];
     } else if (size < 0x10000) { // map 16
-      data = '\xde'
+      bin = '\xde'
         + CHR[size >> 8]
         + CHR[size & 0xff];
     } else { // map 32
-      data = '\xdf'
+      bin = '\xdf'
         + CHR[size >> 24]
         + CHR[size >> 16]
         + CHR[size >> 8]
@@ -316,16 +316,16 @@ class Encoder {
     }
 
     for (const [key, value] of map) {
-      data += this.encode(key);
-      data += this.encode(value);
+      bin += this.encode(key);
+      bin += this.encode(value);
     }
 
-    return data;
+    return bin;
   }
 
-  encodeExt(type, data) {
-    const ext = CHR[type & 0x7f] + data;
-    const len = data.length;
+  encodeExt(type, bin) {
+    const ext = CHR[type & 0x7f] + bin;
+    const len = bin.length;
 
     // fixext 1/2/4/8/16
     switch (len) {
