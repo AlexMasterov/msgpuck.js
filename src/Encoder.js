@@ -49,7 +49,7 @@ class Encoder {
     this.handler = null; // avoid function tracking on the hidden class
     this.handler = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
-    this.encodeBigInt = encodeBigInt ? encodeBigInt : this.encodeInt;
+    this.encodeBigInt = encodeBigInt || this.encodeInt;
     this.codecs = codecs;
     this.alloc = 0;
     this.buffer = null;
