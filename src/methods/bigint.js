@@ -9,7 +9,7 @@ const i8i64 = new Int8Array(i64.buffer);
 const u32u64 = new Uint32Array(u64.buffer);
 const u32i64 = new Int32Array(i64.buffer);
 
-function decodeBigUint64() {
+function decodeUint64() {
   if (this.length < this.offset + 8) {
     return this.handler(0xcf, 8);
   }
@@ -29,7 +29,7 @@ function decodeBigUint64() {
   return u64[0];
 }
 
-function decodeBigInt64() {
+function decodeInt64() {
   if (this.length < this.offset + 8) {
     return this.handler(0xd3, 8);
   }
@@ -77,7 +77,7 @@ function encodeBigInt(bignum) {
 }
 
 module.exports = class BigInt64 {
-  static get decodeBigInt64() { return decodeBigInt64; }
-  static get decodeBigUint64() { return decodeBigUint64; }
+  static get decodeUint64() { return decodeUint64; }
+  static get decodeInt64() { return decodeInt64; }
   static get encodeBigInt() { return encodeBigInt; }
 };

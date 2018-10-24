@@ -2,7 +2,7 @@
 
 const { binToUtf8 } = require('utf8-bin');
 const { throwsDecoderHandler } = require('./handlers');
-const { getDecoderInt64, getDecoderUint64 } = require('./methods');
+const { decodeInt64, decodeUint64 } = require('./methods');
 const Ext = require('./Ext');
 
 const f32 = new Float32Array(1);
@@ -31,8 +31,8 @@ class Decoder {
   } = {}) {
     this.handler = null; // avoid function tracking on the hidden class
     this.handler = handler.bind(this);
-    this.decodeUint64 = getDecoderUint64();
-    this.decodeInt64 = getDecoderInt64();
+    this.decodeUint64 = decodeUint64;
+    this.decodeInt64 = decodeInt64;
     this.codecs = codecs ? packCodecs(codecs) : false;
     this.buffer = null;
     this.bufferMinLen = bufferMinLen >>> 0;

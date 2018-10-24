@@ -2,7 +2,7 @@
 
 const CHR = require('ascii-chr');
 const { utf8toBin } = require('utf8-bin');
-const { selectEncoderFloat, getEncoderInt64 } = require('./methods');
+const { selectEncoderFloat, encodeBigInt } = require('./methods');
 const { throwsEncoderHandler } = require('./handlers');
 const Ext = require('./Ext');
 
@@ -49,7 +49,7 @@ class Encoder {
     this.handler = null; // avoid function tracking on the hidden class
     this.handler = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
-    this.encodeBigInt = getEncoderInt64();
+    this.encodeBigInt = encodeBigInt ? encodeBigInt : this.encodeInt;
     this.codecs = codecs;
     this.alloc = 0;
     this.buffer = null;

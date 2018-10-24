@@ -52,8 +52,10 @@ function encodeFloat64(num) {
     + CHR[u8f64[0]];
 }
 
-module.exports = class Float {
-  static get encodeFloat() { return encodeFloat; }
-  static get encodeFloat32() { return encodeFloat32; }
-  static get encodeFloat64() { return encodeFloat64; }
-};
+function selectEncoderFloat(type) {
+  if (type === '64') return encodeFloat64;
+  if (type === '32') return encodeFloat32;
+  return encodeFloat;
+}
+
+module.exports = selectEncoderFloat;
