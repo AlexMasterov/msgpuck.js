@@ -1,7 +1,7 @@
 'use strict';
 
 const CHR = require('ascii-chr');
-const { utf8toBin } = require('utf8-binary');
+const { utf8toBin } = require('utf8-bin');
 const { selectEncoderFloat, getEncoderInt64 } = require('./methods');
 const { throwsEncoderHandler } = require('./handlers');
 const Ext = require('./Ext');

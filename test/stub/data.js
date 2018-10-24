@@ -1,7 +1,7 @@
 'use strict';
 
 const CHR = require('ascii-chr');
-const { utf8toBin } = require('utf8-binary');
+const { utf8toBin } = require('utf8-bin');
 
 const Ext = require('../../src/Ext');
 

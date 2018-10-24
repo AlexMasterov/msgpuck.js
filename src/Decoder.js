@@ -1,6 +1,6 @@
 'use strict';
 
-const { binToUtf8 } = require('utf8-binary');
+const { binToUtf8 } = require('utf8-bin');
 const { throwsDecoderHandler } = require('./handlers');
 const { getDecoderInt64, getDecoderUint64 } = require('./methods');
 const Ext = require('./Ext');

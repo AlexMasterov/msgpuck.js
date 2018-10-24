@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "ascii-chr": "0.2.1",
-    "utf8-binary": "0.2.0"
+    "utf8-bin": "0.2.1"
   },
   "devDependencies": {
     "coveralls": "3.0.2",
