@@ -125,7 +125,7 @@ declare module 'msgpuck' {
 
     constructor(options?: DecoderOption);
 
-    public decode(buffer: Buffer): DecodedResult;
+    public decode(buffer: Buffer, start?: 0, end?: buffer.length): DecodedResult;
   }
 
   type EncoderFloat = (num: number) => EncodedBinary;
