@@ -200,9 +200,9 @@ class Encoder {
     }
     // str 32
     return '\xdb'
-      + CHR[len >> 24]
-      + CHR[len >> 16]
-      + CHR[len >> 8]
+      + CHR[len >> 24 & 0xff]
+      + CHR[len >> 16 & 0xff]
+      + CHR[len >> 8 & 0xff]
       + CHR[len & 0xff]
       + bin;
   }
@@ -236,9 +236,9 @@ class Encoder {
     }
     // bin 32
     return '\xc6'
-      + CHR[len >> 24]
-      + CHR[len >> 16]
-      + CHR[len >> 8]
+      + CHR[len >> 24 & 0xff]
+      + CHR[len >> 16 & 0xff]
+      + CHR[len >> 8 & 0xff]
       + CHR[len & 0xff]
       + bin;
   }
@@ -256,9 +256,9 @@ class Encoder {
         + CHR[len & 0xff];
     } else { // array 32
       bin = '\xdd'
-        + CHR[len >> 24]
-        + CHR[len >> 16]
-        + CHR[len >> 8]
+        + CHR[len >> 24 & 0xff]
+        + CHR[len >> 16 & 0xff]
+        + CHR[len >> 8 & 0xff]
         + CHR[len & 0xff];
     }
 
@@ -283,9 +283,9 @@ class Encoder {
         + CHR[len & 0xff];
     } else { // map 32
       bin = '\xdf'
-        + CHR[len >> 24]
-        + CHR[len >> 16]
-        + CHR[len >> 8]
+        + CHR[len >> 24 & 0xff]
+        + CHR[len >> 16 & 0xff]
+        + CHR[len >> 8 & 0xff]
         + CHR[len & 0xff];
     }
 
@@ -311,9 +311,9 @@ class Encoder {
         + CHR[size & 0xff];
     } else { // map 32
       bin = '\xdf'
-        + CHR[size >> 24]
-        + CHR[size >> 16]
-        + CHR[size >> 8]
+        + CHR[size >> 24 & 0xff]
+        + CHR[size >> 16 & 0xff]
+        + CHR[size >> 8 & 0xff]
         + CHR[size & 0xff];
     }
 
