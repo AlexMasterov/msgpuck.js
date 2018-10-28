@@ -3,7 +3,7 @@
 const assert = require('assert');
 const stub = require('./stub');
 
-const Decoder = require('../src/Decoder');
+const { Decoder } = require('../src');
 const DecodingFailed = require('../src/errors/DecodingFailed');
 const InsufficientData = require('../src/errors/InsufficientData');
 

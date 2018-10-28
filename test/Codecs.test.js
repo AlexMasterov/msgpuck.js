@@ -1,8 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const Encoder = require('../src/Encoder');
-const Decoder = require('../src/Decoder');
+const { Encoder, Decoder } = require('../src');
 const Codec = require('../src/Codec');
 
 const {

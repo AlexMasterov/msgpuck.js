@@ -1,10 +1,8 @@
 'use strict';
 
-const CHR = require('ascii-chr');
+const { CHR, f32, f64 } = require('./binary');
 
 const fround = Math.fround;
-const f32 = new Float32Array(1);
-const f64 = new Float64Array(1);
 const u8f32 = new Uint8Array(f32.buffer);
 const u8f64 = new Uint8Array(f64.buffer);
 

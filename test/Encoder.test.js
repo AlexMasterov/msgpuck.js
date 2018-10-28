@@ -3,7 +3,7 @@
 const assert = require('assert');
 const stub = require('./stub');
 
-const Encoder = require('../src/Encoder');
+const { Encoder } = require('../src');
 const EncodingFailed = require('../src/errors/EncodingFailed');
 
 const testStub = (name, stub) => process =>
