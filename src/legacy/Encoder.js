@@ -7,6 +7,7 @@ const selectEncoderFloat = require('./selectEncoderFloat');
 const Ext = require('../Ext');
 
 const isArray = Array.isArray;
+const isBuffer = Buffer.isBuffer;
 const ObjectKeys = Object.keys;
 
 const Bool = 'boolean';
@@ -49,7 +50,7 @@ class Encoder {
       case Obj:
         if (value === null) return '\xc0';
         if (isArray(value)) return this.encodeArray(value);
-        if (value.constructor === Buffer) return this.encodeBin(value);
+        if (isBuffer(value)) return this.encodeBin(value);
         if (value.constructor === Ext) {
           return this.encodeExt(value.type, value.bin);
         }
