@@ -51,9 +51,7 @@ class Encoder {
         if (value === null) return '\xc0';
         if (isArray(value)) return this.encodeArray(value);
         if (isBuffer(value)) return this.encodeBin(value);
-        if (value.constructor === Ext) {
-          return this.encodeExt(value.type, value.bin);
-        }
+        if (value.constructor == Ext) return this.encodeExt(value.type, value.bin);
         if (this.codecs) {
           for (let codec, i = 0; i < this.codecs.length; i++) {
             codec = this.codecs[i];
