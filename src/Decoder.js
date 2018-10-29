@@ -38,7 +38,8 @@ class Decoder {
       return this.handler(0xc1, 1);
     }
 
-    const byte = this.buffer[this.offset++];
+    const byte = this.buffer[this.offset];
+    this.offset += 1;
 
     if (byte < 0xc0) {
       // positive fixint
@@ -156,7 +157,11 @@ class Decoder {
       return this.handler(0xcc, 1);
     }
 
-    return this.buffer[this.offset++];
+    const num = this.buffer[this.offset];
+
+    this.offset += 1;
+
+    return num;
   }
 
   decodeUint16() {
@@ -212,7 +217,11 @@ class Decoder {
       return this.handler(0xd0, 1);
     }
 
-    return this.buffer[this.offset++] - 0x100;
+    const num = this.buffer[this.offset] - 0x100;
+
+    this.offset += 1;
+
+    return num;
   }
 
   decodeInt16() {
@@ -308,7 +317,8 @@ class Decoder {
       return this.handler(0xc7, length);
     }
 
-    const type = this.buffer[this.offset++];
+    const type = this.buffer[this.offset];
+    this.offset += 1;
 
     if (this.codecs) {
       const codec = this.codecs.get(type);
