@@ -9,6 +9,13 @@ const Ext = require('../Ext');
 const isArray = Array.isArray;
 const ObjectKeys = Object.keys;
 
+const Bool = 'boolean';
+const Num = 'number';
+const Str = 'string';
+const Symb = 'symbol';
+const Obj = 'object';
+const Undef = 'undefined';
+
 const ALLOC_BYTES = 2048;
 
 class Encoder {
@@ -30,16 +37,16 @@ class Encoder {
 
   encode(value) {
     switch (typeof value) {
-      case 'number':
-        return value % 1 === 0 ? this.encodeInt(value) : this.encodeFloat(value);
-      case 'string':
+      case Str:
         return this.encodeStr(value);
-      case 'boolean':
+      case Num:
+        return value % 1 === 0 ? this.encodeInt(value) : this.encodeFloat(value);
+      case Bool:
         return value ? '\xc3' : '\xc2';
-      case 'undefined':
+      case Undef:
         value = { __isUndefined__: true };
-      case 'symbol':
-      case 'object':
+      case Symb:
+      case Obj:
         if (value === null) return '\xc0';
         if (isArray(value)) return this.encodeArray(value);
         if (value.constructor === Buffer) return this.encodeBin(value);
@@ -55,7 +62,7 @@ class Encoder {
           }
         }
         return this.encodeObject(value);
-      
+
       default:
         return this.handler(value);
     }
@@ -140,7 +147,6 @@ class Encoder {
     return '\xcf\x00\x20\x00\x00\x00\x00\x00\x00';
   }
 
-  
   encodeStr(str) {
     let len = str.length, bin = '\xa0';
     if (len === 0) return bin;

@@ -11,6 +11,14 @@ const ObjectKeys = Object.keys;
 const u8u64 = new Uint8Array(u64.buffer);
 const i8i64 = new Int8Array(i64.buffer);
 
+const Bool = 'boolean';
+const Num = 'number';
+const BigNum = 'bigint';
+const Str = 'string';
+const Symb = 'symbol';
+const Obj = 'object';
+const Undef = 'undefined';
+
 const ALLOC_BYTES = 2048;
 
 class Encoder {
@@ -31,16 +39,16 @@ class Encoder {
 
   encode(value) {
     switch (typeof value) {
-      case 'number':
-        return value % 1 === 0 ? this.encodeInt(value) : this.encodeFloat(value);
-      case 'string':
+      case Str:
         return this.encodeStr(value);
-      case 'boolean':
+      case Num:
+        return value % 1 === 0 ? this.encodeInt(value) : this.encodeFloat(value);
+      case Bool:
         return value ? '\xc3' : '\xc2';
-      case 'undefined':
+      case Undef:
         value = { __isUndefined__: true };
-      case 'symbol':
-      case 'object':
+      case Symb:
+      case Obj:
         if (value === null) return '\xc0';
         if (isArray(value)) return this.encodeArray(value);
         if (value.constructor === Buffer) return this.encodeBin(value);
@@ -56,7 +64,7 @@ class Encoder {
           }
         }
         return this.encodeObject(value);
-      case 'bigint':
+      case BigNum:
         return (value > 0xffffffff || value < -0x80000000)
           ? this.encodeBigInt(value)
           : this.encodeInt(Number(value));
