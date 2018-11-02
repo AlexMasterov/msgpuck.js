@@ -1,6 +1,5 @@
 'use strict';
 /* istanbul ignore file */
-
 const isNodeXX = process.version[2] !== '.';
 
 module.exports = class MsgPuck {

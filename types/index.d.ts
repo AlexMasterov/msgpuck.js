@@ -1,4 +1,4 @@
-// Type definitions for msgpuck 0.7.0
+// Type definitions for msgpuck 0.7.6
 // Project: https://github.com/AlexMasterov/msgpuck.js
 // Definitions by: Alex Masterov <https://github.com/AlexMasterov>
 // TypeScript Version: 3.1
@@ -98,7 +98,7 @@ declare module 'msgpuck' {
 
   interface DecoderOption {
     /**
-     * @default 6
+     * @default 15
      */
     bufferMinLen?: number;
 
