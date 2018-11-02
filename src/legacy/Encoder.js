@@ -2,11 +2,12 @@
 
 const { utf8toBin } = require('utf8-bin');
 const { throwsEncoderHandler } = require('../handlers');
-const { CHR, FastBuffer } = require('./binary');
+const { CHR } = require('./binary');
 const selectEncoderFloat = require('./selectEncoderFloat');
 const Ext = require('../Ext');
 
 const isArray = Array.isArray;
+const alloc = Buffer.allocUnsafe;
 const isBuffer = Buffer.isBuffer;
 const ObjectKeys = Object.keys;
 
@@ -155,8 +156,8 @@ class Encoder {
       len = bin.length;
     } else {
       if (len > this.alloc) {
-        this.alloc = ALLOC_BYTES * ((len | ALLOC_BYTES) / 896 >> 0);
-        this.buffer = new FastBuffer(this.alloc);
+        this.alloc = ALLOC_BYTES * (len >>> 10 | 2);
+        this.buffer = alloc(this.alloc);
       }
       len = this.buffer.utf8Write(str, 0);
       bin = this.buffer.latin1Slice(0, len);

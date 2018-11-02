@@ -2,9 +2,10 @@
 
 const { binToUtf8 } = require('utf8-bin');
 const { throwsDecoderHandler } = require('../handlers');
-const { FastBuffer, f32, f64 } = require('./binary');
+const { f32, f64 } = require('./binary');
 const Ext = require('../Ext');
 
+const FastBuffer = Buffer[Symbol.species];
 const u32f32 = new Uint32Array(f32.buffer);
 const u32f64 = new Uint32Array(f64.buffer);
 
