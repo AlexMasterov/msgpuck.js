@@ -43,7 +43,7 @@ class Encoder {
       case Str:
         return this.encodeStr(value);
       case Num:
-        return value % 1 === 0 ? this.encodeInt(value) : this.encodeFloat(value);
+        return (value % 1 === 0) ? this.encodeInt(value) : this.encodeFloat(value);
       case Bool:
         return value ? '\xc3' : '\xc2';
       case Undef:

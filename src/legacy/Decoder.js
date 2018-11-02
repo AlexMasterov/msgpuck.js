@@ -46,14 +46,14 @@ class Decoder {
       }
       // fixmap
       if (byte < 0x90) {
-        return byte === 0x80 ? {} : this.decodeMap(byte & 0xf);
+        return (byte === 0x80) ? {} : this.decodeMap(byte & 0xf);
       }
       // fixarray
       if (byte < 0xa0) {
-        return byte === 0x90 ? [] : this.decodeArray(byte & 0x0f);
+        return (byte === 0x90) ? [] : this.decodeArray(byte & 0x0f);
       }
       // fixstr
-      return byte === 0xa0 ? '' : this.decodeStr(byte & 0x1f);
+      return (byte === 0xa0) ? '' : this.decodeStr(byte & 0x1f);
     }
     // negative fixint
     if (byte > 0xdf) {
@@ -284,7 +284,7 @@ class Decoder {
       return this.handler(0xd9, length);
     }
 
-    return length < this.bufferMinLen
+    return (length < this.bufferMinLen)
       ? binToUtf8(this.buffer, this.offset, this.offset += length)
       : this.buffer.utf8Slice(this.offset, this.offset += length);
   }
