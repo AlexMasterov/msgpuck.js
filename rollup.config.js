@@ -16,10 +16,10 @@ function patchEncoder() {
       // types
         .replace(/[, ]+u64[, ]/, ' ')
         .replace(/[, ]+i64[, ]/, ' ')
-        .replace(/\s+const (u8u64|i8i64|BigNum)[^;]+;/g, '')
+        .replace(/const (u8u64|i8i64|BigNum)(?:[^;]+)/g, '')
       // encodeBigInt => encodeInt
         .replace(/(this.codecs.+);/, 'this.encodeBigInt = this.encodeInt;\r\n    $1')
-        .replace(/\s+case ('bigint'|BigNum):[^;]+;/, '')
+        .replace(/\s+case ('bigint'|BigNum)(?:[^;]+)/, '')
         .replace(/if \(bignum < 0\)[^}]+}\r\n/, '')
         .replace(/\s+encodeBigInt\(bignum\)[^}]+}/, '');
     },
@@ -56,7 +56,7 @@ function patchDecoder() {
       // types
         .replace(/[, ]+u64[, ]+/, ' ')
         .replace(/[, ]+i64[, ]+/, ' ')
-        .replace(/const (u32u64|u32i64).+\r\n/g, '')
+        .replace(/const (u32u64|u32i64)(?:[^;]+)/g, '')
       // decodeUint64
         .replace(/\s+u32u64\[1\][^;]+;\r\n/g, '')
         .replace(/u32u64\[0\][^;]+;\r\n/g, uint64)

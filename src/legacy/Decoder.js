@@ -10,7 +10,7 @@ const u32f64 = new Uint32Array(f64.buffer);
 
 class Decoder {
   constructor({
-    bufferMinLen=6,
+    bufferMinLen=15,
     handler=throwsDecoderHandler,
     codecs=false,
   } = {}) {

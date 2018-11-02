@@ -1,6 +1,6 @@
 {
   "name": "msgpuck",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "A fast and memory-efficient MessagePack serialization library",
   "keywords": [
     "messagepack",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "ascii-chr": "0.2.1",
-    "utf8-bin": "0.2.1"
+    "utf8-bin": "0.2.2"
   },
   "devDependencies": {
     "coveralls": "3.0.2",

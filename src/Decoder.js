@@ -12,7 +12,7 @@ const u32i64 = new Int32Array(i64.buffer);
 
 class Decoder {
   constructor({
-    bufferMinLen=6,
+    bufferMinLen=15,
     handler=throwsDecoderHandler,
     codecs=false,
   } = {}) {
