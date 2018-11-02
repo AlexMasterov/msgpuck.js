@@ -10,7 +10,7 @@ class MapCodec extends Codec {
   }
 
   supports(value) {
-    return value.constructor === Map;
+    return value.constructor == Map;
   }
 
   encode(encoder, value) {

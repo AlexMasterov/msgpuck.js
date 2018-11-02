@@ -8,7 +8,7 @@ class RegExpCodec extends Codec {
   }
 
   supports(value) {
-    return value.constructor === RegExp;
+    return value.constructor == RegExp;
   }
 
   encode(encoder, value) {

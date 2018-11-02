@@ -8,7 +8,7 @@ class SetCodec extends Codec {
   }
 
   supports(value) {
-    return value.constructor === Set;
+    return value.constructor == Set;
   }
 
   encode(encoder, value) {

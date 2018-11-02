@@ -8,7 +8,7 @@ class UndefinedCodec extends Codec {
   }
 
   supports(value) {
-    return value.__isUndefined__ === true;
+    return value.__isUndefined__ == true;
   }
 
   encode(encoder, value) {

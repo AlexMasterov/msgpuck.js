@@ -8,7 +8,7 @@ class NumberCodec extends Codec {
   }
 
   supports(value) {
-    return value.constructor === Number;
+    return value.constructor == Number;
   }
 
   encode(encoder, value) {

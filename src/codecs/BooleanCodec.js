@@ -10,7 +10,7 @@ class BooleanCodec extends Codec {
   }
 
   supports(value) {
-    return value.constructor === Boolean;
+    return value.constructor == Boolean;
   }
 
   encode(encoder, value) {

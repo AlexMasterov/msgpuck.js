@@ -8,7 +8,7 @@ class ErrorCodec extends Codec {
   }
 
   supports(value) {
-    return value.constructor === Error;
+    return value.constructor == Error;
   }
 
   encode(encoder, value) {

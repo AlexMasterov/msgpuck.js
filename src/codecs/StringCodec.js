@@ -8,7 +8,7 @@ class StringCodec extends Codec {
   }
 
   supports(value) {
-    return value.constructor === String;
+    return value.constructor == String;
   }
 
   encode(encoder, value) {
