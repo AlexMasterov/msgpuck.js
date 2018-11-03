@@ -17,9 +17,11 @@ A fast and memory-efficient [MessagePack](https://msgpack.org) serialization lib
 
 ## Future works (not implemented yet)
 
-- Decoder low-level methods
+- Web browsers
 - Zero-copy stream handler
-- Web browsers, WebAssembly, Bundler plugins
+- Improving low-level methods and codecs
+- Customizable encoder and decoder, options to optimize different cases
+- WebAssembly research
 
 ## Installation
 
@@ -44,7 +46,7 @@ const encoder = new Encoder();
 
 ...
 
-encoder.encode(value); // string(encoded values)
+encoder.encode(value); // string(binary)
 ```
 
 A list of all low-level encoder methods:
@@ -64,15 +66,15 @@ encoder.encodeExt(1, '\x2a');           // MP ext
 ```
 
 ### Encoding options
+
 The `Encoder` object supports options for fine-tuning the encoding process (defaults are in bold):
 
-| Name                 | Description                                                |
-| -------------------- | ---------------------------------------------------------- |
-| **float: '64'**      | Forces floats to be encoded as 64-bits MessagePack floats  |
-| float: '32'          | Forces floats to be encoded as 32-bits MessagePack floats  |
-| float: 'auto'        | Detects MessagePack floats type automatically              |
-| bufferMinLen: **15** | The minimum length of the string to use the Buffer         |
-| codecs: **false**    | An array of codecs                                         |
+| Name              | Description                                               |
+| ----------------- | --------------------------------------------------------- |
+| **float: '64'**   | Forces floats to be encoded as 64-bits MessagePack floats |
+| float: '32'       | Forces floats to be encoded as 32-bits MessagePack floats |
+| float: 'auto'     | Detects MessagePack floats type automatically             |
+| codecs: **false** | An array of codecs                                        |
 
 ## Decoding
 
