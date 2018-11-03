@@ -148,8 +148,8 @@ class Encoder {
   }
 
   encodeStr(str) {
-    let len = str.length, bin = '\xa0';
-    if (len === 0) return bin;
+    let len = str.length, bin;
+    if (len === 0) return '\xa0';
 
     if (len < this.bufferMinLen) {
       bin = utf8toBin(str);
