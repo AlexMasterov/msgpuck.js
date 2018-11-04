@@ -18,12 +18,11 @@ const Symb = 'symbol';
 const Obj = 'object';
 const Undef = 'undefined';
 
-const ALLOC_BYTES = 2048;
-
 class Encoder {
   constructor({
     float='64',
     bufferMinLen=15,
+    bufferMinAlloc=2048,
     handler=throwsEncoderHandler,
     codecs=false,
   } = {}) {
@@ -32,9 +31,10 @@ class Encoder {
     this.encodeFloat = selectEncoderFloat(float);
     this.encodeBigInt = this.encodeInt;
     this.codecs = codecs;
-    this.alloc = 0;
     this.buffer = null;
+    this.bufferAlloc = 0;
     this.bufferMinLen = bufferMinLen >>> 0;
+    this.bufferMinAlloc = bufferMinAlloc >>> 0;
   }
 
   encode(value) {
@@ -156,7 +156,7 @@ class Encoder {
       len = bin.length;
     } else {
       if (len > this.alloc) {
-        this.alloc = ALLOC_BYTES * (len >>> 10 | 2);
+        this.alloc = this.bufferMinAlloc * (len >>> 10 | 2);
         this.buffer = alloc(this.alloc);
       }
       len = this.buffer.utf8Write(str, 0);
