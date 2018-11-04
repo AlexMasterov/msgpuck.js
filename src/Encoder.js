@@ -9,7 +9,7 @@ const Ext = require('./Ext');
 const isArray = Array.isArray;
 const alloc = Buffer.allocUnsafe;
 const isBuffer = Buffer.isBuffer;
-const ObjectKeys = Object.keys;
+const objectKeys = Object.keys;
 const u8u64 = new Uint8Array(u64.buffer);
 const i8i64 = new Int8Array(i64.buffer);
 
@@ -182,7 +182,7 @@ class Encoder {
       bin = utf8toBin(str);
       len = bin.length;
     } else {
-      if (len > this.alloc) {
+      if (len > this.bufferAlloc) {
         this.alloc = this.bufferMinAlloc * (len >>> 10 | 2);
         this.buffer = alloc(this.alloc);
       }
@@ -280,7 +280,7 @@ class Encoder {
   }
 
   encodeObject(obj) {
-    const keys = ObjectKeys(obj);
+    const keys = objectKeys(obj);
     const len = keys.length;
     if (len === 0) return '\x80';
 
