@@ -13,10 +13,8 @@ const ObjectKeys = Object.keys;
 
 const Bool = 'boolean';
 const Num = 'number';
-const Str = 'string';
-const Symb = 'symbol';
 const Obj = 'object';
-const Undef = 'undefined';
+const Str = 'string';
 
 class Encoder {
   constructor({
@@ -43,11 +41,6 @@ class Encoder {
         return this.encodeStr(value);
       case Num:
         return (value % 1 === 0) ? this.encodeInt(value) : this.encodeFloat(value);
-      case Bool:
-        return value ? '\xc3' : '\xc2';
-      case Undef:
-        value = { __isUndefined__: true };
-      case Symb:
       case Obj:
         if (value === null) return '\xc0';
         if (isArray(value)) return this.encodeArray(value);
@@ -62,6 +55,8 @@ class Encoder {
           }
         }
         return this.encodeObject(value);
+      case Bool:
+        return value ? '\xc3' : '\xc2';
 
       default:
         return this.handler(value);
