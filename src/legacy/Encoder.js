@@ -46,12 +46,11 @@ class Encoder {
         if (isArray(value)) return this.encodeArray(value);
         if (isBuffer(value)) return this.encodeBin(value);
         if (value.constructor == Ext) return this.encodeExt(value.type, value.bin);
-        if (this.codecs) {
-          for (let codec, i = 0; i < this.codecs.length; i++) {
-            codec = this.codecs[i];
-            if (codec.supports(value)) {
-              return this.encodeExt(codec.type, codec.encode(this, value));
-            }
+        if (this.codecs !== false) {
+          let bin, i = this.codecs.length;
+          while (i > 0) {
+            bin = this.codecs[i -= 1].encode(this, value);
+            if (bin !== null) return bin;
           }
         }
         return this.encodeObject(value);

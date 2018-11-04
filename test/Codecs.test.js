@@ -1,23 +1,21 @@
 'use strict';
 
 const assert = require('assert');
-const { Encoder, Decoder } = require('../src');
-const Codec = require('../src/Codec');
+const { Encoder, Decoder, Codec } = require('../src');
 
 const {
-  BooleanCodec,
-  ErrorCodec,
   MapCodec,
-  NumberCodec,
-  RegExpCodec,
-  SetCodec,
-  StringCodec,
-  SymbolCodec,
-  UndefinedCodec,
+  ScalarObjectCodec,
 } = require('../src/codecs');
 
-function process(value, codec) {
-  const options = { codecs: [codec] };
+const test = (...stubs) => process =>
+  stubs.forEach(({ name, value, expected }) =>
+    it(name, () => process(value, expected)));
+
+const type = (name, value, expected) => ({ name, value, expected });
+
+function process(value, ...codecs) {
+  const options = { codecs };
   const encoder = new Encoder(options);
   const decoder = new Decoder(options);
 
@@ -35,93 +33,24 @@ describe('Codecs', () => {
     });
   });
 
-  describe('undefined', () => {
-    it('UndefinedCodec', () => {
-      const value = undefined;
-      const actual = process(value, UndefinedCodec.make());
-      assert.deepStrictEqual(actual, value);
+  describe('ScalarObjectCodec', () => {
+    test(
+      type('Number', Number(42), 42),
+      type('String', String('xyz'), 'xyz'),
+      type('Boolean (true)', Boolean(true), true),
+      type('Boolean (false)', Boolean(false), false),
+    )((value, expected) => {
+      const actual = process(value, new ScalarObjectCodec());
+      assert.deepStrictEqual(actual, expected);
     });
   });
 
-  describe('Symbol', () => {
-    it('SymbolCodec', () => {
-      const value = Symbol('xyz');
-      const actual = process(value, SymbolCodec.make());
-      assert.deepStrictEqual(actual.toString(), value.toString());
-    });
-
-    it('SymbolCodec for', () => {
-      const value = Symbol('xyz');
-      const actual = process(value, SymbolCodec.withFor());
-      assert.deepStrictEqual(actual.toString(), value.toString());
-    });
-  });
-
-  describe('String', () => {
-    it('StringCodec', () => {
-      const value = new String('xyz');
-      const actual = process(value, StringCodec.make());
-      assert.deepStrictEqual(actual, value.toString());
-    });
-  });
-
-  describe('Number', () => {
-    it('NumberCodec', () => {
-      const value = new Number(42);
-      const actual = process(value, NumberCodec.make());
-      assert.deepStrictEqual(actual, value.valueOf());
-    });
-  });
-
-  describe('Boolean', () => {
-    it('BooleanCodec true', () => {
-      const value = new Boolean(true);
-      const actual = process(value, BooleanCodec.make());
-      assert.deepStrictEqual(actual, value.valueOf());
-    });
-
-    it('BooleanCodec false', () => {
-      const value = new Boolean(false);
-      const actual = process(value, BooleanCodec.make());
-      assert.deepStrictEqual(actual, value.valueOf());
-    });
-  });
-
-  describe('RegExp', () => {
-    it('RegExpCodec', () => {
-      const value = /xyz/;
-      const actual = process(value, RegExpCodec.make());
-      assert.deepStrictEqual(actual, new RegExp(value));
-    });
-
-    it('RegExpCodec /i', () => {
-      const value = /xyz/i;
-      const actual = process(value, RegExpCodec.make());
-      assert.deepStrictEqual(actual, new RegExp(value));
-    });
-  });
-
-  describe('Error', () => {
-    it('ErrorCodec', () => {
-      const value = new Error('xyz', 'Error');
-      const actual = process(value, ErrorCodec.make());
-      assert.deepStrictEqual(actual, value);
-    });
-  });
-
-  describe('Set', () => {
-    it('SetCodec', () => {
-      const value = new Set([['xyz', 42]]);
-      const actual = process(value, SetCodec.make());
-      assert.deepStrictEqual(actual, value);
-    });
-  });
-
-  describe('Map', () => {
-    it('MapCodec', () => {
-      const value = new Map([['xyz', 42]]);
+  describe('MapCodec', () => {
+    test(
+      type('Map', new Map([['xyz', 42]]), new Map([['xyz', 42]])),
+    )((value, expected) => {
       const actual = process(value, MapCodec.make());
-      assert.deepStrictEqual(actual, value);
+      assert.deepStrictEqual(actual, expected);
     });
   });
 });
