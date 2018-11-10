@@ -3,8 +3,8 @@
 const assert = require('assert');
 const stub = require('./stub');
 
-const { Encoder } = require('../src');
-const EncodingFailed = require('../src/errors/EncodingFailed');
+const { Encoder, errors } = require('../');
+const { EncodingFailed } = errors;
 
 const testStub = (name, stub) => process =>
   describe(name, () => stub.forEach(({ name, value, bin }) =>

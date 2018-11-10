@@ -2,7 +2,7 @@
 
 const { utf8toBin } = require('utf8-bin');
 
-const Ext = require('../../src/Ext');
+const { Ext } = require('../../');
 const CHR = String.fromCharCode;
 
 const byte = (...bytes) => Buffer.from(bytes);

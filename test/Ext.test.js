@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const Ext = require('../src/Ext');
+const { Ext } = require('../');
 
 describe('Ext', () => {
   const requireParams = 2;

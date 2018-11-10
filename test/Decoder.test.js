@@ -3,9 +3,8 @@
 const assert = require('assert');
 const stub = require('./stub');
 
-const { Decoder } = require('../src');
-const DecodingFailed = require('../src/errors/DecodingFailed');
-const InsufficientData = require('../src/errors/InsufficientData');
+const { Decoder, errors } = require('../');
+const { DecodingFailed, InsufficientData } = errors;
 
 // assets module v8.x can't compare NaN and exceptions
 const isNode8 = process.version[1] === '8';

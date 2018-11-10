@@ -1,9 +1,9 @@
 'use strict';
 
 const { binToUtf8 } = require('utf8-bin');
-const { throwsDecoderHandler } = require('../handlers');
+const { throwsDecoderHandler } = require('./handlers');
 const { f32, f64 } = require('./binary');
-const Ext = require('../Ext');
+const Ext = require('./Ext');
 
 const FastBuffer = Buffer[Symbol.species];
 const u32f32 = new Uint32Array(f32.buffer);
@@ -204,7 +204,7 @@ class Decoder {
       + (this.buffer[this.offset + 5] << 16
         | this.buffer[this.offset + 6] << 8
         | this.buffer[this.offset + 7]);
-  
+
     this.offset += 8;
 
     return num;
@@ -263,7 +263,7 @@ class Decoder {
       + (this.buffer[this.offset + 5] << 16
         | this.buffer[this.offset + 6] << 8
         | this.buffer[this.offset + 7]);
-  
+
     this.offset += 8;
 
     return num;

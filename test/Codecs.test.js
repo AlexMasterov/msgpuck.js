@@ -1,12 +1,9 @@
 'use strict';
 
 const assert = require('assert');
-const { Encoder, Decoder, Codec } = require('../src');
 
-const {
-  MapCodec,
-  ScalarObjectCodec,
-} = require('../src/codecs');
+const { Encoder, Decoder, Codec, codecs } = require('../');
+const { MapCodec, ScalarObjectCodec } = codecs;
 
 const test = (...stubs) => process =>
   stubs.forEach(({ name, value, expected }) =>

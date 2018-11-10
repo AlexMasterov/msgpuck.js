@@ -22,29 +22,28 @@
   "bugs": {
     "url": "https://github.com/AlexMasterov/msgpuck.js/issues"
   },
-  "main": "./src/index.js",
-  "types": "./types/index.d.ts",
+  "main": "./index.js",
+  "files": [
+    "src/",
+    "dist/",
+    "./index.js"
+  ],
+  "engines": {
+    "node": ">=8.3.0"
+  },
   "scripts": {
-    "build": "rollup -c",
     "test": "nyc mocha test/*.test.js",
     "test-report": "nyc --reporter=html --reporter=text mocha test/*.test.js",
     "coverage": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls"
   },
-  "engines": {
-    "node": ">=8.3.0"
-  },
-  "directories": {
-    "test": "test/"
-  },
   "dependencies": {
-    "ascii-chr": "0.2.1",
-    "utf8-bin": "0.2.2"
+    "ascii-chr": "0.3.0",
+    "utf8-bin": "0.3.1"
   },
   "devDependencies": {
     "coveralls": "3.0.2",
     "mocha": "5.2.0",
-    "nyc": "13.1.0",
-    "rollup": "0.66.6"
+    "nyc": "13.1.0"
   },
   "nyc": {
     "cache": false,

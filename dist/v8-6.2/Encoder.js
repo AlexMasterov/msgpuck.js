@@ -1,14 +1,14 @@
 'use strict';
 
 const { utf8toBin } = require('utf8-bin');
-const { throwsEncoderHandler } = require('../handlers');
+const { throwsEncoderHandler } = require('./handlers');
 const { CHR } = require('./binary');
 const selectEncoderFloat = require('./selectEncoderFloat');
-const Ext = require('../Ext');
+const Ext = require('./Ext');
 
 const isArray = Array.isArray;
-const alloc = Buffer.allocUnsafe;
 const isBuffer = Buffer.isBuffer;
+const alloc = Buffer.allocUnsafe;
 const objectKeys = Object.keys;
 
 const Bool = 'boolean';
