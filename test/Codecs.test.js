@@ -49,7 +49,7 @@ describe('Codecs', () => {
     test(
       type('Map', new Map([['xyz', 42]]), new Map([['xyz', 42]])),
     )((value, expected) => {
-      const actual = process(value, MapCodec.make());
+      const actual = process(value, new MapCodec());
       assert.deepStrictEqual(actual, expected);
     });
   });
