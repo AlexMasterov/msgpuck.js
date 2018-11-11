@@ -150,8 +150,8 @@ class Encoder {
       len = bin.length;
     } else {
       if (len > this.bufferAlloc) {
-        this.alloc = this.bufferMinAlloc * (len >>> 10 | 2);
-        this.buffer = alloc(this.alloc);
+        this.bufferAlloc = this.bufferMinAlloc * (len >>> 10 | 2);
+        this.buffer = alloc(this.bufferAlloc);
       }
       len = this.buffer.utf8Write(str, 0);
       bin = this.buffer.latin1Slice(0, len);
