@@ -1,6 +1,6 @@
 'use strict';
 
-const { CHR, f32, u8 } = require('./binary');
+const { CHR, f32, u8 } = require('../binary');
 
 const fround = Math.fround;
 const u8f32 = new Uint8Array(f32.buffer);

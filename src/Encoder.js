@@ -2,8 +2,8 @@
 
 const { utf8toBin } = require('utf8-bin');
 const { throwsEncoderHandler } = require('./handlers');
+const { selectEncoderFloat, encodeAscii } = require('./encoders');
 const { CHR, u64, i64 } = require('./binary');
-const selectEncoderFloat = require('./selectEncoderFloat');
 const Ext = require('./Ext');
 
 const isArray = Array.isArray;
@@ -22,6 +22,7 @@ const BigNum = 'bigint';
 class Encoder {
   constructor({
     float='64',
+    objectKeys='ascii',
     bufferMinLen=15,
     bufferMinAlloc=2048,
     handler=throwsEncoderHandler,
@@ -30,6 +31,7 @@ class Encoder {
     this.handler = null; // avoid function tracking on the hidden class
     this.handler = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
+    this.encodeObjectKeys = (objectKeys === 'ascii') ? encodeAscii : this.encodeStr;
     this.codecs = codecs;
     this.buffer = null;
     this.bufferAlloc = 0;
@@ -300,7 +302,7 @@ class Encoder {
 
     for (let key, i = 0; i < len; i++) {
       key = keys[i];
-      bin += this.encodeStr(key);
+      bin += this.encodeObjectKeys(key);
       bin += this.encode(obj[key]);
     }
 
