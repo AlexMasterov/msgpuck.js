@@ -144,12 +144,14 @@ describe('Encoder', () => {
 
   [
     () => {},
+    undefined,
+    Symbol('xyz'),
   ].forEach(type => {
     const process = () => {
       const encoder = new Encoder();
       assert.throws(() => encoder.encode(type), EncodingFailed);
     };
 
-    testThrows(`${typeof type} '${type}' could not encode`)(process);
+    testThrows(`Could not encode: ${typeof type}`)(process);
   });
 });
