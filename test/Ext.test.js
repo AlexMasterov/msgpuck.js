@@ -13,6 +13,6 @@ describe('Ext', () => {
   missingParams.forEach(params => {
     const count = requireParams - params.length;
     it(`throws when ${count} parameters is missing`, () =>
-      assert.throws(() => Ext.make(...params), Error));
+      assert.throws(() => new Ext(...params), Error));
   });
 });
