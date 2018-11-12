@@ -1,6 +1,7 @@
 'use strict';
 
 const Codec = require('../Codec');
+const { encodeMapHeader } = require('../encoders');
 
 const objectEntries = Object.entries;
 
@@ -10,9 +11,15 @@ class MapCodec extends Codec {
   }
 
   encode(encoder, value) {
-    return (value.constructor == Map)
-      ? encoder.encodeExt(this.type, encoder.encodeMap(value))
-      : null;
+    if (value.constructor != Map) return null;
+
+    let bin = encodeMapHeader(value.size);
+    for (const [key, val] of value) {
+      bin += encoder.encode(key);
+      bin += encoder.encode(val);
+    }
+
+    return encoder.encodeExt(this.type, bin);
   }
 
   decode(decoder, length) {

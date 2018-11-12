@@ -277,33 +277,6 @@ class Encoder {
     return bin;
   }
 
-  encodeMap(map) {
-    const size = map.size;
-    if (size === 0) return '\x80';
-
-    let bin;
-    if (size < 0x10) { // fixmap
-      bin = CHR[0x80 | size];
-    } else if (size < 0x10000) { // map 16
-      bin = '\xde'
-        + CHR[size >> 8]
-        + CHR[size & 0xff];
-    } else { // map 32
-      bin = '\xdf'
-        + CHR[size >> 24 & 0xff]
-        + CHR[size >> 16 & 0xff]
-        + CHR[size >> 8 & 0xff]
-        + CHR[size & 0xff];
-    }
-
-    for (const [key, value] of map) {
-      bin += this.encode(key);
-      bin += this.encode(value);
-    }
-
-    return bin;
-  }
-
   encodeExt(type, bin) {
     const ext = CHR[type & 0x7f] + bin;
     const len = bin.length;

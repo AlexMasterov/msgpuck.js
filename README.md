@@ -61,7 +61,6 @@ encoder.encodeStr('foo');               // MP str
 encoder.encodeBin(Buffer.from([0x2a])); // MP bin
 encoder.encodeArray([1, 2]);            // MP array
 encoder.encodeObject({ key: 'value' }); // MP map
-encoder.encodeMap(new Map([[1, 2]]);    // MP map
 encoder.encodeExt(1, '\x2a');           // MP ext
 ```
 

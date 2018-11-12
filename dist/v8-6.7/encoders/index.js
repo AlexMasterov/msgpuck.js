@@ -1,7 +1,7 @@
-const selectEncoderFloat = require('./selectEncoderFloat');
-const encodeAscii = require('./encodeAscii');
+'use strict';
 
-module.exports = {
-  selectEncoderFloat,
-  encodeAscii,
+module.exports = class Encoders {
+  static get encodeAscii() { return require('./encodeAscii'); }
+  static get encodeMapHeader() { return require('./encodeMapHeader'); }
+  static get selectEncoderFloat() { return require('./selectEncoderFloat'); }
 };

@@ -123,15 +123,6 @@ describe('Encoder', () => {
   });
 
   test(
-    'fixmap',
-    'map16',
-    'map32',
-  )((value, expected) => {
-    const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encodeMap(value), expected);
-  });
-
-  test(
     'fixext',
     'ext8',
     'ext16',
