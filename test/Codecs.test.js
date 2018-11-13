@@ -1,13 +1,13 @@
 'use strict';
 
-const assert = require('assert');
+const { deepStrictEqual } = require('assert');
 
 const { Encoder, Decoder, Codec, codecs } = require('../');
 const { MapCodec, ScalarObjectCodec } = codecs;
 
-const test = (...stubs) => process =>
+const test = (...stubs) => spec =>
   stubs.forEach(({ name, value, expected }) =>
-    it(name, () => process(value, expected)));
+    it(name, () => spec(value, expected)));
 
 const type = (name, value, expected) => ({ name, value, expected });
 
@@ -30,11 +30,11 @@ describe('Codecs', () => {
       };
 
       const uselessCodec = new UselessCodec(42);
-      assert.deepStrictEqual(UselessCodec.type, Codec.type);
-      assert.deepStrictEqual(uselessCodec.type, 42);
+      deepStrictEqual(UselessCodec.type, Codec.type);
+      deepStrictEqual(uselessCodec.type, 42);
 
       const actual = process({}, uselessCodec);
-      assert.deepStrictEqual(actual, {});
+      deepStrictEqual(actual, {});
     });
   });
 
@@ -44,19 +44,19 @@ describe('Codecs', () => {
       type('String', new String('xyz'), 'xyz'),
       type('Boolean (true)', new Boolean(true), true),
       type('Boolean (false)', new Boolean(false), false),
-      type('default', { default: true }, { default: true }),
+      type('default', { default: true }, { default: true })
     )((value, expected) => {
       const actual = process(value, new ScalarObjectCodec());
-      assert.deepStrictEqual(actual, expected);
+      deepStrictEqual(actual, expected);
     });
   });
 
   describe('MapCodec', () => {
     test(
-      type('Map', new Map([['xyz', 42]]), new Map([['xyz', 42]])),
+      type('Map', new Map([['xyz', 42]]), new Map([['xyz', 42]]))
     )((value, expected) => {
       const actual = process(value, new MapCodec());
-      assert.deepStrictEqual(actual, expected);
+      deepStrictEqual(actual, expected);
     });
   });
 });

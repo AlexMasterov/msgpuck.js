@@ -10,15 +10,9 @@
     "typescript"
   ],
   "license": "MIT",
-  "author": {
-    "name": "Alex Masterov",
-    "email": "alex.masterow@gmail.com"
-  },
+  "author": "Alex Masterov <alex.masterow@gmail.com>",
+  "repository": "AlexMasterov/msgpuck",
   "homepage": "https://github.com/AlexMasterov/msgpuck.js#readme",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/AlexMasterov/msgpuck.js.git"
-  },
   "bugs": {
     "url": "https://github.com/AlexMasterov/msgpuck.js/issues"
   },
@@ -29,12 +23,12 @@
     "./index.js"
   ],
   "engines": {
-    "node": ">=8.3.0"
+    "node": ">=7.0.0"
   },
   "scripts": {
-    "test": "nyc mocha test/*.test.js",
+    "test": "nyc mocha --timeout 0 test/*.test.js",
     "test-report": "nyc --reporter=html --reporter=text mocha test/*.test.js",
-    "coverage": "nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "dependencies": {
     "ascii-chr": "0.3.0",
@@ -46,7 +40,10 @@
     "nyc": "13.1.0"
   },
   "nyc": {
-    "cache": false,
+    "all": false,
+    "cache": true,
+    "sourceMap": true,
+    "instrument": true,
     "reporter": [],
     "include": [
       "src/**/*.js"

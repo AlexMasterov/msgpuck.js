@@ -1,83 +1,73 @@
 'use strict';
 
-const assert = require('assert');
+const { deepStrictEqual, throws } = require('assert');
 const stub = require('./stub');
 
 const { Encoder, errors } = require('../');
 const { EncodingFailed } = errors;
 
-const testStub = (name, stub) => process =>
-  describe(name, () => stub.forEach(({ name, value, bin }) =>
-    it(name, () => process(value, bin.latin1Slice()))
-  ));
-
-const test = (...stubs) => process =>
-  stubs.forEach(type => testStub(type, stub[type])(process));
-
-const testThrows = name => process =>
-  describe('throws', () =>
-    it(name, () => process())
-  );
+const test = (...stubs) => spec => stubs.forEach(name =>
+  describe(name, () => stub[name].forEach(({ name, value, bin }) =>
+    it(name, () => spec(value, bin.latin1Slice()))
+  )));
 
 describe('Encoder', () => {
   test('nil')((value, expected) => {
     const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeNil(), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeNil(), expected);
   });
 
   test('boolean')((value, expected) => {
     const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeBool(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeBool(value), expected);
   });
 
   test('float')((value, expected) => {
     const encoder = new Encoder({ float: 'auto' });
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeFloat(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeFloat(value), expected);
   });
 
   test('float32')((value, expected) => {
     const encoder = new Encoder({ float: '32' });
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeFloat(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeFloat(value), expected);
   });
 
   test('float64')((value, expected) => {
     const encoder = new Encoder({ float: '64' });
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeFloat(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeFloat(value), expected);
   });
 
   test(
-    'fixint',
+    '+fixint',
     'uint8',
     'uint16',
     'uint32',
-    'uint64',
+    'uint64_safe',
     '-fixint',
     'int8',
     'int16',
     'int32',
-    'int64',
+    'int64_safe'
   )((value, expected) => {
     const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeInt(value), expected);
-  });
-
-  test('bigint')((value, expected) => {
-    const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encodeBigInt(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeInt(value), expected);
+    if (global.BigInt) {
+      deepStrictEqual(encoder.encode(BigInt(value)), expected);
+    }
   });
 
   test(
-    'u_bigint',
-    'i_bigint',
+    'uint64',
+    'int64'
   )((value, expected) => {
     const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
   });
 
   test(
@@ -85,64 +75,62 @@ describe('Encoder', () => {
     'str8',
     'str16',
     'str32',
-    'utf8',
+    'utf8'
   )((value, expected) => {
     const encoder = new Encoder({ bufferMinLen: 10 });
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeStr(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeStr(value), expected);
   });
 
   test(
     'bin8',
     'bin16',
-    'bin32',
+    'bin32'
   )((value, expected) => {
     const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeBin(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeBin(value), expected);
   });
 
   test(
     'fixarr',
     'arr16',
-    'arr32',
+    'arr32'
   )((value, expected) => {
     const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeArray(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeArray(value), expected);
   });
 
   test(
     'fixobj',
     'obj16',
-    'obj32',
+    'obj32'
   )((value, expected) => {
     const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeObject(value), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeObject(value), expected);
   });
 
   test(
     'fixext',
     'ext8',
     'ext16',
-    'ext32',
+    'ext32'
   )((value, expected) => {
     const encoder = new Encoder();
-    assert.deepStrictEqual(encoder.encode(value), expected);
-    assert.deepStrictEqual(encoder.encodeExt(value.type, value.bin), expected);
+    deepStrictEqual(encoder.encode(value), expected);
+    deepStrictEqual(encoder.encodeExt(value.type, value.bin), expected);
   });
 
-  [
-    () => {},
-    undefined,
-    Symbol('xyz'),
-  ].forEach(type => {
-    const process = () => {
-      const encoder = new Encoder();
-      assert.throws(() => encoder.encode(type), EncodingFailed);
-    };
-
-    testThrows(`Could not encode: ${typeof type}`)(process);
+  describe('throws', () => {
+    [
+      () => {},
+      undefined,
+      Symbol('xyz'),
+    ].forEach(type =>
+      it(`Could not encode: ${typeof type}`, () =>
+        throws(() => (new Encoder).encode(type), EncodingFailed)
+      ));
   });
 });

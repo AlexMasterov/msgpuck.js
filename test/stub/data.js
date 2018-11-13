@@ -1,22 +1,23 @@
 'use strict';
 
-const { utf8toBin } = require('utf8-bin');
-
 const { Ext } = require('../../');
-const CHR = String.fromCharCode;
 
-const byte = (...bytes) => Buffer.from(bytes);
+function byte() {
+  return Buffer.from(arguments);
+}
+
 const byteN = (value, repeat) => Buffer.allocUnsafe(repeat).fill(value);
 const byteStrN = (value, length) => {
-  let data = '';
-  for (let key, i = 0; i < length; i++) {
-    key = utf8toBin(String(i));
-    data += CHR(key.length | 0xa0) + key + value;
+  let i = 0, key, data = '';
+  while (i < length) {
+    key = String(i);
+    data += String.fromCharCode(key.length | 0xa0) + key + value;
+    i += 1;
   }
   return Buffer.from(data, 'binary');
 };
 
-const bint = global.BigInt ? global.BigInt : Number;
+const ext = (type, bin) => new Ext(type, bin);
 const strN = (value, repeat) => value.repeat(repeat);
 const arrN = (value, repeat) => new Array(repeat).fill(value);
 const mapN = (value, repeat) => new Map(arrN(value, repeat).map((k, v) => [String(v), k]));
@@ -26,11 +27,8 @@ const objN = (value, size) => {
   return obj;
 };
 
-const ext = (type, bin) => new Ext(type, bin);
-
 module.exports = {
   arrN,
-  bint,
   byte,
   byteN,
   byteStrN,

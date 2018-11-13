@@ -1,6 +1,6 @@
 'use strict';
 
-const assert = require('assert');
+const { throws } = require('assert');
 const { Ext } = require('../');
 
 describe('Ext', () => {
@@ -13,6 +13,6 @@ describe('Ext', () => {
   missingParams.forEach(params => {
     const count = requireParams - params.length;
     it(`throws when ${count} parameters is missing`, () =>
-      assert.throws(() => new Ext(...params), Error));
+      throws(() => new Ext(...params), Error));
   });
 });

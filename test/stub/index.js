@@ -1,15 +1,14 @@
 'use strict';
 
-const { arrN, bint, byte, byteN, byteStrN, ext, mapN, objN, strN } = require('./data');
+const { arrN, byte, byteN, byteStrN, ext, mapN, objN, strN } = require('./data');
 
-const MIN_FLOAT32 = 1 / 2 ** (127 - 1);
-const MIN_FLOAT64 = 2 ** -(1023 - 1);
 const MIN_SAFE_INT = Number.MIN_SAFE_INTEGER;
 const MAX_SAFE_INT = Number.MAX_SAFE_INTEGER;
 const MIN_SAFE_INT_OVERFLOW = MIN_SAFE_INT - 1;
 const MAX_SAFE_INT_OVERFLOW = MAX_SAFE_INT + 1;
+const MIN_FLOAT32 = 1.1754943508222875e-38; // 1 / 2 ** (127 - 1);
+const MIN_FLOAT64 = 2.2250738585072014e-308; // 2 ** -(1023 - 1)
 
-const hasBigInt = global.BigInt !== void 0;
 const type = (name, value, bin) => ({ name, value, bin });
 
 const stub = {
@@ -37,65 +36,61 @@ const stub = {
     type('NaN', NaN, byte(0xcb, 0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
   ],
 
-  'fixint': [
-    type('min (0)', 0, byte(0x00)),
-    type('max (127)', 127, byte(0x7f)),
+  '+fixint': [
+    type('0', 0, byte(0x00)),
+    type('127', 127, byte(0x7f)),
   ],
   'uint8': [
-    type('min (128)', 128, byte(0xcc, 0x80)),
-    type('max (255)', 255, byte(0xcc, 0xff)),
+    type('128', 128, byte(0xcc, 0x80)),
+    type('255', 255, byte(0xcc, 0xff)),
   ],
   'uint16': [
-    type('min (256)', 256, byte(0xcd, 0x01, 0x00)),
-    type('max (65535)', 65535, byte(0xcd, 0xff, 0xff)),
+    type('256', 256, byte(0xcd, 0x01, 0x00)),
+    type('65535', 65535, byte(0xcd, 0xff, 0xff)),
   ],
   'uint32': [
-    type('min (65536)', 65536, byte(0xce, 0x00, 0x01, 0x00, 0x00)),
-    type('max (4294967295)', 4294967295, byte(0xce, 0xff, 0xff, 0xff, 0xff)),
+    type('65536', 65536, byte(0xce, 0x00, 0x01, 0x00, 0x00)),
+    type('4294967295', 4294967295, byte(0xce, 0xff, 0xff, 0xff, 0xff)),
   ],
-  'uint64': [
-    type('min (4294967296)', 4294967296, byte(0xcf, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00)),
-    type('max (9007199254740991)', MAX_SAFE_INT, byte(0xcf, 0x00, 0x1f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
-    type('overflow (9007199254740992)', MAX_SAFE_INT_OVERFLOW, byte(0xcf, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+  'uint64_safe': [
+    type('4294967296', 4294967296, byte(0xcf, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00)),
+    type('9007199254740991', MAX_SAFE_INT, byte(0xcf, 0x00, 0x1f, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
+  ],
+  'uint64': global.BigInt ? [
+    type('4294967296', BigInt('4294967296'), byte(0xcf, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00)),
+    type('9007199254740992', BigInt('9007199254740992'), byte(0xcf, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+    type('18446744073709551615', BigInt('18446744073709551615'), byte(0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
+  ] : [
+    type('9007199254740992', MAX_SAFE_INT_OVERFLOW, byte(0xcf, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
   ],
 
   '-fixint': [
-    type('mmin (-1)', -1, byte(0xff)),
-    type('max (-32)', -32, byte(0xe0)),
+    type('-1', -1, byte(0xff)),
+    type('-32', -32, byte(0xe0)),
   ],
   'int8': [
-    type('min (-33)', -33, byte(0xd0, 0xdf)),
-    type('max (-128)', -128, byte(0xd0, 0x80)),
+    type('-33', -33, byte(0xd0, 0xdf)),
+    type('-128', -128, byte(0xd0, 0x80)),
   ],
   'int16': [
-    type('min (-129)', -129, byte(0xd1, 0xff, 0x7f)),
-    type('max (-32768)', -32768, byte(0xd1, 0x80, 0x00)),
+    type('-129', -129, byte(0xd1, 0xff, 0x7f)),
+    type('-32768', -32768, byte(0xd1, 0x80, 0x00)),
   ],
   'int32': [
-    type('min (-32769)', -32769, byte(0xd2, 0xff, 0xff, 0x7f, 0xff)),
-    type('max (-2147483648)', -2147483648, byte(0xd2, 0x80, 0x00, 0x00, 0x00)),
+    type('-32769', -32769, byte(0xd2, 0xff, 0xff, 0x7f, 0xff)),
+    type('-2147483648', -2147483648, byte(0xd2, 0x80, 0x00, 0x00, 0x00)),
   ],
-  'int64': [
-    type('min (-2147483649)', -2147483649, byte(0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff)),
-    type('max (-9007199254740991)', MIN_SAFE_INT, byte(0xd3, 0xff, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01)),
-    type('overflow (-9007199254740992)', MIN_SAFE_INT_OVERFLOW, byte(0xd3, 0xff, 0xdf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
+  'int64_safe': [
+    type('-2147483649', -2147483649, byte(0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff)),
+    type('-9007199254740991', MIN_SAFE_INT, byte(0xd3, 0xff, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01)),
   ],
-
-  'bigint': hasBigInt ? [
-    type('min uint64 (0n)', bint('0'), byte(0xcf, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
-    type('max uint64 (18446744073709551615n)', bint('18446744073709551615'), byte(0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
-    type('max int64 (-9223372036854775808n)', bint('-9223372036854775808'), byte(0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
-  ] : [],
-  'u_bigint': hasBigInt ? [
-    type('min (4294967296)', bint('4294967296'), byte(0xcf, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00)),
-    type('s_uint64 overflow (9007199254740993n)', bint('9007199254740993'), byte(0xcf, 0x00, 0x20, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01)),
-    type('max (18446744073709551615n)', bint('18446744073709551615'), byte(0xcf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
-  ] : [],
-  'i_bigint': hasBigInt ? [
-    type('min (-2147483649n)', bint('-2147483649'), byte(0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff)),
-    type('s_int64 overflow (-9007199254740993n)', bint('-9007199254740993'), byte(0xd3, 0xff, 0xdf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
-    type('max int64 (-9223372036854775808n)', bint('-9223372036854775808'), byte(0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
-  ] : [],
+  'int64': global.BigInt ? [
+    type('-2147483649', BigInt('-2147483649'), byte(0xd3, 0xff, 0xff, 0xff, 0xff, 0x7f, 0xff, 0xff, 0xff)),
+    type('-9007199254740992', BigInt('-9007199254740992'), byte(0xd3, 0xff, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+    type('-9223372036854775808', BigInt('-9223372036854775808'), byte(0xd3, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+  ] : [
+    type('-9007199254740992', MIN_SAFE_INT_OVERFLOW, byte(0xd3, 0xff, 0xdf, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff)),
+  ],
 
   'fixstr': [
     type('min (0)', '', byte(0xa0)),
@@ -161,18 +156,6 @@ const stub = {
     type('min (65536)', objN(1, 65536), Buffer.from([0xdf, 0x00, 0x01, 0x00, 0x00, ...byteStrN('\x01', 65536)])),
   ],
 
-  'fixmap': [
-    type('min (0)', new Map(), byte(0x80)),
-    type('max (15)', mapN(1, 15), Buffer.from([0x8f, ...byteStrN('\x01', 15)])),
-  ],
-  'map16': [
-    type('min (16)', mapN(1, 16), byte(0xde, 0x00, 0x10, ...byteStrN('\x01', 16))),
-    type('min (65535)', mapN(1, 65535), Buffer.from([0xde, 0xff, 0xff, ...byteStrN('\x01', 65535)])),
-  ],
-  'map32': [
-    type('min (65536)', mapN(1, 65536), Buffer.from([0xdf, 0x00, 0x01, 0x00, 0x00, ...byteStrN('\x01', 65536)])),
-  ],
-
   'fixext': [
     type('1', ext(1, '\xc0'), byte(0xd4, 0x01, 0xc0)),
     type('2', ext(1, strN('\xc0', 2)), byte(0xd5, 0x01, ...byteN(0xc0, 2))),
@@ -191,6 +174,18 @@ const stub = {
   'ext32': [
     type('max (65536)', ext(1, strN('\xc0', 65536)), byte(0xc9, 0x00, 0x01, 0x00, 0x00, 0x01, ...byteN(0xc0, 65536))),
   ],
+
+  // 'fixmap': [
+  //   type('min (0)', new Map(), byte(0x80)),
+  //   type('max (15)', mapN(1, 15), byte(0x8f, ...byteStrN('\x01', 15))),
+  // ],
+  // 'map16': [
+  //   type('min (16)', mapN(1, 16), Buffer.from([0xde, 0x00, 0x10, ...byteStrN('\x01', 16)])),
+  //   type('min (65535)', mapN(1, 65535), Buffer.from([0xde, 0xff, 0xff, ...byteStrN('\x01', 65535)])),
+  // ],
+  // 'map32': [
+  //   type('min (65536)', mapN(1, 65536), Buffer.from([0xdf, 0x00, 0x01, 0x00, 0x00, ...byteStrN('\x01', 65536)])),
+  // ],
 };
 
 module.exports = stub;

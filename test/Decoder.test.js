@@ -1,72 +1,70 @@
 'use strict';
 
-const assert = require('assert');
+const { deepStrictEqual, ok, throws } = require('assert');
+// assets module v8.x can't compare NaN and exceptions
+const isNodeX = process.version[2] === '.';
+const assertFloatEqual = (actual, expected) =>
+  isNodeX && Number.isNaN(expected)
+    ? ok(Number.isNaN(actual))
+    : deepStrictEqual(actual, expected);
+
 const stub = require('./stub');
 
 const { Decoder, errors } = require('../');
 const { DecodingFailed, InsufficientData } = errors;
 
-// assets module v8.x can't compare NaN and exceptions
-const isNode8 = process.version[1] === '8';
-const assertDeepStrictEqualNode8 = (actual, expected) =>
-  isNode8 && Number.isNaN(expected)
-    ? assert.ok(Number.isNaN(actual))
-    : assert.deepStrictEqual(actual, expected);
+const test = (...stubs) => spec => stubs.forEach(name =>
+  describe(name, () => stub[name].forEach(({ name, value, bin }) =>
+    it(name, () => spec(bin, value))
+  )));
 
-const testStub = (name, stub) => process =>
-  describe(name, () => stub.forEach(({ name, value, bin: buffer }) =>
-    it(name, () => process(buffer, value))
-  ));
-
-const test = (...stubs) => process =>
-  stubs.forEach(type => testStub(type, stub[type])(process));
-
-const testUnexpectedLength = (...stubs) => process =>
+const testUnexpectedLength = (...stubs) => spec =>
   stubs.forEach(([type, slice]) =>
-    describe(type, () => stub[type].forEach(({ name, bin: buffer }) =>
-      it(name, () => process(buffer.slice(0, slice)))
+    describe(type, () => stub[type].forEach(({ name, bin }) =>
+      it(name, () => spec(bin.slice(0, slice)))
     )));
 
 describe('Decoder', () => {
   test('nil')((buffer, expected) => {
     const decoder = new Decoder();
-    assert.deepStrictEqual(decoder.decode(buffer), expected);
+    deepStrictEqual(decoder.decode(buffer), expected);
   });
 
   test('boolean')((buffer, expected) => {
     const decoder = new Decoder();
-    assert.deepStrictEqual(decoder.decode(buffer), expected);
+    deepStrictEqual(decoder.decode(buffer), expected);
   });
 
   test('float')((buffer, expected) => {
     const decoder = new Decoder();
-    assertDeepStrictEqualNode8(decoder.decode(buffer), expected);
+    assertFloatEqual(decoder.decode(buffer), expected);
   });
 
   test('float32')((buffer, expected) => {
     const decoder = new Decoder();
-    assertDeepStrictEqualNode8(decoder.decode(buffer), expected);
+    const actual = decoder.decode(buffer);
+    assertFloatEqual(decoder.decode(buffer), expected);
   });
 
   test('float64')((buffer, expected) => {
     const decoder = new Decoder();
-    assertDeepStrictEqualNode8(decoder.decode(buffer), expected);
+    assertFloatEqual(decoder.decode(buffer), expected);
   });
 
   test(
-    'fixint',
+    '+fixint',
     'uint8',
     'uint16',
     'uint32',
-    (global.BigInt ? 'u_bigint' : 'uint64'),
+    (global.BigInt ? 'uint64' : 'uint64_safe'),
     '-fixint',
     'int8',
     'int16',
     'int32',
-    (global.BigInt ? 'i_bigint' : 'int64'),
+    (global.BigInt ? 'int64' : 'int64_safe')
   )((buffer, expected) => {
     const decoder = new Decoder();
-    assert.deepStrictEqual(decoder.decode(buffer), expected);
+    deepStrictEqual(decoder.decode(buffer), expected);
   });
 
   test(
@@ -74,60 +72,60 @@ describe('Decoder', () => {
     'str8',
     'str16',
     'str32',
-    'utf8',
+    'utf8'
   )((buffer, expected) => {
     const decoder = new Decoder({ bufferMinLen: 6 });
-    assert.deepStrictEqual(decoder.decode(buffer), expected);
+    deepStrictEqual(decoder.decode(buffer), expected);
   });
 
   test(
     'bin8',
     'bin16',
-    'bin32',
+    'bin32'
   )((buffer, expected) => {
     const decoder = new Decoder();
-    assert.deepStrictEqual(decoder.decode(buffer), expected);
+    deepStrictEqual(decoder.decode(buffer), expected);
   });
 
   test(
     'fixarr',
     'arr16',
-    'arr32',
+    'arr32'
   )((buffer, expected) => {
     const decoder = new Decoder();
-    assert.deepStrictEqual(decoder.decode(buffer), expected);
+    deepStrictEqual(decoder.decode(buffer), expected);
   });
 
   test(
     'fixobj',
     'obj16',
-    'obj32',
+    'obj32'
   )((buffer, expected) => {
     const decoder = new Decoder();
-    assert.deepStrictEqual(decoder.decode(buffer), expected);
+    deepStrictEqual(decoder.decode(buffer), expected);
   });
 
   test(
     'fixext',
     'ext8',
     'ext16',
-    'ext32',
+    'ext32'
   )((buffer, expected) => {
     const decoder = new Decoder();
-    assert.deepStrictEqual(decoder.decode(buffer), expected);
+    deepStrictEqual(decoder.decode(buffer), expected);
   });
 
   describe('throws', () => {
     it('no data', () => {
       const decoder = new Decoder();
       const buffer = Buffer.allocUnsafe(0);
-      assert.throws(() => decoder.decode(buffer), DecodingFailed);
+      throws(() => decoder.decode(buffer), DecodingFailed);
     });
 
     it('decode unknown byte (0xc1)', () => {
       const decoder = new Decoder();
       const buffer = Buffer.from([0xc1]);
-      assert.throws(() => decoder.decode(buffer), DecodingFailed);
+      throws(() => decoder.decode(buffer), DecodingFailed);
     });
 
     testUnexpectedLength(
@@ -153,10 +151,10 @@ describe('Decoder', () => {
       ['fixext', 1],
       ['ext8', 3],
       ['ext16', 4],
-      ['ext32', 6],
-    )(buffer => {
+      ['ext32', 6]
+    )(bin => {
       const decoder = new Decoder();
-      assert.throws(() => decoder.decode(buffer), InsufficientData);
+      throws(() => decoder.decode(bin), InsufficientData);
     });
   });
 });
