@@ -1,6 +1,6 @@
 'use strict';
 
-const MsgPackError = require('../MsgPackError');
+const MsgPackError = require('./MsgPackError');
 
 class DecodingFailed extends MsgPackError {
   static noData() {

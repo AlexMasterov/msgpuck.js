@@ -11,7 +11,7 @@ const assertFloatEqual = (actual, expected) =>
 const stub = require('./stub');
 
 const { Decoder, errors } = require('../');
-const { DecodingFailed, InsufficientData } = errors;
+const { DecodingFailed, InsufficientData, MsgPackError } = errors;
 
 const test = (...stubs) => spec => stubs.forEach(name =>
   describe(name, () => stub[name].forEach(({ name, value, bin }) =>
@@ -125,16 +125,21 @@ describe('Decoder', () => {
   });
 
   describe('throws', () => {
+    const isValidErrors = (...errors) =>
+      throwsError => errors.every(err => throwsError instanceof err);
+
     it('no data', () => {
       const decoder = new Decoder();
       const buffer = Buffer.allocUnsafe(0);
-      throws(() => decoder.decode(buffer), DecodingFailed);
+      throws(() => decoder.decode(buffer),
+        isValidErrors(DecodingFailed, MsgPackError));
     });
 
     it('decode unknown byte (0xc1)', () => {
       const decoder = new Decoder();
       const buffer = Buffer.from([0xc1]);
-      throws(() => decoder.decode(buffer), DecodingFailed);
+      throws(() => decoder.decode(buffer),
+        isValidErrors(DecodingFailed, MsgPackError));
     });
 
     testUnexpectedLength(
@@ -163,7 +168,8 @@ describe('Decoder', () => {
       ['ext32', 6]
     )(bin => {
       const decoder = new Decoder();
-      throws(() => decoder.decode(bin), InsufficientData);
+      throws(() => decoder.decode(bin),
+        isValidErrors(InsufficientData, DecodingFailed, MsgPackError));
     });
   });
 });

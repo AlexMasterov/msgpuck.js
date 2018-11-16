@@ -4,7 +4,7 @@ const { deepStrictEqual, throws } = require('assert');
 const stub = require('./stub');
 
 const { Encoder, errors } = require('../');
-const { EncodingFailed } = errors;
+const { EncodingFailed, MsgPackError } = errors;
 
 const test = (...stubs) => spec => stubs.forEach(name =>
   describe(name, () => stub[name].forEach(({ name, value, bin }) =>
@@ -129,13 +129,17 @@ describe('Encoder', () => {
   });
 
   describe('throws', () => {
+    const isValidErrors = (...errors) =>
+      throwsError => errors.every(err => throwsError instanceof err);
+
     [
       () => {},
       undefined,
       Symbol('xyz')
     ].forEach(type =>
       it(`Could not encode: ${typeof type}`, () =>
-        throws(() => (new Encoder).encode(type), EncodingFailed)
+        throws(() => (new Encoder).encode(type),
+          isValidErrors(EncodingFailed, MsgPackError))
       ));
   });
 });
