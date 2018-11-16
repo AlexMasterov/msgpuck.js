@@ -28,8 +28,8 @@ class Encoder {
     this.handler = null; // avoid function tracking on the hidden class
     this.handler = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
-    this.encodeObjectKeys = (objectKeys === 'ascii') ? encodeAscii : this.encodeStr;
     this.encodeBigInt = this.encodeInt;
+    this.encodeObjectKeys = (objectKeys === 'ascii') ? encodeAscii : this.encodeStr;
     this.codecs = codecs;
     this.buffer = null;
     this.bufferAlloc = 0;
@@ -97,7 +97,7 @@ class Encoder {
           + CHR[num >> 8 & 0xff]
           + CHR[num & 0xff];
       }
-      // s_int 64
+      // int 64 safe
       if (num > -0x20000000000001) {
         return '\xd3'
           + encodeInt64(
@@ -106,7 +106,7 @@ class Encoder {
           );
       }
       // -Infinity
-      return '\xd3\xff\xdf\xff\xff\xff\xff\xff\xff';
+      return '\xcb\xff\xf0\x00\x00\x00\x00\x00\x00';
     }
     // positive fixint
     if (num < 0x80) {
@@ -131,7 +131,7 @@ class Encoder {
         + CHR[num >> 8 & 0xff]
         + CHR[num & 0xff];
     }
-    // s_uint 64
+    // uint 64 safe
     if (num < 0x20000000000000) {
       return '\xcf'
         + encodeInt64(
@@ -140,7 +140,7 @@ class Encoder {
         );
     }
     // Infinity
-    return '\xcf\x00\x20\x00\x00\x00\x00\x00\x00';
+    return '\xcb\x7f\xf0\x00\x00\x00\x00\x00\x00';
   }
 
   encodeStr(str) {

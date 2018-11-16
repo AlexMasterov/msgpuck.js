@@ -68,6 +68,15 @@ describe('Decoder', () => {
   });
 
   test(
+    'uint64_safe_overflow',
+    'int64_safe_overflow'
+  )((buffer, expected) => {
+    const decoder = new Decoder();
+    const actual = decoder.decode(buffer);
+    deepStrictEqual(Number.isFinite(actual), false);
+  });
+
+  test(
     'fixstr',
     'str8',
     'str16',

@@ -42,7 +42,7 @@ describe('Encoder', () => {
     deepStrictEqual(encoder.encodeFloat(value), expected);
   });
 
-  test(
+  const integers = [
     '+fixint',
     'uint8',
     'uint16',
@@ -52,23 +52,28 @@ describe('Encoder', () => {
     'int8',
     'int16',
     'int32',
-    'int64_safe'
+    'int64_safe',
+  ];
+
+  test(
+    ...integers,
+    'uint64_safe_overflow',
+    'int64_safe_overflow'
   )((value, expected) => {
     const encoder = new Encoder();
     deepStrictEqual(encoder.encode(value), expected);
     deepStrictEqual(encoder.encodeInt(value), expected);
-    if (global.BigInt) {
-      deepStrictEqual(encoder.encode(BigInt(value)), expected);
-    }
   });
 
-  test(
-    'uint64',
-    'int64'
-  )((value, expected) => {
-    const encoder = new Encoder();
-    deepStrictEqual(encoder.encode(value), expected);
-  });
+  global.BigInt &&
+    test(
+      ...integers,
+      'uint64',
+      'int64'
+    )((value, expected) => {
+      const encoder = new Encoder();
+      deepStrictEqual(encoder.encode(BigInt(value)), expected);
+    });
 
   test(
     'fixstr',
@@ -127,7 +132,7 @@ describe('Encoder', () => {
     [
       () => {},
       undefined,
-      Symbol('xyz'),
+      Symbol('xyz')
     ].forEach(type =>
       it(`Could not encode: ${typeof type}`, () =>
         throws(() => (new Encoder).encode(type), EncodingFailed)
