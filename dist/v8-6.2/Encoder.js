@@ -2,7 +2,7 @@
 
 const { utf8toBin } = require('utf8-bin');
 const { throwsEncoderHandler } = require('./handlers');
-const { selectEncoderFloat, encodeAscii } = require('./encoders');
+const { encodeAscii, encodeInt64, selectEncoderFloat } = require('./encoders');
 const { CHR } = require('./binary');
 const Ext = require('./Ext');
 
@@ -310,17 +310,6 @@ class Encoder {
       + CHR[len & 0xff]
       + ext;
   }
-}
-
-function encodeInt64(hi, lo) {
-  return CHR[hi >> 24 & 0xff]
-    + CHR[hi >> 16 & 0xff]
-    + CHR[hi >> 8 & 0xff]
-    + CHR[hi & 0xff]
-    + CHR[lo >> 24 & 0xff]
-    + CHR[lo >> 16 & 0xff]
-    + CHR[lo >> 8 & 0xff]
-    + CHR[lo & 0xff];
 }
 
 module.exports = Encoder;
