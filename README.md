@@ -11,7 +11,7 @@ A fast and memory-efficient [MessagePack](https://msgpack.org) serialization lib
 
 - Fully compliant with the latest [MessagePack specification](https://github.com/msgpack/msgpack/blob/master/spec.md#messagepack-specification)
 - Supports low-level methods
-- Supports safe/big 64-bit integers handling
+- Supports safe/big/custom 64-bit integers handling
 - Supports custom Extension Types (Serialization Codecs)
 - [Fully tested](https://travis-ci.org/AlexMasterov/msgpuck.js), including V8 JIT optimizations
 
