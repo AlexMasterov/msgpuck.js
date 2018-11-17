@@ -18,15 +18,14 @@ const Str = 'string';
 
 class Encoder {
   constructor({
+    handler=throwsEncoderHandler,
     float='64',
     objectKeys='ascii',
+    codecs=false,
     bufferMinLen=15,
     bufferMinAlloc=2048,
-    handler=throwsEncoderHandler,
-    codecs=false,
   } = {}) {
-    this.handler = null; // avoid function tracking on the hidden class
-    this.handler = handler.bind(this);
+    this.unsupportedType = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
     this.encodeBigInt = this.encodeInt;
     this.encodeObjectKeys = (objectKeys === 'ascii') ? encodeAscii : this.encodeStr;
@@ -60,7 +59,7 @@ class Encoder {
         return value ? '\xc3' : '\xc2';
 
       default:
-        return this.handler(value);
+        return this.unsupportedType(value);
     }
   }
 

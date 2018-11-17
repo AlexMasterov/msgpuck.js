@@ -21,15 +21,14 @@ const BigNum = 'bigint';
 
 class Encoder {
   constructor({
+    handler=throwsEncoderHandler,
     float='64',
     objectKeys='ascii',
+    codecs=false,
     bufferMinLen=15,
     bufferMinAlloc=2048,
-    handler=throwsEncoderHandler,
-    codecs=false,
   } = {}) {
-    this.handler = null; // avoid function tracking on the hidden class
-    this.handler = handler.bind(this);
+    this.unsupportedType = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
     this.encodeObjectKeys = (objectKeys === 'ascii') ? encodeAscii : this.encodeStr;
     this.codecs = codecs;
@@ -66,7 +65,7 @@ class Encoder {
           : this.encodeInt(Number(value));
 
       default:
-        return this.handler(value);
+        return this.unsupportedType(value);
     }
   }
 
