@@ -63,7 +63,7 @@ describe('Decoder throws', () => {
       type('fixext', 1),
       type('ext8', 3),
       type('ext16', 4),
-      type('ext32', 6),
+      type('ext32', 6)
     )(buffer => {
       const decoder = new Decoder();
       throws(() => decoder.decode(buffer),
