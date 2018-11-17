@@ -13,12 +13,11 @@ const u32i64 = new Int32Array(i64.buffer);
 
 class Decoder {
   constructor({
-    bufferMinLen=15,
-    handler=throwsDecoderHandler,
+    lengthHandler=throwsDecoderHandler,
     codecs=false,
+    bufferMinLen=15,
   } = {}) {
-    this.handler = null; // avoid function tracking on the hidden class
-    this.handler = handler.bind(this);
+    this.unexpectedLength = lengthHandler.bind(this);
     this.codecs = codecs ? packCodecs(codecs) : false;
     this.buffer = null;
     this.bufferMinLen = bufferMinLen >>> 0;
@@ -36,7 +35,7 @@ class Decoder {
 
   parse() {
     if (this.length < this.offset + 1) {
-      return this.handler(0xc1, 1);
+      return this.unexpectedLength(1);
     }
 
     const byte = this.buffer[this.offset];
@@ -114,13 +113,13 @@ class Decoder {
       case 0xc8: return this.decodeExt(this.decodeUint16());
       case 0xc9: return this.decodeExt(this.decodeUint32());
 
-      default: return this.handler(0xc1, 0);
+      default: return this.unexpectedLength(0);
     }
   }
 
   decodeFloat32() {
     if (this.length < this.offset + 4) {
-      return this.handler(0xca, 4);
+      return this.unexpectedLength(4);
     }
 
     u32f32[0] = this.buffer[this.offset] * 0x1000000
@@ -135,7 +134,7 @@ class Decoder {
 
   decodeFloat64() {
     if (this.length < this.offset + 8) {
-      return this.handler(0xcb, 8);
+      return this.unexpectedLength(8);
     }
 
     u32f64[1] = this.buffer[this.offset] * 0x1000000
@@ -155,7 +154,7 @@ class Decoder {
 
   decodeUint8() {
     if (this.length < this.offset + 1) {
-      return this.handler(0xcc, 1);
+      return this.unexpectedLength(1);
     }
 
     const num = this.buffer[this.offset];
@@ -167,7 +166,7 @@ class Decoder {
 
   decodeUint16() {
     if (this.length < this.offset + 2) {
-      return this.handler(0xcd, 2);
+      return this.unexpectedLength(2);
     }
 
     const num = this.buffer[this.offset] << 8
@@ -180,7 +179,7 @@ class Decoder {
 
   decodeUint32() {
     if (this.length < this.offset + 4) {
-      return this.handler(0xce, 4);
+      return this.unexpectedLength(4);
     }
 
     const num = this.buffer[this.offset] * 0x1000000
@@ -195,7 +194,7 @@ class Decoder {
 
   decodeUint64() {
     if (this.length < this.offset + 8) {
-      return this.handler(0xcf, 8);
+      return this.unexpectedLength(8);
     }
 
     u32u64[1] = this.buffer[this.offset] << 24
@@ -215,7 +214,7 @@ class Decoder {
 
   decodeInt8() {
     if (this.length < this.offset + 1) {
-      return this.handler(0xd0, 1);
+      return this.unexpectedLength(1);
     }
 
     const num = this.buffer[this.offset] - 0x100;
@@ -227,7 +226,7 @@ class Decoder {
 
   decodeInt16() {
     if (this.length < this.offset + 2) {
-      return this.handler(0xd2, 2);
+      return this.unexpectedLength(2);
     }
 
     const num = (this.buffer[this.offset] << 8
@@ -240,7 +239,7 @@ class Decoder {
 
   decodeInt32() {
     if (this.length < this.offset + 4) {
-      return this.handler(0xd2, 4);
+      return this.unexpectedLength(4);
     }
 
     const num = this.buffer[this.offset] << 24
@@ -255,7 +254,7 @@ class Decoder {
 
   decodeInt64() {
     if (this.length < this.offset + 8) {
-      return this.handler(0xd3, 8);
+      return this.unexpectedLength(8);
     }
 
     u32i64[1] = this.buffer[this.offset] << 24
@@ -275,7 +274,7 @@ class Decoder {
 
   decodeBin(length) {
     if (this.length < this.offset + length) {
-      return this.handler(0xc4, length);
+      return this.unexpectedLength(length);
     }
 
     const start = this.buffer.byteOffset + this.offset;
@@ -286,7 +285,7 @@ class Decoder {
 
   decodeStr(length) {
     if (this.length < this.offset + length) {
-      return this.handler(0xd9, length);
+      return this.unexpectedLength(length);
     }
 
     return (length < this.bufferMinLen)
@@ -315,7 +314,7 @@ class Decoder {
 
   decodeExt(length) {
     if (this.length < this.offset + length) {
-      return this.handler(0xc7, length);
+      return this.unexpectedLength(length);
     }
 
     const type = this.buffer[this.offset];

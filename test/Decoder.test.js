@@ -1,6 +1,8 @@
 'use strict';
 
-const { deepStrictEqual, ok, throws } = require('assert');
+const { deepStrictEqual, ok } = require('assert');
+const stub = require('./stub');
+
 // assets module v8.x can't compare NaN and exceptions
 const isNodeX = process.version[2] === '.';
 const assertFloatEqual = (actual, expected) =>
@@ -8,21 +10,12 @@ const assertFloatEqual = (actual, expected) =>
     ? ok(Number.isNaN(actual))
     : deepStrictEqual(actual, expected);
 
-const stub = require('./stub');
-
-const { Decoder, errors } = require('../');
-const { DecodingFailed, InsufficientData, MsgPackError } = errors;
+const { Decoder } = require('../');
 
 const test = (...stubs) => spec => stubs.forEach(name =>
   describe(name, () => stub[name].forEach(({ name, value, bin }) =>
     it(name, () => spec(bin, value))
   )));
-
-const testUnexpectedLength = (...stubs) => spec =>
-  stubs.forEach(([type, slice]) =>
-    describe(type, () => stub[type].forEach(({ name, bin }) =>
-      it(name, () => spec(bin.slice(0, slice)))
-    )));
 
 describe('Decoder', () => {
   test('nil')((buffer, expected) => {
@@ -122,54 +115,5 @@ describe('Decoder', () => {
   )((buffer, expected) => {
     const decoder = new Decoder();
     deepStrictEqual(decoder.decode(buffer), expected);
-  });
-
-  describe('throws', () => {
-    const isValidErrors = (...errors) =>
-      throwsError => errors.every(err => throwsError instanceof err);
-
-    it('no data', () => {
-      const decoder = new Decoder();
-      const buffer = Buffer.allocUnsafe(0);
-      throws(() => decoder.decode(buffer),
-        isValidErrors(DecodingFailed, MsgPackError));
-    });
-
-    it('decode unknown byte (0xc1)', () => {
-      const decoder = new Decoder();
-      const buffer = Buffer.from([0xc1]);
-      throws(() => decoder.decode(buffer),
-        isValidErrors(DecodingFailed, MsgPackError));
-    });
-
-    testUnexpectedLength(
-      ['float32', 1],
-      ['float64', 1],
-      ['int8', 1],
-      ['int16', 1],
-      ['int32', 1],
-      ['int64', 1],
-      ['uint8', 1],
-      ['uint16', 1],
-      ['uint32', 1],
-      ['uint64', 1],
-      ['str8', 1],
-      ['str16', 3],
-      ['str32', 5],
-      ['bin8', 1],
-      ['bin16', 3],
-      ['arr16', 2],
-      ['arr32', 4],
-      ['obj16', 2],
-      ['obj32', 4],
-      ['fixext', 1],
-      ['ext8', 3],
-      ['ext16', 4],
-      ['ext32', 6]
-    )(bin => {
-      const decoder = new Decoder();
-      throws(() => decoder.decode(bin),
-        isValidErrors(InsufficientData, DecodingFailed, MsgPackError));
-    });
   });
 });
