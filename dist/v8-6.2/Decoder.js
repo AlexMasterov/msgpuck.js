@@ -11,11 +11,11 @@ const u32f64 = new Uint32Array(f64.buffer);
 
 class Decoder {
   constructor({
-    lengthHandler=throwsDecoderHandler,
+    handler=throwsDecoderHandler,
     codecs=false,
     bufferMinLen=15,
   } = {}) {
-    this.unexpectedLength = lengthHandler.bind(this);
+    this.unexpectedLength = handler.bind(this);
     this.codecs = codecs ? packCodecs(codecs) : false;
     this.buffer = null;
     this.bufferMinLen = bufferMinLen >>> 0;
