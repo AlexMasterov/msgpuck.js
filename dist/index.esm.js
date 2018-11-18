@@ -90,16 +90,16 @@ class InsufficientData extends DecodingFailed {
   }
 }
 
+function throwsEncoderHandler(value) {
+  throw EncodingFailed.withValue(value);
+}
+
 function throwsDecoderHandler(expectedLength) {
   if (expectedLength === 0) {
     throw DecodingFailed.fromOffset(this.offset);
   }
 
   throw InsufficientData.unexpectedLength(expectedLength, this.length - this.offset);
-}
-
-function throwsEncoderHandler(value) {
-  throw EncodingFailed.withValue(value);
 }
 
 function asciiToStr() {

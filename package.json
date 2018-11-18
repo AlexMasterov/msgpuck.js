@@ -19,6 +19,7 @@
   },
   "main": "./index.js",
   "module": "./dist/index.esm.js",
+  "browser": "./dist/index.umd.min.js",
   "unpkg": "./dist/index.esm.min.js",
   "types": "./dist/index.d.ts",
   "files": ["src/", "dist/", "./index.js"],
