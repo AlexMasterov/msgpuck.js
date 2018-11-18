@@ -1,5 +1,7 @@
 'use strict';
 
+/* istanbul ignore file */
+
 const { CHR } = require('../binary');
 
 function encodeMapHeader(len) {
