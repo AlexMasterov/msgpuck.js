@@ -1,13 +1,14 @@
 {
   "name": "msgpuck",
-  "version": "0.7.6",
+  "version": "0.8.1",
   "description": "A fast and memory-efficient MessagePack serialization library",
   "keywords": [
     "messagepack",
     "msgpack",
     "binary",
     "serialization",
-    "typescript"
+    "typescript",
+    "browser"
   ],
   "license": "MIT",
   "author": "Alex Masterov <alex.masterow@gmail.com>",
@@ -17,11 +18,10 @@
     "url": "https://github.com/AlexMasterov/msgpuck.js/issues"
   },
   "main": "./index.js",
-  "files": [
-    "src/",
-    "dist/",
-    "./index.js"
-  ],
+  "module": "./dist/index.esm.js",
+  "unpkg": "./dist/index.esm.min.js",
+  "types": "./dist/index.d.ts",
+  "files": ["src/", "dist/", "./index.js"],
   "engines": {
     "node": ">=7.0.0"
   },
@@ -36,8 +36,15 @@
   },
   "devDependencies": {
     "coveralls": "3.0.2",
+    "fs-extra": "7.0.1",
     "mocha": "5.2.0",
-    "nyc": "13.1.0"
+    "nyc": "13.1.0",
+    "rollup": "0.67.3",
+    "rollup-plugin-bundle-size": "1.0.2",
+    "rollup-plugin-cjs-es": "0.7.0",
+    "rollup-plugin-delete": "0.1.2",
+    "rollup-plugin-node-resolve": "3.4.0",
+    "rollup-plugin-terser": "3.0.0"
   },
   "nyc": {
     "all": false,
@@ -45,8 +52,6 @@
     "sourceMap": true,
     "instrument": true,
     "reporter": [],
-    "include": [
-      "src/**/*.js"
-    ]
+    "include": ["src/**/*.js"]
   }
 }

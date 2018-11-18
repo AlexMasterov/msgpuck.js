@@ -10,18 +10,9 @@ A fast and memory-efficient [MessagePack](https://msgpack.org) serialization lib
 ## Features
 
 - Fully compliant with the latest [MessagePack specification](https://github.com/msgpack/msgpack/blob/master/spec.md#messagepack-specification)
-- Supports low-level methods
 - Supports safe/big/custom 64-bit integers handling
 - Supports custom Extension Types (Serialization Codecs)
 - [Fully tested](https://travis-ci.org/AlexMasterov/msgpuck.js), including V8 JIT optimizations
-
-## Future works (not implemented yet)
-
-- Web browsers
-- Zero-copy stream handler
-- Improving low-level methods and codecs
-- Customizable encoder and decoder, options to optimize different cases
-- WebAssembly research
 
 ## Installation
 
@@ -64,17 +55,6 @@ encoder.encodeObject({ key: 'value' }); // MP map
 encoder.encodeExt(1, '\x2a');           // MP ext
 ```
 
-### Encoding options
-
-The `Encoder` object supports options for fine-tuning the encoding process (defaults are in bold):
-
-| Name              | Description                                               |
-| ----------------- | --------------------------------------------------------- |
-| **float: '64'**   | Forces floats to be encoded as 64-bits MessagePack floats |
-| float: '32'       | Forces floats to be encoded as 32-bits MessagePack floats |
-| float: 'auto'     | Detects MessagePack floats type automatically             |
-| codecs: **false** | An array of codecs                                        |
-
 ## Decoding
 
 To decode data (buffer) you can either use an instance of `Decoder`:
@@ -115,6 +95,6 @@ npm run test
 
 ## License
 
-Copyright &#169; 2018-present Alex Masterov &lt;alex.masterow@gmail.com&gt;
+Copyright &#169; 2018 Alex Masterov &lt;alex.masterow@gmail.com&gt;
 
-msgpuck is licensed under MIT and can be used for any personal or commercial project.
+MsgPuck is licensed under MIT and can be used for any personal or commercial project.
