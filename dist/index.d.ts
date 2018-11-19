@@ -1,4 +1,4 @@
-// Type definitions for msgpuck 0.7.6
+// Type definitions for msgpuck 0.8.1
 // Project: https://github.com/AlexMasterov/msgpuck.js
 // Definitions by: Alex Masterov <https://github.com/AlexMasterov>
 // TypeScript Version: 3.1
@@ -8,162 +8,79 @@
 /// <reference types="node" />
 
 declare module 'msgpuck' {
-  namespace codecs {
-    interface UndefinedValue {
-      readonly __isUndefined__: true;
-    }
-
-    class CanWithFor extends Codec {
-      private withFor: boolean;
-
-      public static withFor(type?: number): CanWithFor;
-    }
-
-    class UndefinedCodec extends Codec {
-      public encode(encoder: Encoder, value: UndefinedValue): EncodedResult;
-      public decode(decoder: Decoder, length: number): undefined | errors.DecodingFailed;
-    }
-
-    class BooleanCodec extends Codec {
-      public encode(encoder: Encoder, value: Boolean): EncodedResult;
-      public decode(decoder: Decoder, length: number): boolean | errors.DecodingFailed;
-    }
-
-    class NumberCodec extends Codec {
-      public encode(encoder: Encoder, value: Number): EncodedResult;
-      public decode(decoder: Decoder, length: number): number | errors.DecodingFailed;
-    }
-
-    class StringCodec extends Codec {
-      public encode(encoder: Encoder, value: String): EncodedResult;
-      public decode(decoder: Decoder, length: number): string | errors.DecodingFailed;
-    }
-
-    class SymbolCodec extends CanWithFor {
-      public encode(encoder: Encoder, value: Symbol): EncodedResult;
-      public decode(decoder: Decoder, length: number): Symbol | errors.DecodingFailed;
-    }
-
-    class RegExpCodec extends Codec {
-      public encode(encoder: Encoder, value: RegExp): EncodedResult;
-      public decode(decoder: Decoder, length: number): RegExp | errors.DecodingFailed;
-    }
-
-    class ErrorCodec extends Codec {
-      public encode(encoder: Encoder, value: Error): EncodedResult;
-      public decode(decoder: Decoder, length: number): Error | errors.DecodingFailed;
-    }
-
-    class MapCodec extends Codec {
-      public encode(encoder: Encoder, value: Map<any, any>): EncodedResult;
-      public decode(decoder: Decoder, length: number): Map<any, any> | errors.DecodingFailed;
-    }
-
-    class SetCodec extends Codec {
-      public encode(encoder: Encoder, value: Set<any>): EncodedResult;
-      public decode(decoder: Decoder, length: number): Set<any> | errors.DecodingFailed;
-    }
-  }
-
-  namespace errors {
-    class MsgPackError extends Error { }
-
-    class EncodingFailed extends MsgPackError { }
-
-    class DecodingFailed extends MsgPackError { }
-
-    class InsufficientData extends DecodingFailed { }
-  }
-
-  abstract class Codec {
-    readonly type: number;
-
-    public static make(type?: number): Codec;
-
-    constructor(type?: number);
-
-    public supports(value: any): boolean;
-    public encode(encoder: Encoder, value: any): EncodedResult;
-    public decode(decoder: Decoder, length: number): DecodedResult;
-  }
-
   type EncodedBinary = string;
+
   type EncodedResult = EncodedBinary | errors.EncodingFailed;
   type DecodedResult = any | errors.DecodingFailed;
+  type CodecResult = EncodedResult | null;
 
   type EncoderHandler = (value: any) => EncodedResult;
-  type DecoderHandler = (byte: number, expectedLength: number) => DecodedResult;
+  type DecoderHandler = (expectedLength: number) => DecodedResult;
 
-  // type DecodeInt64 = () => number | BigInt;
-
-  interface DecoderOption {
-    /**
-     * @default 15
-     */
-    bufferMinLen?: number;
-
-    /**
-     * @default throwsEncoderHandler
-     */
-    handler?: DecoderHandler;
-
-    /**
-     * @default false
-     */
-    codecs?: CodecOption;
-  }
-
-  class Decoder {
-    private handler: DecoderHandler;
-    // private decodeUint64: DecodeInt64;
-    // private decodeInt64: DecodeInt64;
-    private codecs: CodecOption;
-    private buffer: null | Buffer;
-    private offset: number;
-    private length: number;
-    private bufferMinLen: number;
-
-    constructor(options?: DecoderOption);
-
-    public decode(buffer: Buffer, start?: 0, end?: buffer.length): DecodedResult;
-  }
-
-  type EncoderFloat = (num: number) => EncodedBinary;
-  // type EncoderBigInt = (bignum: BigInt) => EncodedBinary;
   type CodecOption = ReadonlyArray<Codec> | false;
 
+  type EncoderFloat = (num: number) => EncodedBinary;
+  type EncodeObjectKeys = (str: string) => EncodedBinary;
+  // type EncoderBigInt = (bignum: BigInt) => EncodedBinary;
+
+  // @see https://github.com/Microsoft/TypeScript/issues/15480
+  type ApplicationTypes = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+    | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20
+    | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31
+    | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 | 40 | 41 | 42
+    | 43 | 44 | 45 | 46 | 47 | 48 | 49 | 50 | 51 | 52 | 53
+    | 54 | 55 | 56 | 57 | 58 | 59 | 60 | 61 | 62 | 63 | 64
+    | 65 | 66 | 67 | 68 | 69 | 70 | 71 | 72 | 73 | 74 | 75
+    | 76 | 77 | 78 | 79 | 80 | 81 | 82 | 83 | 84 | 85 | 86
+    | 87 | 88 | 89 | 90 | 91 | 92 | 93 | 94 | 95 | 96 | 97
+    | 98 | 99 | 100 | 101 | 102 | 103 | 104 | 105 | 106 | 107
+    | 108 | 109 | 110 | 111 | 112 | 113 | 114 | 115 | 116 | 117
+    | 118 | 119 | 120 | 121 | 122 | 123 | 124 | 125 | 126 | 127;
+
   interface EncoderOption {
+    /**
+     * @default handlers.throwsEncoderHandler
+     */
+    handler?: EncoderHandler;
+
     /**
      * @default '64'
      */
     float?: '32' | '64' | 'auto';
 
     /**
-     * @default 15
+     * @default 'ascii'
      */
-    bufferMinLen?: number;
-
-    /**
-     * @default throwsEncoderHandler
-     */
-    handler?: EncoderHandler;
+    encodeObjectKeys?: 'ascii' | 'utf8';
 
     /**
      * @default false
      */
     codecs?: CodecOption;
+
+    /**
+     * @default 15
+     */
+    bufferMinLen?: number;
+
+    /**
+     * @default 2048
+     */
+    bufferMinAlloc?: number;
   }
 
   class Encoder {
-    private handler: EncoderHandler;
+    private unsupportedType: EncoderHandler;
     private encodeFloat: EncoderFloat;
+    private encodeObjectKeys: EncodeObjectKeys;
     // private encodeBigInt: EncoderBigInt;
     private codecs: CodecOption;
-    private alloc: number;
-    private buffer: null | Buffer;
+    private buffer: Buffer | null;
+    private bufferAlloc: number;
     private bufferMinLen: number;
+    private bufferMinAlloc: number;
 
-    constructor(options?: EncoderOption);
+    new (options?: EncoderOption): Encoder;
 
     public encode(value: any): EncodedResult;
     public encodeNil(): EncodedBinary;
@@ -174,16 +91,90 @@ declare module 'msgpuck' {
     public encodeBin(bin: Buffer): EncodedBinary;
     public encodeArray(arr: ArrayLike<any>): EncodedBinary;
     public encodeObject(obj: object): EncodedBinary;
-    public encodeMap(map: Map<any, any>): EncodedBinary;
-    public encodeExt(type: number, bin: EncodedBinary): EncodedBinary;
+    public encodeExt(type: ApplicationTypes, bin: EncodedBinary): EncodedBinary;
+  }
+
+  interface DecoderOption {
+    /**
+     * @default handlers.throwsDecoderHandler
+     */
+    handler?: DecoderHandler;
+
+    /**
+     * @default false
+     */
+    codecs?: CodecOption;
+
+    /**
+     * @default 15
+     */
+    bufferMinLen?: number;
+  }
+
+  class Decoder {
+    private unexpectedLength: EncoderHandler;
+    private codecs: CodecOption;
+    private buffer: Buffer | null;
+    private bufferMinLen: number;
+    private offset: number;
+    private length: number;
+
+    new (options?: DecoderOption): Decoder;
+
+    public decode(buffer: Buffer, start?: number, end?: number): DecodedResult;
+  }
+
+  abstract class Codec {
+    /**
+     * @default 0x00
+     */
+    readonly type: ApplicationTypes;
+
+    new (type?: ApplicationTypes): Codec;
   }
 
   class Ext {
-    readonly type: number;
+    readonly type: ApplicationTypes; // 0 - 127
     readonly bin: EncodedBinary;
 
-    public static make(type: number, bin: EncodedBinary): Ext;
+    new (type: ApplicationTypes, bin: EncodedBinary): Ext;
+  }
 
-    constructor(type: number, bin: EncodedBinary);
+  namespace codecs {
+    class MapCodec extends Codec {
+      public encode(encoder: Encoder, value: any): CodecResult;
+      public decode(decoder: Decoder, length: number): DecodedResult;
+    }
+
+    class ScalarObjectCodec {
+      public encode(encoder: Encoder, value: any): CodecResult;
+    }
+
+    class LongCodec {
+      public encode(encoder: Encoder, value: any): CodecResult;
+    }
+
+    function decodeLong(): DecodedResult;
+  }
+
+  namespace handlers {
+    function throwsEncoderHandler(value: any): EncodedResult;
+    function throwsDecoderHandler(expectedLength: number): DecodedResult;
+  }
+
+  namespace errors {
+    class MsgPackError extends Error { }
+
+    class EncodingFailed extends MsgPackError {
+      public static withValue(value: any): EncodingFailed;
+    }
+
+    class DecodingFailed extends MsgPackError {
+      public static fromOffset(offset: number): DecodingFailed;
+    }
+
+    class InsufficientData extends DecodingFailed {
+      public static unexpectedLength(expected: number, actual: number): InsufficientData;
+    }
   }
 }
