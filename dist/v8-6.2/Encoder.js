@@ -9,7 +9,6 @@ const Ext = require('./Ext');
 const isArray = Array.isArray;
 const isBuffer = Buffer.isBuffer;
 const alloc = Buffer.allocUnsafe;
-const objectKeys = Object.keys;
 
 const Bool = 'boolean';
 const Num = 'number';
@@ -20,7 +19,8 @@ class Encoder {
   constructor({
     handler=throwsEncoderHandler,
     float='64',
-    objectKeys='ascii',
+    objectKey='ascii',
+    objectKeys=Object.keys,
     codecs=false,
     bufferMinLen=15,
     bufferMinAlloc=2048,
@@ -28,7 +28,8 @@ class Encoder {
     this.unsupportedType = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
     this.encodeBigInt = this.encodeInt;
-    this.encodeObjectKeys = (objectKeys === 'ascii') ? encodeAscii : this.encodeStr;
+    this.encodeObjectKey = (objectKey === 'ascii') ? encodeAscii : this.encodeStr;
+    this.objectKeys = objectKeys;
     this.codecs = codecs;
     this.buffer = null;
     this.bufferAlloc = 0;
@@ -248,7 +249,7 @@ class Encoder {
   }
 
   encodeObject(obj) {
-    const keys = objectKeys(obj);
+    const keys = this.objectKeys(obj);
     const len = keys.length;
     if (len === 0) return '\x80';
 
@@ -269,7 +270,7 @@ class Encoder {
 
     for (let key, i = 0; i < len; i++) {
       key = keys[i];
-      bin += this.encodeObjectKeys(key);
+      bin += this.encodeObjectKey(key);
       bin += this.encode(obj[key]);
     }
 

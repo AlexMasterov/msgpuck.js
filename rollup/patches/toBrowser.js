@@ -31,7 +31,8 @@ const patchEncoder = code => code
 // Opt. size
   .replace(/this.codecs/g, 'this.c')
   .replace(/this.unsupportedType/g, 'this.u')
-  .replace(/this.encodeObjectKeys/g, 'this.e');
+  .replace(/this.encodeObjectKey/g, 'this.e')
+  .replace(/this.objectKeys/g, 'this.o');
 
 const patchDecoder = code => code
   .replace(/[\s]?const FastBuffer[^;]+;/, '')

@@ -20,7 +20,8 @@ declare module 'msgpuck' {
   type CodecOption = ReadonlyArray<Codec> | false;
 
   type EncoderFloat = (num: number) => EncodedBinary;
-  type EncodeObjectKeys = (str: string) => EncodedBinary;
+  type EncodeObjectKey = (str: string) => EncodedBinary;
+  type ObjectKeys = (obj: object) => string[];
   // type EncoderBigInt = (bignum: BigInt) => EncodedBinary;
 
   // @see https://github.com/Microsoft/TypeScript/issues/15480
@@ -41,7 +42,7 @@ declare module 'msgpuck' {
     /**
      * @default handlers.throwsEncoderHandler
      */
-    handler?: EncoderHandler;
+    handler?: EncodeObjectKey;
 
     /**
      * @default '64'
@@ -51,7 +52,12 @@ declare module 'msgpuck' {
     /**
      * @default 'ascii'
      */
-    encodeObjectKeys?: 'ascii' | 'utf8';
+    objectKey?: 'ascii' | 'utf8';
+
+    /**
+     * @default Object.keys
+     */
+    objectKeys?: ObjectKeys;
 
     /**
      * @default false
@@ -72,7 +78,8 @@ declare module 'msgpuck' {
   class Encoder {
     private unsupportedType: EncoderHandler;
     private encodeFloat: EncoderFloat;
-    private encodeObjectKeys: EncodeObjectKeys;
+    private encodeObjectKey: EncodeObjectKey;
+    private objectKeys: ObjectKeys;
     // private encodeBigInt: EncoderBigInt;
     private codecs: CodecOption;
     private buffer: Buffer | null;

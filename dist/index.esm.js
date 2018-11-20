@@ -218,7 +218,6 @@ class Ext {
 }
 
 const isArray = Array.isArray;
-const objectKeys = Object.keys;
 
 const Bool = 'boolean';
 const Num = 'number';
@@ -229,13 +228,15 @@ class Encoder {
   constructor({
     handler=throwsEncoderHandler,
     float='64',
-    objectKeys='ascii',
+    objectKey='ascii',
+    objectKeys=Object.keys,
     codecs=false,
   } = {}) {
     this.u = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
     this.encodeBigInt = this.encodeInt;
-    this.e = (objectKeys === 'ascii') ? encodeAscii : this.encodeStr;
+    this.e = (objectKey === 'ascii') ? encodeAscii : this.encodeStr;
+    this.o = objectKeys;
     this.c = codecs;
   }
 
@@ -431,7 +432,7 @@ class Encoder {
   }
 
   encodeObject(obj) {
-    const keys = objectKeys(obj);
+    const keys = this.o(obj);
     const len = keys.length;
     if (len === 0) return '\x80';
 
