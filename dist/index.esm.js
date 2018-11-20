@@ -90,16 +90,16 @@ class InsufficientData extends DecodingFailed {
   }
 }
 
-function throwsEncoderHandler(value) {
-  throw EncodingFailed.withValue(value);
-}
-
 function throwsDecoderHandler(expectedLength) {
   if (expectedLength === 0) {
     throw DecodingFailed.fromOffset(this.offset);
   }
 
   throw InsufficientData.unexpectedLength(expectedLength, this.length - this.offset);
+}
+
+function throwsEncoderHandler(value) {
+  throw EncodingFailed.withValue(value);
 }
 
 function asciiToStr() {
@@ -518,7 +518,7 @@ class Decoder {
   }
 
   parse() {
-    if (this.l < this.o + 1) {
+    if (this.l <= this.o) {
       return this.u(1);
     }
 
@@ -637,7 +637,7 @@ class Decoder {
   }
 
   decodeUint8() {
-    if (this.l < this.o + 1) {
+    if (this.l <= this.o) {
       return this.u(1);
     }
 
@@ -696,7 +696,7 @@ class Decoder {
   }
 
   decodeInt8() {
-    if (this.l < this.o + 1) {
+    if (this.l <= this.o) {
       return this.u(1);
     }
 

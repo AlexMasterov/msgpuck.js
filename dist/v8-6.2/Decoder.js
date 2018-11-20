@@ -32,7 +32,7 @@ class Decoder {
   }
 
   parse() {
-    if (this.length < this.offset + 1) {
+    if (this.length <= this.offset) {
       return this.unexpectedLength(1);
     }
 
@@ -151,7 +151,7 @@ class Decoder {
   }
 
   decodeUint8() {
-    if (this.length < this.offset + 1) {
+    if (this.length <= this.offset) {
       return this.unexpectedLength(1);
     }
 
@@ -210,7 +210,7 @@ class Decoder {
   }
 
   decodeInt8() {
-    if (this.length < this.offset + 1) {
+    if (this.length <= this.offset) {
       return this.unexpectedLength(1);
     }
 
