@@ -12,7 +12,7 @@
   ],
   "license": "MIT",
   "author": "Alex Masterov <alex.masterow@gmail.com>",
-  "repository": "AlexMasterov/msgpuck",
+  "repository": "AlexMasterov/msgpuck.js",
   "homepage": "https://github.com/AlexMasterov/msgpuck.js#readme",
   "bugs": {
     "url": "https://github.com/AlexMasterov/msgpuck.js/issues"
@@ -28,12 +28,12 @@
   },
   "scripts": {
     "test": "nyc mocha --timeout 0 test/*.test.js",
-    "test-report": "nyc --reporter=html --reporter=text mocha test/*.test.js",
+    "test:report": "nyc --reporter=html --reporter=text mocha test/*.test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
-  "dependencies": {
-    "ascii-chr": "0.3.0",
-    "utf8-bin": "0.3.1"
+  "peerDependencies": {
+    "ascii-chr": "0.3.x",
+    "utf8-bin": "0.3.x"
   },
   "devDependencies": {
     "coveralls": "3.0.2",
