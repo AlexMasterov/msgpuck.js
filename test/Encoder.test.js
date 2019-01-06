@@ -81,7 +81,7 @@ describe('Encoder', () => {
     'str32',
     'utf8'
   )((value, expected) => {
-    const encoder = new Encoder({ bufferMinLen: 10 });
+    const encoder = new Encoder({ bufferLenMin: 10 });
     deepStrictEqual(encoder.encode(value), expected);
     deepStrictEqual(encoder.encodeStr(value), expected);
   });

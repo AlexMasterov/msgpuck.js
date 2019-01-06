@@ -76,7 +76,7 @@ describe('Decoder', () => {
     'str32',
     'utf8'
   )((buffer, expected) => {
-    const decoder = new Decoder({ bufferMinLen: 6 });
+    const decoder = new Decoder({ bufferLenMin: 6 });
     deepStrictEqual(decoder.decode(buffer), expected);
   });
 
