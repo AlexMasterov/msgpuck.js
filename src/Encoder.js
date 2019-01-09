@@ -28,13 +28,14 @@ class Encoder {
     bufferLenMin=15,
     bufferAllocMin=2048,
   } = {}) {
+    this.buffer = null;
+    this.bufferAlloc = 0;
+
     this.unsupportedType = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
     this.encodeObjectKey = (objectKey === 'ascii') ? encodeAscii : this.encodeStr;
     this.objectKeys = objectKeys;
     this.codecs = codecs;
-    this.buffer = null;
-    this.bufferAlloc = 0;
     this.bufferLenMin = bufferLenMin >>> 0;
     this.bufferAllocMin = bufferAllocMin >>> 0;
   }

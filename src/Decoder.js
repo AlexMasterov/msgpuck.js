@@ -17,12 +17,13 @@ class Decoder {
     codecs=false,
     bufferLenMin=15,
   } = {}) {
-    this.unexpectedLength = handler.bind(this);
-    this.codecs = codecs ? packCodecs(codecs) : false;
     this.buffer = null;
-    this.bufferLenMin = bufferLenMin >>> 0;
     this.offset = 0;
     this.length = 0;
+
+    this.unexpectedLength = handler.bind(this);
+    this.codecs = codecs && packCodecs(codecs);
+    this.bufferLenMin = bufferLenMin >>> 0;
   }
 
   decode(buffer, start=0, end=buffer.length) {
