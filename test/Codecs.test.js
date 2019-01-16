@@ -2,8 +2,8 @@
 
 const { deepStrictEqual } = require('assert');
 
-const { Encoder, Decoder, Codec, codecs } = require('../');
-const { MapCodec, ScalarObjectCodec } = codecs;
+const { Encoder, Decoder } = require('../');
+const { Codec, MapCodec, ScalarObjectCodec } = require('../').codecs;
 
 const test = (...stubs) => spec =>
   stubs.forEach(({ name, value, expected }) =>
