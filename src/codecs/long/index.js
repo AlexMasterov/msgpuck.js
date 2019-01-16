@@ -1,9 +1,6 @@
 'use strict';
-/* istanbul ignore file */
 
-module.exports = class Long {
+module.exports = class LongCodec {
   static get LongCodec() { return require('./LongCodec'); }
-  static get decodeLong() { return require('./decodeLong'); }
+  static get LongDecode() { return require('./LongDecode'); }
 };
-
-module.exports = Long;
