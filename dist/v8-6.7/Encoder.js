@@ -25,8 +25,8 @@ class Encoder {
     objectKey='ascii',
     objectKeys=Object.keys,
     codecs=false,
-    bufferMinLen=15,
-    bufferMinAlloc=2048,
+    bufferLenMin=15,
+    bufferAllocMin=2048,
   } = {}) {
     this.unsupportedType = handler.bind(this);
     this.encodeFloat = selectEncoderFloat(float);
@@ -35,8 +35,8 @@ class Encoder {
     this.codecs = codecs;
     this.buffer = null;
     this.bufferAlloc = 0;
-    this.bufferMinLen = bufferMinLen >>> 0;
-    this.bufferMinAlloc = bufferMinAlloc >>> 0;
+    this.bufferLenMin = bufferLenMin >>> 0;
+    this.bufferAllocMin = bufferAllocMin >>> 0;
   }
 
   encode(value) {
@@ -179,12 +179,12 @@ class Encoder {
     let len = str.length, bin;
     if (len === 0) return '\xa0';
 
-    if (len < this.bufferMinLen) {
+    if (len < this.bufferLenMin) {
       bin = utf8toBin(str);
       len = bin.length;
     } else {
       if (len > this.bufferAlloc) {
-        this.bufferAlloc = this.bufferMinAlloc * (len >>> 10 | 2);
+        this.bufferAlloc = this.bufferAllocMin * (len >>> 10 | 2);
         this.buffer = alloc(this.bufferAlloc);
       }
       len = this.buffer.utf8Write(str, 0);

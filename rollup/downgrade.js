@@ -1,5 +1,4 @@
-import del from 'rollup-plugin-delete';
-import copy from './plugins/copy';
+import { copy, remove } from './plugins/fs';
 
 export default ({ distName, rootDir, entries, plugins } = {}) => {
   Object.keys(entries).forEach(key =>
@@ -13,11 +12,9 @@ export default ({ distName, rootDir, entries, plugins } = {}) => {
       format: 'cjs',
     },
 
-    experimentalCodeSplitting: true,
-
     plugins: [
-      del({
-        targets: `dist/${distName}`,
+      remove({
+        path: `dist/${distName}`,
       }),
       copy({
         src: rootDir,

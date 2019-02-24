@@ -15,12 +15,12 @@ class Decoder {
   constructor({
     handler=throwsDecoderHandler,
     codecs=false,
-    bufferMinLen=15,
+    bufferLenMin=15,
   } = {}) {
     this.unexpectedLength = handler.bind(this);
     this.codecs = codecs ? packCodecs(codecs) : false;
     this.buffer = null;
-    this.bufferMinLen = bufferMinLen >>> 0;
+    this.bufferLenMin = bufferLenMin >>> 0;
     this.offset = 0;
     this.length = 0;
   }
@@ -288,7 +288,7 @@ class Decoder {
       return this.unexpectedLength(length);
     }
 
-    return (length < this.bufferMinLen)
+    return (length < this.bufferLenMin)
       ? binToUtf8(this.buffer, this.offset, this.offset += length)
       : this.buffer.utf8Slice(this.offset, this.offset += length);
   }

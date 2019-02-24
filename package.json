@@ -22,7 +22,11 @@
   "browser": "./dist/index.umd.min.js",
   "unpkg": "./dist/index.esm.min.js",
   "types": "./dist/index.d.ts",
-  "files": ["src/", "dist/", "./index.js"],
+  "files": [
+    "src/",
+    "dist/",
+    "./index.js"
+  ],
   "engines": {
     "node": ">=7.0.0"
   },
@@ -31,21 +35,19 @@
     "test:report": "nyc --reporter=html --reporter=text mocha test/*.test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
-  "peerDependencies": {
-    "ascii-chr": "0.3.x",
-    "utf8-bin": "0.3.x"
+  "dependencies": {
+    "ascii-chr": "0.3.0",
+    "utf8-bin": "0.3.1"
   },
   "devDependencies": {
-    "coveralls": "3.0.2",
+    "coveralls": "3.0.3",
     "fs-extra": "7.0.1",
-    "mocha": "5.2.0",
-    "nyc": "13.1.0",
-    "rollup": "0.67.3",
-    "rollup-plugin-bundle-size": "1.0.2",
+    "mocha": "6.0.1",
+    "nyc": "13.3.0",
+    "rollup": "1.2.3",
     "rollup-plugin-cjs-es": "0.7.0",
-    "rollup-plugin-delete": "0.1.2",
-    "rollup-plugin-node-resolve": "3.4.0",
-    "rollup-plugin-terser": "3.0.0"
+    "rollup-plugin-node-resolve": "4.0.1",
+    "rollup-plugin-terser": "4.0.4"
   },
   "nyc": {
     "all": false,
@@ -53,6 +55,8 @@
     "sourceMap": true,
     "instrument": true,
     "reporter": [],
-    "include": ["src/**/*.js"]
+    "include": [
+      "src/**/*.js"
+    ]
   }
 }

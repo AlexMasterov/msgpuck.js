@@ -1,7 +1,7 @@
 // Type definitions for msgpuck 0.8.1
 // Project: https://github.com/AlexMasterov/msgpuck.js
 // Definitions by: Alex Masterov <https://github.com/AlexMasterov>
-// TypeScript Version: 3.1
+// TypeScript Version: 3.2.2
 
 /// <reference lib="es5" />
 /// <reference lib="es2015.collection" />
@@ -19,10 +19,10 @@ declare module 'msgpuck' {
 
   type CodecOption = ReadonlyArray<Codec> | false;
 
-  type EncoderFloat = (num: number) => EncodedBinary;
-  type EncodeObjectKey = (str: string) => EncodedBinary;
   type ObjectKeys = (obj: object) => string[];
-  // type EncoderBigInt = (bignum: BigInt) => EncodedBinary;
+  type EncodeObjectKey = (str: string) => EncodedBinary;
+  type EncoderFloat = (num: number) => EncodedBinary;
+  // type EncoderBigInt = (bignum: bigint) => EncodedBinary;
 
   // @see https://github.com/Microsoft/TypeScript/issues/15480
   type ApplicationTypes = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
@@ -42,7 +42,7 @@ declare module 'msgpuck' {
     /**
      * @default handlers.throwsEncoderHandler
      */
-    handler?: EncodeObjectKey;
+    handler?: EncoderHandler;
 
     /**
      * @default '64'
@@ -76,24 +76,13 @@ declare module 'msgpuck' {
   }
 
   class Encoder {
-    private unsupportedType: EncoderHandler;
-    private encodeFloat: EncoderFloat;
-    private encodeObjectKey: EncodeObjectKey;
-    private objectKeys: ObjectKeys;
-    // private encodeBigInt: EncoderBigInt;
-    private codecs: CodecOption;
-    private buffer: Buffer | null;
-    private bufferAlloc: number;
-    private bufferMinLen: number;
-    private bufferMinAlloc: number;
-
-    new (options?: EncoderOption): Encoder;
+    new(options?: EncoderOption): Encoder;
 
     public encode(value: any): EncodedResult;
     public encodeNil(): EncodedBinary;
     public encodeBool(bool: boolean): EncodedBinary;
     public encodeInt(num: number): EncodedBinary;
-    // public encodeBigInt(bignum: BigInt): EncodedBinary;
+    // public encodeBigInt(bignum: bigint): EncodedBinary;
     public encodeStr(str: string): EncodedBinary;
     public encodeBin(bin: Buffer): EncodedBinary;
     public encodeArray(arr: ArrayLike<any>): EncodedBinary;
@@ -119,14 +108,7 @@ declare module 'msgpuck' {
   }
 
   class Decoder {
-    private unexpectedLength: EncoderHandler;
-    private codecs: CodecOption;
-    private buffer: Buffer | null;
-    private bufferMinLen: number;
-    private offset: number;
-    private length: number;
-
-    new (options?: DecoderOption): Decoder;
+    new(options?: DecoderOption): Decoder;
 
     public decode(buffer: Buffer, start?: number, end?: number): DecodedResult;
   }
@@ -137,14 +119,14 @@ declare module 'msgpuck' {
      */
     readonly type: ApplicationTypes;
 
-    new (type?: ApplicationTypes): Codec;
+    new(type?: ApplicationTypes): Codec;
   }
 
   class Ext {
     readonly type: ApplicationTypes; // 0 - 127
     readonly bin: EncodedBinary;
 
-    new (type: ApplicationTypes, bin: EncodedBinary): Ext;
+    new(type: ApplicationTypes, bin: EncodedBinary): Ext;
   }
 
   namespace codecs {

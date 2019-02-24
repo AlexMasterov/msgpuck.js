@@ -3,7 +3,6 @@ import downgrade from './rollup/downgrade';
 import browser from './rollup/browser';
 
 import terser from './rollup/plugins/terser';
-import size from 'rollup-plugin-bundle-size';
 
 import pkg from './package.json';
 
@@ -12,7 +11,7 @@ export default [
     distName: 'v8-6.7',
     rootDir: 'src',
     entries: {
-      binary: 'binary.js',
+      'binary': 'binary.js',
       'encoders/selectEncoderFloat': 'encoders/selectEncoderFloat.js',
     },
     plugins: [toV8v67],
@@ -21,9 +20,9 @@ export default [
     distName: 'v8-6.2',
     rootDir: 'dist/v8-6.7',
     entries: {
-      Encoder: 'Encoder.js',
-      Decoder: 'Decoder.js',
-      binary: 'binary.js',
+      'Encoder': 'Encoder.js',
+      'Decoder': 'Decoder.js',
+      'binary': 'binary.js',
       'encoders/encodeAscii': 'encoders/encodeAscii.js',
       'encoders/encodeInt64': 'encoders/encodeInt64.js',
       'encoders/encodeMapHeader': 'encoders/encodeMapHeader.js',
@@ -36,7 +35,6 @@ export default [
     file: pkg.module,
     plugins: [
       toBrowser,
-      size(),
     ],
   }),
   {

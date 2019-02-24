@@ -15,14 +15,14 @@ const removeMsgPackErrorBody = code => code
 const patchEncoder = code => code
 // Remove Node.js Buffer
   .replace(/[\s]+const (?:alloc|isBuffer) = [^;]+;/g, '')
-  .replace(/[\s]+buffer(?:MinLen|MinAlloc)=[^,]+,/g, '')
-  .replace(/[\s]+this.buffer(?:Alloc|MinLen|MinAlloc)? = [^;]+;/g, '')
+  .replace(/[\s]+buffer(?:LenMin|AllocMin)=[^,]+,/g, '')
+  .replace(/[\s]+this.buffer(?:Alloc|LenMin|AllocMin)? = [^;]+;/g, '')
 // Opt. if
   .replace(/\((this.codecs).+\)/g, '($1)')
 // ArrayBuffer
   .replace(/\(isBuffer\((.+)\)\)/g, '($1.constructor == ArrayBuffer)')
 // encodeStr
-  .replace(/if \(len < this.bufferMinLen\)[^}]+} else [^}]+}[^}]+}/,
+  .replace(/if \(len < this.bufferLenMin\)[^}]+} else [^}]+}[^}]+}/,
     'const bin = utf8toBin(str);\r\n    len = bin.length;')
 // encodeBin
   .replace(/(str.length), bin/, '$1')
@@ -36,13 +36,13 @@ const patchEncoder = code => code
 
 const patchDecoder = code => code
   .replace(/[\s]?const FastBuffer[^;]+;/, '')
-  .replace(/[\s]+bufferMinLen=[^,]+,/, '')
-  .replace(/[\s]+this.bufferMinLen = [^;]+;/, '')
+  .replace(/[\s]+bufferLenMin=[^,]+,/, '')
+  .replace(/[\s]+this.bufferLenMin = [^;]+;/, '')
 // decodeBin
   .replace(/const start[^}]+;/,
     'return this.buffer.slice(this.offset, this.offset += length);')
 // decodeStr
-  .replace(/\(length < this.bufferMinLen\)[^}]+;/,
+  .replace(/\(length < this.bufferLenMin\)[^}]+;/,
     'binToUtf8(this.buffer, this.offset, this.offset += length);')
 // decodeExt
   .replace(/latin1Slice\((.+)\)/, 'slice($1)')
