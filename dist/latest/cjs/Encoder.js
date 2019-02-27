@@ -6,7 +6,6 @@ const { encodeAscii, encodeInt64, selectEncoderFloat } = require('./encoders');
 const { CHR, u64, i64 } = require('./binary');
 const Ext = require('./Ext');
 
-const isArray = Array.isArray;
 const isBuffer = Buffer.isBuffer;
 const alloc = Buffer.allocUnsafe;
 const u8u64 = new Uint8Array(u64.buffer);
@@ -21,18 +20,20 @@ const BigNum = 'bigint';
 class Encoder {
   constructor({
     handler=throwsEncoderHandler,
+    codecs=false,
     float='64',
     objectKey='ascii',
-    objectKeys=Object.keys,
-    codecs=false,
+    objectCase=Object.keys,
+    arrayCase=Array.isArray,
     bufferLenMin=15,
     bufferAllocMin=2048,
   } = {}) {
     this.unsupportedType = handler.bind(this);
+    this.codecs = codecs;
     this.encodeFloat = selectEncoderFloat(float);
     this.encodeObjectKey = (objectKey === 'ascii') ? encodeAscii : this.encodeStr;
-    this.objectKeys = objectKeys;
-    this.codecs = codecs;
+    this.objectKeys = objectCase;
+    this.isArray = arrayCase;
     this.buffer = null;
     this.bufferAlloc = 0;
     this.bufferLenMin = bufferLenMin >>> 0;
@@ -47,7 +48,7 @@ class Encoder {
         return (value % 1 === 0) ? this.encodeInt(value) : this.encodeFloat(value);
       case Obj:
         if (value === null) return '\xc0';
-        if (isArray(value)) return this.encodeArray(value);
+        if (this.isArray(value)) return this.encodeArray(value);
         if (isBuffer(value)) return this.encodeBin(value);
         if (value.constructor == Ext) return this.encodeExt(value.type, value.bin);
         if (this.codecs !== false) {

@@ -9,7 +9,7 @@ const FastBuffer = Buffer[Symbol.species];
 const u32f32 = new Uint32Array(f32.buffer);
 const u32f64 = new Uint32Array(f64.buffer);
 const u32u64 = new Uint32Array(u64.buffer);
-const u32i64 = new Int32Array(i64.buffer);
+const i32i64 = new Int32Array(i64.buffer);
 
 class Decoder {
   constructor({
@@ -18,7 +18,7 @@ class Decoder {
     bufferLenMin=15,
   } = {}) {
     this.unexpectedLength = handler.bind(this);
-    this.codecs = codecs ? packCodecs(codecs) : false;
+    this.codecs = codecs && packCodecs(codecs);
     this.buffer = null;
     this.bufferLenMin = bufferLenMin >>> 0;
     this.offset = 0;
@@ -257,12 +257,12 @@ class Decoder {
       return this.unexpectedLength(8);
     }
 
-    u32i64[1] = this.buffer[this.offset] << 24
+    i32i64[1] = this.buffer[this.offset] << 24
       | this.buffer[this.offset + 1] << 16
       | this.buffer[this.offset + 2] << 8
       | this.buffer[this.offset + 3];
 
-    u32i64[0] = this.buffer[this.offset + 4] << 24
+    i32i64[0] = this.buffer[this.offset + 4] << 24
       | this.buffer[this.offset + 5] << 16
       | this.buffer[this.offset + 6] << 8
       | this.buffer[this.offset + 7];

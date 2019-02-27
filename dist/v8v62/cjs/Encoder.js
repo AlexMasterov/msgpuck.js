@@ -3,34 +3,37 @@
 const { utf8toBin } = require('utf8-bin');
 const { throwsEncoderHandler } = require('./handlers');
 const { encodeAscii, encodeInt64, selectEncoderFloat } = require('./encoders');
-const { CHR } = require('./binary');
+const { CHR, u64, i64 } = require('./binary');
 const Ext = require('./Ext');
 
-const isArray = Array.isArray;
 const isBuffer = Buffer.isBuffer;
 const alloc = Buffer.allocUnsafe;
+const u8u64 = new Uint8Array(u64.buffer);
+const i8i64 = new Int8Array(i64.buffer);
 
 const Bool = 'boolean';
 const Num = 'number';
 const Obj = 'object';
 const Str = 'string';
+const BigNum = 'bigint';
 
 class Encoder {
   constructor({
     handler=throwsEncoderHandler,
+    codecs=false,
     float='64',
     objectKey='ascii',
-    objectKeys=Object.keys,
-    codecs=false,
+    objectCase=Object.keys,
+    arrayCase=Array.isArray,
     bufferLenMin=15,
     bufferAllocMin=2048,
   } = {}) {
     this.unsupportedType = handler.bind(this);
-    this.encodeFloat = selectEncoderFloat(float);
-    this.encodeBigInt = this.encodeInt;
-    this.encodeObjectKey = (objectKey === 'ascii') ? encodeAscii : this.encodeStr;
-    this.objectKeys = objectKeys;
     this.codecs = codecs;
+    this.encodeFloat = selectEncoderFloat(float);
+    this.encodeObjectKey = (objectKey === 'ascii') ? encodeAscii : this.encodeStr;
+    this.objectKeys = objectCase;
+    this.isArray = arrayCase;
     this.buffer = null;
     this.bufferAlloc = 0;
     this.bufferLenMin = bufferLenMin >>> 0;
@@ -45,7 +48,7 @@ class Encoder {
         return (value % 1 === 0) ? this.encodeInt(value) : this.encodeFloat(value);
       case Obj:
         if (value === null) return '\xc0';
-        if (isArray(value)) return this.encodeArray(value);
+        if (this.isArray(value)) return this.encodeArray(value);
         if (isBuffer(value)) return this.encodeBin(value);
         if (value.constructor == Ext) return this.encodeExt(value.type, value.bin);
         if (this.codecs !== false) {
@@ -58,6 +61,10 @@ class Encoder {
         return this.encodeObject(value);
       case Bool:
         return value ? '\xc3' : '\xc2';
+      case BigNum:
+        return (value > 0xffffffff || value < -0x80000000)
+          ? this.encodeBigInt(value)
+          : this.encodeInt(Number(value));
 
       default:
         return this.unsupportedType(value);
@@ -141,6 +148,32 @@ class Encoder {
     }
     // Infinity
     return '\xcb\x7f\xf0\x00\x00\x00\x00\x00\x00';
+  }
+
+  encodeBigInt(bignum) {
+    if (bignum < 0) {
+      i64[0] = bignum;
+      return '\xd3'
+        + CHR[i8i64[7] & 0xff]
+        + CHR[i8i64[6] & 0xff]
+        + CHR[i8i64[5] & 0xff]
+        + CHR[i8i64[4] & 0xff]
+        + CHR[i8i64[3] & 0xff]
+        + CHR[i8i64[2] & 0xff]
+        + CHR[i8i64[1] & 0xff]
+        + CHR[i8i64[0] & 0xff];
+    }
+
+    u64[0] = bignum;
+    return '\xcf'
+      + CHR[u8u64[7]]
+      + CHR[u8u64[6]]
+      + CHR[u8u64[5]]
+      + CHR[u8u64[4]]
+      + CHR[u8u64[3]]
+      + CHR[u8u64[2]]
+      + CHR[u8u64[1]]
+      + CHR[u8u64[0]];
   }
 
   encodeStr(str) {
