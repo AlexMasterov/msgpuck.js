@@ -2,10 +2,10 @@
 
 const V8_VERSION = +process.versions.v8.split('.', 2).join('');
 
-function requireMsgPuck() {
-  if (V8_VERSION > 69) return require('./src');
-  if (V8_VERSION > 66) return require('./dist/v8-6.7');
-  return require('./dist/v8-6.2');
+function requireMsgpuck() {
+  if (V8_VERSION > 69) return require('./dist/latest/cjs');
+  if (V8_VERSION > 66) return require('./dist/v8v67/cjs');
+  return require('./dist/v8v62/cjs');
 }
 
-module.exports = requireMsgPuck();
+module.exports = requireMsgpuck();

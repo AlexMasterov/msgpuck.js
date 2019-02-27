@@ -1,17 +1,25 @@
-import { copySync, removeSync } from 'fs-extra';
+'use strict';
 
-const excludePaths = exclude => {
-  if (!Array.isArray(exclude)) exclude = Object.values(exclude);
-  return path => !exclude.includes(path.replace(/[\\/\\]/g, '/'));
+const { normalize } = require('path');
+const { copySync, removeSync } = require('fs-extra');
+
+const makePathSet = (paths) => {
+  if (!Array.isArray(paths)) paths = Object.values(paths);
+  return new Set(paths.map(normalize));
 };
 
-export const copy = ({ src, dest, exclude, verbose=false } = {}) => {
+const makeFilterPaths = paths => {
+  const exclude = makePathSet(paths);
+  return path => !exclude.has(path);
+};
+
+const copy = ({ src, dest, exclude, verbose=false } = {}) => {
   const opts = {
-    filter: exclude && excludePaths(exclude),
+    ...(exclude && { filter: makeFilterPaths(exclude) }),
   };
 
   return {
-    name: 'copy',
+    name: 'rollup/plugins/copy',
     generateBundle: () => {
       try {
         copySync(src, dest, opts);
@@ -27,8 +35,8 @@ export const copy = ({ src, dest, exclude, verbose=false } = {}) => {
   };
 };
 
-export const remove = ({ path, verbose=false } = {}) => ({
-  name: 'remove',
+const remove = ({ path, verbose=false } = {}) => ({
+  name: 'rollup/plugins/remove',
   buildStart: () => {
     try {
       removeSync(path);
@@ -42,3 +50,8 @@ export const remove = ({ path, verbose=false } = {}) => ({
     }
   },
 });
+
+module.exports = {
+  remove,
+  copy,
+};

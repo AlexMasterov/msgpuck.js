@@ -1,9 +1,7 @@
-import toV8v62 from './toV8v62';
-import toV8v67 from './toV8v67';
-import toBrowser from './toBrowser';
+'use strict';
 
-export {
-  toV8v62,
-  toV8v67,
-  toBrowser,
+module.exports = {
+  browserPatch: require('./browser'),
+  v8v62Patch: require('./v8v62'),
+  v8v67Patch: require('./v8v67'),
 };

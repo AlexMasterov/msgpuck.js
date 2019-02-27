@@ -1,10 +1,10 @@
-import path from 'path';
+'use strict';
 
 const removeUint8 = code => code
   .replace(/([\s])+const u8[^;]+;/, '$1')
   .replace(/[\s]+u8,?/, '');
 
-const fromViewToTypedArray = code => code
+const viewToUint8 = code => code
   .replace(/([,\s])u8(,?)/, '$1f64$2')
   .replace(/const vu8 = [^;]+;/, 'const u8f64 = new Uint8Array(f64.buffer);')
   .replace(/vu8.setFloat(32|64)[^;]+;/g, 'f$1[0] = num;')
@@ -13,14 +13,8 @@ const fromViewToTypedArray = code => code
     return `${type}f64[${flipIdx}]`;
   });
 
-export default {
-  transform(code, id) {
-    const { name } = path.parse(id);
-    switch (name) {
-      case 'binary': return removeUint8(code);
-      case 'selectEncoderFloat': return fromViewToTypedArray(code);
-    }
-
-    return code;
-  },
+// v8v67
+module.exports = {
+  'binary.js': [removeUint8],
+  'encoders/selectEncoderFloat.js': [viewToUint8],
 };
