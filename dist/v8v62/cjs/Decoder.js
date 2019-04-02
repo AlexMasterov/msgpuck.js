@@ -2,14 +2,12 @@
 
 const { binToUtf8 } = require('utf8-bin');
 const { throwsDecoderHandler } = require('./handlers');
-const { f32, f64, u64, i64 } = require('./binary');
+const { f32, f64 } = require('./binary');
 const Ext = require('./Ext');
 
 const FastBuffer = Buffer[Symbol.species];
 const u32f32 = new Uint32Array(f32.buffer);
 const u32f64 = new Uint32Array(f64.buffer);
-const u32u64 = new Uint32Array(u64.buffer);
-const i32i64 = new Int32Array(i64.buffer);
 
 class Decoder {
   constructor({
@@ -196,20 +194,19 @@ class Decoder {
     if (this.length < this.offset + 8) {
       return this.unexpectedLength(8);
     }
-
-    u32u64[1] = this.buffer[this.offset] << 24
-      | this.buffer[this.offset + 1] << 16
-      | this.buffer[this.offset + 2] << 8
-      | this.buffer[this.offset + 3];
-
-    u32u64[0] = this.buffer[this.offset + 4] << 24
-      | this.buffer[this.offset + 5] << 16
-      | this.buffer[this.offset + 6] << 8
-      | this.buffer[this.offset + 7];
+    
+    const num = this.buffer[this.offset] * 0x1000000
+      + (this.buffer[this.offset + 1] << 16
+        | this.buffer[this.offset + 2] << 8
+        | this.buffer[this.offset + 3]) * 0x100000000
+      + this.buffer[this.offset + 4] * 0x1000000
+      + (this.buffer[this.offset + 5] << 16
+        | this.buffer[this.offset + 6] << 8
+        | this.buffer[this.offset + 7]);
 
     this.offset += 8;
 
-    return u64[0];
+    return num;
   }
 
   decodeInt8() {
@@ -256,20 +253,19 @@ class Decoder {
     if (this.length < this.offset + 8) {
       return this.unexpectedLength(8);
     }
-
-    i32i64[1] = this.buffer[this.offset] << 24
+    
+    const num = (this.buffer[this.offset] << 24
       | this.buffer[this.offset + 1] << 16
       | this.buffer[this.offset + 2] << 8
-      | this.buffer[this.offset + 3];
-
-    i32i64[0] = this.buffer[this.offset + 4] << 24
-      | this.buffer[this.offset + 5] << 16
-      | this.buffer[this.offset + 6] << 8
-      | this.buffer[this.offset + 7];
+      | this.buffer[this.offset + 3]) * 0x100000000
+      + this.buffer[this.offset + 4] * 0x1000000
+      + (this.buffer[this.offset + 5] << 16
+        | this.buffer[this.offset + 6] << 8
+        | this.buffer[this.offset + 7]);
 
     this.offset += 8;
 
-    return i64[0];
+    return num;
   }
 
   decodeBin(length) {

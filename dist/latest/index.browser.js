@@ -868,4 +868,4 @@ function packCodecs(codecs) {
   return pack;
 }
 
-export { Encoder, Decoder };
+export { Decoder, Encoder };
