@@ -28,22 +28,21 @@
     "dist/",
     "./index.js",
     "./index.d.ts",
-    "LICENSE",
-    "README.md"
+    "LICENSE"
   ],
   "engines": {
     "node": ">=7.0.0"
   },
   "scripts": {
+    "build": "node rollup/build",
     "test": "nyc mocha --timeout 0 test/*.test.js",
     "test:report": "nyc --reporter=html --reporter=text mocha test/*.test.js",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "build": "node rollup/build"
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "sideEffects": false,
   "dependencies": {
-    "ascii-chr": "0.3.0",
-    "utf8-bin": "0.3.1"
+    "ascii-chr": "0.4.2",
+    "utf8-bin": "0.4.0"
   },
   "devDependencies": {
     "coveralls": "3.0.3",

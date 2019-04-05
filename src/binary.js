@@ -1,6 +1,6 @@
 'use strict';
 
-const CHR = String.fromCharCode;
+const { charCode: CHR } = require('ascii-chr');
 
 const u8 = new Uint8Array(8);
 const f32 = new Float32Array(1);
