@@ -3,7 +3,7 @@
 
 const { CHR } = require('../binary');
 
-function encodeAscii(str) {
+const encodeAscii = (str) => {
   const len = str.length;
   // fixstr
   if (len < 0x20) {
@@ -30,6 +30,6 @@ function encodeAscii(str) {
     + CHR(len >> 8 & 0xff)
     + CHR(len & 0xff)
     + str;
-}
+};
 
 module.exports = encodeAscii;

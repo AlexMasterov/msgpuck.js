@@ -4,7 +4,7 @@
 
 const { CHR } = require('../binary');
 
-function encodeMapHeader(len) {
+const encodeMapHeader = (len) => {
   if (len === 0) return '\x80';
   // fixmap
   if (len < 0x10) {
@@ -22,6 +22,6 @@ function encodeMapHeader(len) {
     + CHR[len >> 16 & 0xff]
     + CHR[len >> 8 & 0xff]
     + CHR[len & 0xff];
-}
+};
 
 module.exports = encodeMapHeader;

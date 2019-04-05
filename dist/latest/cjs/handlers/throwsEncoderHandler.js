@@ -2,8 +2,8 @@
 
 const { EncodingFailed } = require('../errors');
 
-function throwsEncoderHandler(value) {
+const throwsEncoderHandler = (value) => {
   throw EncodingFailed.withValue(value);
-}
+};
 
 module.exports = throwsEncoderHandler;

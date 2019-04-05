@@ -11,6 +11,18 @@ const u32f64 = new Uint32Array(f64.buffer);
 const u32u64 = new Uint32Array(u64.buffer);
 const i32i64 = new Int32Array(i64.buffer);
 
+const packCodecs = (codecs) => {
+  const pack = new Map();
+
+  let codec, i = codecs.length;
+  while (i > 0) {
+    codec = codecs[i -= 1];
+    pack.set(codec.type, codec);
+  }
+
+  return pack;
+};
+
 class Decoder {
   constructor({
     handler=throwsDecoderHandler,
@@ -332,18 +344,6 @@ class Decoder {
       this.buffer.latin1Slice(this.offset, this.offset += length)
     );
   }
-}
-
-function packCodecs(codecs) {
-  const pack = new Map();
-
-  let codec, i = codecs.length;
-  while (i > 0) {
-    codec = codecs[i -= 1];
-    pack.set(codec.type, codec);
-  }
-
-  return pack;
 }
 
 module.exports = Decoder;
