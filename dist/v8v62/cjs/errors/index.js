@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = class Errors {
   static get MsgPackError() { return require('./MsgPackError'); }
   static get DecodingFailed() { return require('./DecodingFailed'); }

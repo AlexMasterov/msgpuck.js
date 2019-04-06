@@ -1,0 +1,1 @@
+import{DecodingFailed as t,InsufficientData as e,EncodingFailed as o}from'../errors/index.js';function f(o){if(0===o)throw t.fromOffset(this.offset);throw e.unexpectedLength(o,this.length-this.offset)}const r=t=>{throw o.withValue(t)};export{f as throwsDecoderHandler,r as throwsEncoderHandler};

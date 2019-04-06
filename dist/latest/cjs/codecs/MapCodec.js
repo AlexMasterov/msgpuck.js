@@ -1,6 +1,6 @@
 'use strict';
 
-const Codec = require('../Codec');
+const Codec = require('./Codec');
 const { encodeMapHeader } = require('../encoders');
 
 const objectEntries = Object.entries;

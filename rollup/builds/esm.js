@@ -19,6 +19,6 @@ build('esm (browser)')(
     external: ['long'],
     exports: esmExportTypes,
     patch: browserPatch,
-    // minify: true,
+    minify: true,
   }),
 ).catch(console.error);
