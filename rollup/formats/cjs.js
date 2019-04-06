@@ -1,43 +1,37 @@
 'use strict';
 
-const { resolve } = require('path');
-const { remove, copy, patch } = require('../plugins');
+const { remove, copy, transform } = require('../plugins');
+const {
+  makeFilepathNormalizer,
+  makeInputNormalizer,
+  makeKeyResolver,
+  makePatchForInput,
+  remake,
+} = require('./resolvers');
 
-const trimExt = (filename) => {
-  const ext = filename.lastIndexOf('.');
-  return ext > 0
-    ? filename.slice(0, ext)
-    : filename;
-};
-
-const cjs = ({ source, target, patch: patches = {} } = {}) => {
-  const entries = Object.entries(patches);
-
-  const input = entries.reduce((input, [filename]) =>
-    (input[trimExt(filename)] = `${source}/${filename}`, input), {});
-
-  const modules = entries.map(([module, patches]) =>
-    [resolve(`${source}/${module}`), patches]);
-
-  return {
-    input,
-    output: {
-      dir: target,
-      format: 'cjs',
-      preferConst: true,
-    },
-    plugins: [
-      ...(patches && [patch(modules)]),
-      remove({
-        path: target,
-      }),
-      copy({
-        src: `src`,
-        dest: target,
-        exclude: input,
-      }),
-    ],
-  };
-};
+const cjs = ({ src = 'src', input, target, external, patch } = {}) => ({
+  input: {
+    ...(input && remake(input, makeInputNormalizer(src))),
+    ...(patch && remake(patch, makePatchForInput(src))),
+  },
+  output: {
+    dir: target,
+    format: 'cjs',
+    preferConst: true,
+  },
+  external,
+  plugins: [
+    patch && transform(remake(patch, makeKeyResolver(src))),
+    remove({
+      path: target,
+    }),
+    copy({
+      src,
+      dest: target,
+      exclude: patch &&
+          Object.keys(patch).map(makeFilepathNormalizer(src)),
+    }),
+  ],
+});
 
 module.exports = cjs;

@@ -1,48 +1,53 @@
 'use strict';
 
-const { resolve } = require('path');
-const { remove, npm, cjs, patch, terser } = require('../plugins');
+const { remove, npm, cjs, transform, terser } = require('../plugins');
+const {
+  makeKeyResolver,
+  makeInputNormalizer,
+  remake,
+} = require('./resolvers');
 
-const makeExportTypeFilter = (types) => {
-  const exports = new Map(Object.entries(types));
-  return (id) => exports.has(id) ? exports.get(id) : null;
-};
-
-const esm = ({ source, input, target, exports, patch: patches = {}, minify = false }) => {
-  const modules = Object.entries(patches).map(([module, patches]) =>
-    [resolve(`${source}/${module}`), patches]);
-
-  exports = Object.entries(exports).reduce((exports, [module, type]) => {
-    return (exports[resolve(`${source}/${module}`)] = type, exports);
-  }, {});
-
-  return {
-    input: `${source}/${input}`,
-    output: {
-      format: 'esm',
-      file: target,
-      freeze: false,
-      preferConst: true,
-    },
-    plugins: [
-      patches && patch(modules),
-      remove({
-        path: target,
-      }),
-      npm({
-        module: true,
-        extensions: ['.js'],
-        preferBuiltins: false,
-      }),
-      cjs({
-        cache: false,
-        nested: true,
-        sourceMap: false,
-        ...(exports && { exportType: makeExportTypeFilter(exports) }),
-      }),
-      minify && terser(),
-    ],
-  };
-};
+const esm = ({
+  src = 'src',
+  input,
+  target,
+  external,
+  exports,
+  patch,
+  minify = false,
+}) => ({
+  input: {
+    ...(input && remake(input, makeInputNormalizer(src))),
+  },
+  output: {
+    format: 'esm',
+    dir: target,
+    freeze: true,
+    interop: true,
+    esModule: false,
+    preferConst: true,
+  },
+  treeshake: {
+    annotations: false,
+    pureExternalModules: true,
+    propertyReadSideEffects: false,
+  },
+  external,
+  plugins: [
+    patch && transform(remake(patch, makeKeyResolver(src))),
+    remove({
+      path: target,
+    }),
+    npm({
+      module: true,
+      extensions: ['.js'],
+      preferBuiltins: false,
+    }),
+    cjs({
+      exports: remake(exports, makeKeyResolver(src)),
+    }),
+    minify && terser(),
+  ],
+});
 
 module.exports = esm;

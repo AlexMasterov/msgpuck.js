@@ -1,15 +1,9 @@
 'use strict';
 
-const { normalize } = require('path');
 const { copySync, removeSync } = require('fs-extra');
 
-const makePathSet = (paths) => {
-  if (!Array.isArray(paths)) paths = Object.values(paths);
-  return new Set(paths.map(normalize));
-};
-
 const makeFilterPaths = paths => {
-  const exclude = makePathSet(paths);
+  const exclude = new Set(paths);
   return path => !exclude.has(path);
 };
 
