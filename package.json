@@ -1,6 +1,6 @@
 {
   "name": "msgpuck",
-  "version": "0.8.1",
+  "version": "0.8.0",
   "description": "A fast and memory-efficient MessagePack serialization library",
   "keywords": [
     "messagepack",
@@ -18,11 +18,14 @@
     "url": "https://github.com/AlexMasterov/msgpuck.js/issues"
   },
   "main": "./index.js",
-  "module": "./dist/latest/index.browser.js",
   "browser": {
-    "./index.js": "./dist/latest/index.browser.js"
+    "./index.js": "./dist/latest/browser/index.js",
+    "./errors/index.js": "./dist/latest/browser/errors/index.js",
+    "./handlers/index.js": "./dist/latest/browser/handlers/index.js",
+    "./codecs/index.js": "./dist/latest/browser/codecs/index.js",
+    "./codecs/long/index.js": "./dist/latest/browser/codecs/long/index.js"
   },
-  "unpkg": "./dist/latest/index.browser.min.js",
+  "unpkg": "./dist/latest/umd/msgpuck.min.js",
   "types": "./index.d.ts",
   "files": [
     "dist/",
@@ -34,7 +37,7 @@
     "node": ">=7.0.0"
   },
   "scripts": {
-    "build": "node rollup/build",
+    "build": "node rollup/builds/all",
     "test": "nyc mocha --timeout 0 test/*.test.js",
     "test:report": "nyc --reporter=html --reporter=text mocha test/*.test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
@@ -49,9 +52,9 @@
     "fs-extra": "7.0.1",
     "mocha": "6.0.2",
     "nyc": "13.3.0",
-    "rollup": "1.8.0",
+    "rollup": "1.9.0",
     "rollup-plugin-cjs-es": "0.7.0",
-    "rollup-plugin-node-resolve": "4.0.1",
+    "rollup-plugin-node-resolve": "4.2.1",
     "rollup-plugin-terser": "4.0.4"
   },
   "nyc": {

@@ -39,7 +39,7 @@ const esm = ({
       path: target,
     }),
     npm({
-      module: true,
+      mainFields: ['module', 'browser', 'main'],
       extensions: ['.js'],
       preferBuiltins: false,
     }),
