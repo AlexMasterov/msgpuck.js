@@ -2,10 +2,6 @@
 
 const V8v67 = require('./V8v67');
 
-const charCodeToCHR = code => code
-  .replace(/(const CHR) = [^;]+;/, `$1 = require('ascii-chr')`)
-  .replace(/(CHR)\((.+)\)/g, '$1[$2]');
-
 // Encoder
 const removeBigIntFromEncoder = code => code
   .replace(/\s+case BigNum[^;]+/, '')
@@ -53,6 +49,12 @@ const removeBigIntFromDecoder = code => code
   .replace(/\s+const (u|i)32(u|i)64[^;]+;/g, '');
 
 // binary
+const charCodeToCHR = code => code
+  .replace(/(CHR)\((.+)\)/g, '$1[$2]');
+
+const charCodeToCHRs = code => code
+  .replace(/charCode/g, 'charCodes');
+
 const removeBigIntArray = code => code
   .replace(/\s+const (u|i)64[^;]+;/g, '')
   .replace(/[\s]+(u|i)64,?/g, '');
@@ -61,9 +63,16 @@ const removeBigIntArray = code => code
 module.exports = {
   'Encoder.js': [charCodeToCHR, removeBigIntFromEncoder],
   'Decoder.js': [removeBigIntFromDecoder],
-  'binary.js': [...V8v67['binary.js'], charCodeToCHR, removeBigIntArray],
+  'binary.js': [
+    ...V8v67['binary.js'],
+    charCodeToCHRs,
+    removeBigIntArray,
+  ],
   'encoders/encodeAscii.js': [charCodeToCHR],
   'encoders/encodeInt64.js': [charCodeToCHR],
   'encoders/encodeMapHeader.js': [charCodeToCHR],
-  'encoders/selectEncoderFloat.js': [...V8v67['encoders/selectEncoderFloat.js'], charCodeToCHR],
+  'encoders/selectEncoderFloat.js': [
+    ...V8v67['encoders/selectEncoderFloat.js'],
+    charCodeToCHR,
+  ],
 };

@@ -31,25 +31,28 @@ const removeBufferFromEncoder = code => code
 ;
 
 const removeBufferFromDecoder = code => code
-  .replace(/[\s]?const FastBuffer[^;]+;/, '')
 // constructor
   .replace(/[\s]+bufferLenMin=[^,]+,/, '')
   .replace(/[\s]+this.bufferLenMin = [^;]+;/, '')
 // decodeStr
   .replace(/\(length < this.bufferLenMin\)[^}]+;/,
     'binToUtf8(this.buffer, this.offset, this.offset += length);')
+// decodeBin
+  .replace(/[\s]?const FastBuffer[^;]+;/, '')
+  .replace(/new FastBuffer/, 'new Uint8Array')
 // decodeExt
   .replace(/latin1Slice\((.+)\)/, 'slice($1)')
 ;
 
+// index
 const removeExportFromIndex = code => code
-  .replace(/\s{1,5}static? get (Ext|Codec|codecs|errors)[^}]+}/g, '');
+  .replace(/\s{1,5}static? get (handlers|errors|codecs)[^}]+}/g, '');
 
 module.exports = {
   'index.js': [removeExportFromIndex, ...indexPatch('')['index.js']],
-  ...indexPatch('encoders/', 'handlers/', 'errors/', 'codecs/'),
   'Encoder.js': [removeBufferFromEncoder, ...optimize['Encoder.js']],
   'Decoder.js': [removeBufferFromDecoder, ...optimize['Decoder.js']],
   'MsgPackError.js': [...optimize['MsgPackError.js']],
   'Ext.js': [...optimize['Ext.js']],
+  ...indexPatch('errors/', 'handlers/', 'encoders/', 'codecs/'),
 };
