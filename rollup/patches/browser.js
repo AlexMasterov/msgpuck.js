@@ -22,7 +22,7 @@ const removeBufferFromEncoder = code => code
   .replace(/[\s]+this.buffer(?:Alloc|LenMin|AllocMin)? = [^;]+;/g, '')
   .replace(/[\s]+this.isBuffer = [^;]+;/g, '')
 // ArrayBuffer
-  .replace(/\(this.isBuffer\((.+)\)\)/g, '($1.constructor == ArrayBuffer)')
+  .replace(/\(isBuffer\((.+)\)\)/g, '($1.constructor == ArrayBuffer)')
 // encodeStr
   .replace(/(str.length), bin/, '$1')
   .replace(/\s{1,5}if \(len < this.bufferLenMin\).*[^//]+\n/, encodeStr)
