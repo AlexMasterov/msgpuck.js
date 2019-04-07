@@ -1,6 +1,6 @@
 'use strict';
 
-const { indexPatch } = require('./node');
+const NodePatch = require('./node');
 const optimize = require('../optimizers');
 
 const encodeStr = `
@@ -44,15 +44,10 @@ const removeBufferFromDecoder = code => code
   .replace(/latin1Slice\((.+)\)/, 'slice($1)')
 ;
 
-// index
-const removeExportFromIndex = code => code
-  .replace(/\s{1,5}static? get (handlers|errors|codecs)[^}]+}/g, '');
-
 module.exports = {
-  'index.js': [removeExportFromIndex, ...indexPatch('')['index.js']],
+  ...NodePatch,
   'Encoder.js': [removeBufferFromEncoder, ...optimize['Encoder.js']],
   'Decoder.js': [removeBufferFromDecoder, ...optimize['Decoder.js']],
   'MsgPackError.js': [...optimize['MsgPackError.js']],
   'Ext.js': [...optimize['Ext.js']],
-  ...indexPatch('errors/', 'handlers/', 'encoders/', 'codecs/'),
 };

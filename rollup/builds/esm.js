@@ -15,7 +15,7 @@ build('esm (browser)')(
       'codecs/index': 'codecs/index.js',
       'codecs/long/index': 'codecs/long/index.js',
     },
-    target: `dist/latest/browser`,
+    target: 'dist/latest/browser',
     external: ['long'],
     exports: esmExportTypes,
     patch: browserPatch,

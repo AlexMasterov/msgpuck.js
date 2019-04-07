@@ -2,6 +2,7 @@
 
 const { build } = require('../build');
 const { mjs } = require('../formats');
+const { nodePatch } = require('../patches');
 const { esmExportTypes } = require('./typeExports');
 
 build('mjs (node)')(
@@ -14,8 +15,9 @@ build('mjs (node)')(
       'codecs/index': 'codecs/index.js',
       'codecs/long/index': 'codecs/long/index.js',
     },
-    target: `dist/latest/mjs`,
+    target: 'dist/latest/mjs',
     external: ['long'],
     exports: esmExportTypes,
+    patch: nodePatch,
   }),
 ).catch(console.error);

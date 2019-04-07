@@ -22,7 +22,7 @@ const esm = ({
   output: {
     format: 'esm',
     dir: target,
-    freeze: true,
+    freeze: false,
     interop: true,
     esModule: false,
     preferConst: true,

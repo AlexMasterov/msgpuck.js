@@ -11,7 +11,7 @@ build('umd (browser)')(
     input: {
       'msgpuck.min.js': 'index.js',
     },
-    target: `dist/latest/umd`,
+    target: 'dist/latest/umd',
     exports: esmExportTypes,
     patch: browserPatch,
     minify: true,

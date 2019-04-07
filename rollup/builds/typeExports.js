@@ -25,7 +25,6 @@ const esmExportTypes = makeExportByDefault(
   'codecs/long/LongDecode.js',
 );
 
-
 module.exports = {
   esmExportTypes,
   makeExportByDefault,
