@@ -61,7 +61,6 @@ describe('Encoder', () => {
   )((value, expected) => {
     const encoder = new Encoder();
     deepStrictEqual(encoder.encode(value), expected);
-    deepStrictEqual(encoder.encodeInt(value), expected);
   });
 
   global.BigInt &&

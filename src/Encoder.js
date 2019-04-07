@@ -45,7 +45,11 @@ class Encoder {
       case Str:
         return this.encodeStr(value);
       case Num:
-        return (value % 1 === 0) ? this.encodeInt(value) : this.encodeFloat(value);
+        return (value % 1 === 0)
+          ? (value < 0)
+            ? this.encodeInt(value)
+            : this.encodeUint(value)
+          : this.encodeFloat(value);
       case Obj:
         if (value === null) return '\xc0';
         if (this.isArray(value)) return this.encodeArray(value);
@@ -64,7 +68,9 @@ class Encoder {
       case BigNum:
         return (value > 0xffffffff || value < -0x80000000)
           ? this.encodeBigInt(value)
-          : this.encodeInt(Number(value));
+          : (value < 0)
+            ? this.encodeInt(Number(value))
+            : this.encodeUint(Number(value));
 
       default:
         return this.unsupportedType(value);
@@ -80,41 +86,42 @@ class Encoder {
   }
 
   encodeInt(num) {
-    if (num < 0) {
-      // negative fixint
-      if (num > -0x21) {
-        return CHR(num & 0xff);
-      }
-      // int 8
-      if (num > -0x81) {
-        return '\xd0'
+    // negative fixint
+    if (num > -0x21) {
+      return CHR(num & 0xff);
+    }
+    // int 8
+    if (num > -0x81) {
+      return '\xd0'
           + CHR(num & 0xff);
-      }
-      // int 16
-      if (num > -0x8001) {
-        return '\xd1'
+    }
+    // int 16
+    if (num > -0x8001) {
+      return '\xd1'
           + CHR(num >> 8 & 0xff)
           + CHR(num & 0xff);
-      }
-      // int 32
-      if (num > -0x80000001) {
-        return '\xd2'
+    }
+    // int 32
+    if (num > -0x80000001) {
+      return '\xd2'
           + CHR(num >> 24 & 0xff)
           + CHR(num >> 16 & 0xff)
           + CHR(num >> 8 & 0xff)
           + CHR(num & 0xff);
-      }
-      // int 64 safe
-      if (num > -0x20000000000001) {
-        return '\xd3'
-          + encodeInt64(
-            (num / 0x100000000 >> 0) - 1,
-            num >>> 0
-          );
-      }
-      // -Infinity
-      return '\xcb\xff\xf0\x00\x00\x00\x00\x00\x00';
     }
+    // int 64 safe
+    if (num > -0x20000000000001) {
+      return '\xd3'
+        + encodeInt64(
+          (num / 0x100000000 >> 0) - 1,
+          num >>> 0
+        );
+    }
+    // -Infinity
+    return '\xcb\xff\xf0\x00\x00\x00\x00\x00\x00';
+  }
+
+  encodeUint(num) {
     // positive fixint
     if (num < 0x80) {
       return CHR(num);
