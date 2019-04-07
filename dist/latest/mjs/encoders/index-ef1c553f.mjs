@@ -151,11 +151,4 @@ const selectEncoderFloat = (type) => {
   return encodeFloat;
 };
 
-const _require___$__$encoders_ = (class Encoders {
-  static get encodeAscii() { return encodeAscii; }
-  static get encodeInt64() { return encodeInt64; }
-  static get encodeMapHeader() { return encodeMapHeader; }
-  static get selectEncoderFloat() { return selectEncoderFloat; }
-});
-
-export { charCode as a, codePoint as b, charCodes2 as c, f32 as d, f64 as e, u64 as f, i64 as g, _require___$__$encoders_ as h };
+export { charCode as a, codePoint as b, charCodes2 as c, f32 as d, f64 as e, u64 as f, i64 as g, selectEncoderFloat as h, encodeAscii as i, encodeInt64 as j, encodeMapHeader as k };

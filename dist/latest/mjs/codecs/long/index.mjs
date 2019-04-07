@@ -1,7 +1,5 @@
-import { h as _require___$__$encoders_ } from '../../encoders/index-b754015a.mjs';
+import { j as encodeInt64 } from '../../encoders/index-ef1c553f.mjs';
 import Long from 'long';
-
-const { encodeInt64 } = _require___$__$encoders_;
 
 class LongCodec {
   encode(encoder, value) {
@@ -33,9 +31,4 @@ function decodeLong() {
   return num;
 }
 
-const LongCodec$1 = (class LongCodec$1 {
-  static get LongCodec() { return LongCodec; }
-  static get LongDecode() { return decodeLong; }
-});
-
-export default LongCodec$1;
+export { LongCodec, decodeLong as LongDecode };

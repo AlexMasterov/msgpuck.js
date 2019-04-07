@@ -1,4 +1,4 @@
-import { h as _require___$__$encoders_ } from '../encoders/index-b754015a.mjs';
+import { k as encodeMapHeader } from '../encoders/index-ef1c553f.mjs';
 
 class Codec {
   static get type() {
@@ -9,8 +9,6 @@ class Codec {
     this.type = type;
   }
 }
-
-const { encodeMapHeader } = _require___$__$encoders_;
 
 const objectEntries = Object.entries;
 
@@ -50,10 +48,4 @@ class ScalarObjectCodec {
   }
 }
 
-const _require__$codecs_ = (class Codecs {
-  static get Codec() { return Codec; }
-  static get MapCodec() { return MapCodec; }
-  static get ScalarObjectCodec() { return ScalarObjectCodec; }
-});
-
-export default _require__$codecs_;
+export { Codec, MapCodec, ScalarObjectCodec };

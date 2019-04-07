@@ -1,7 +1,6 @@
-import { a as charCode, b as codePoint, c as charCodes2, d as f32, e as f64, f as u64, g as i64, h as _require___$__$encoders_ } from './encoders/index-b754015a.mjs';
-import _require__$errors_ from './errors/index.mjs';
-import _require__$handlers_ from './handlers/index.mjs';
-import _require__$codecs_ from './codecs/index.mjs';
+import { a as charCode, b as codePoint, c as charCodes2, d as f32, e as f64, f as u64, g as i64, h as selectEncoderFloat, i as encodeAscii, j as encodeInt64 } from './encoders/index-ef1c553f.mjs';
+import './errors/index.mjs';
+import { throwsDecoderHandler, throwsEncoderHandler } from './handlers/index.mjs';
 
 const binToUtf8 = (bin, offset, length) => {
   let str = '', c;
@@ -65,8 +64,6 @@ class Ext {
     this.bin = bin;
   }
 }
-
-const { throwsDecoderHandler } = _require__$handlers_;
 
 const FastBuffer = Buffer[Symbol.species];
 const u32f32 = new Uint32Array(f32.buffer);
@@ -409,9 +406,6 @@ class Decoder {
   }
 }
 
-const { throwsEncoderHandler } = _require__$handlers_;
-const { encodeAscii, encodeInt64, selectEncoderFloat } = _require___$__$encoders_;
-
 const isBuffer = Buffer.isBuffer;
 const alloc = Buffer.allocUnsafe;
 const u8u64 = new Uint8Array(u64.buffer);
@@ -751,14 +745,4 @@ class Encoder {
   }
 }
 
-const MsgPuck = (class MsgPuck {
-  static get Decoder() { return Decoder; }
-  static get Encoder() { return Encoder; }
-  static get Ext() { return Ext; }
-
-  static get errors() { return _require__$errors_; }
-  static get handlers() { return _require__$handlers_; }
-  static get codecs() { return _require__$codecs_; }
-});
-
-export default MsgPuck;
+export { Decoder, Encoder, Ext };

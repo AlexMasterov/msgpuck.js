@@ -27,11 +27,4 @@ class InsufficientData extends DecodingFailed {
   }
 }
 
-const _require__$errors_ = (class Errors {
-  static get MsgPackError() { return MsgPackError; }
-  static get DecodingFailed() { return DecodingFailed; }
-  static get EncodingFailed() { return EncodingFailed; }
-  static get InsufficientData() { return InsufficientData; }
-});
-
-export default _require__$errors_;
+export { DecodingFailed, EncodingFailed, InsufficientData, MsgPackError };
