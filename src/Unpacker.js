@@ -1,7 +1,7 @@
 'use strict';
 
 const { binToUtf8 } = require('utf8-bin');
-const { throwsDecoderHandler } = require('./handlers');
+const { throwsUnpackerHandler } = require('./handlers');
 const { f32, f64, u64, i64 } = require('./binary');
 const Ext = require('./Ext');
 
@@ -23,9 +23,9 @@ const packCodecs = (codecs) => {
   return pack;
 };
 
-class Decoder {
+class Unpacker {
   constructor({
-    handler=throwsDecoderHandler,
+    handler=throwsUnpackerHandler,
     codecs=false,
     bufferLenMin=15,
   } = {}) {
@@ -37,7 +37,7 @@ class Decoder {
     this.length = 0;
   }
 
-  decode(buffer, start=0, end=buffer.length) {
+  unpack(buffer, start=0, end=buffer.length) {
     this.buffer = buffer;
     this.offset = start;
     this.length = start + end;
@@ -60,14 +60,14 @@ class Decoder {
       }
       // fixmap
       if (byte < 0x90) {
-        return (byte === 0x80) ? {} : this.decodeMap(byte & 0xf);
+        return (byte === 0x80) ? {} : this.unpackMap(byte & 0xf);
       }
       // fixarray
       if (byte < 0xa0) {
-        return (byte === 0x90) ? [] : this.decodeArray(byte & 0x0f);
+        return (byte === 0x90) ? [] : this.unpackArray(byte & 0x0f);
       }
       // fixstr
-      return (byte === 0xa0) ? '' : this.decodeStr(byte & 0x1f);
+      return (byte === 0xa0) ? '' : this.unpackStr(byte & 0x1f);
     }
     // negative fixint
     if (byte > 0xdf) {
@@ -80,56 +80,56 @@ class Decoder {
       case 0xc3: return true;
 
       // float 32/64
-      case 0xca: return this.decodeFloat32();
-      case 0xcb: return this.decodeFloat64();
+      case 0xca: return this.unpackFloat32();
+      case 0xcb: return this.unpackFloat64();
 
       // uint 8/16/32/64
-      case 0xcc: return this.decodeUint8();
-      case 0xcd: return this.decodeUint16();
-      case 0xce: return this.decodeUint32();
-      case 0xcf: return this.decodeUint64();
+      case 0xcc: return this.unpackUint8();
+      case 0xcd: return this.unpackUint16();
+      case 0xce: return this.unpackUint32();
+      case 0xcf: return this.unpackUint64();
 
       // int 8/16/32/64
-      case 0xd0: return this.decodeInt8();
-      case 0xd1: return this.decodeInt16();
-      case 0xd2: return this.decodeInt32();
-      case 0xd3: return this.decodeInt64();
+      case 0xd0: return this.unpackInt8();
+      case 0xd1: return this.unpackInt16();
+      case 0xd2: return this.unpackInt32();
+      case 0xd3: return this.unpackInt64();
 
       // str 8/16/32
-      case 0xd9: return this.decodeStr(this.decodeUint8());
-      case 0xda: return this.decodeStr(this.decodeUint16());
-      case 0xdb: return this.decodeStr(this.decodeUint32());
+      case 0xd9: return this.unpackStr(this.unpackUint8());
+      case 0xda: return this.unpackStr(this.unpackUint16());
+      case 0xdb: return this.unpackStr(this.unpackUint32());
 
       // array 16/32
-      case 0xdc: return this.decodeArray(this.decodeUint16());
-      case 0xdd: return this.decodeArray(this.decodeUint32());
+      case 0xdc: return this.unpackArray(this.unpackUint16());
+      case 0xdd: return this.unpackArray(this.unpackUint32());
 
       // map 16/32
-      case 0xde: return this.decodeMap(this.decodeUint16());
-      case 0xdf: return this.decodeMap(this.decodeUint32());
+      case 0xde: return this.unpackMap(this.unpackUint16());
+      case 0xdf: return this.unpackMap(this.unpackUint32());
 
       // bin 8/16/32
-      case 0xc4: return this.decodeBin(this.decodeUint8());
-      case 0xc5: return this.decodeBin(this.decodeUint16());
-      case 0xc6: return this.decodeBin(this.decodeUint32());
+      case 0xc4: return this.unpackBin(this.unpackUint8());
+      case 0xc5: return this.unpackBin(this.unpackUint16());
+      case 0xc6: return this.unpackBin(this.unpackUint32());
 
       // fixext 1/2/4/8/16
-      case 0xd4: return this.decodeExt(1);
-      case 0xd5: return this.decodeExt(2);
-      case 0xd6: return this.decodeExt(4);
-      case 0xd7: return this.decodeExt(8);
-      case 0xd8: return this.decodeExt(16);
+      case 0xd4: return this.unpackExt(1);
+      case 0xd5: return this.unpackExt(2);
+      case 0xd6: return this.unpackExt(4);
+      case 0xd7: return this.unpackExt(8);
+      case 0xd8: return this.unpackExt(16);
 
       // ext 8/16/32
-      case 0xc7: return this.decodeExt(this.decodeUint8());
-      case 0xc8: return this.decodeExt(this.decodeUint16());
-      case 0xc9: return this.decodeExt(this.decodeUint32());
+      case 0xc7: return this.unpackExt(this.unpackUint8());
+      case 0xc8: return this.unpackExt(this.unpackUint16());
+      case 0xc9: return this.unpackExt(this.unpackUint32());
 
       default: return this.unexpectedLength(0);
     }
   }
 
-  decodeFloat32() {
+  unpackFloat32() {
     if (this.length < this.offset + 4) {
       return this.unexpectedLength(4);
     }
@@ -144,7 +144,7 @@ class Decoder {
     return f32[0];
   }
 
-  decodeFloat64() {
+  unpackFloat64() {
     if (this.length < this.offset + 8) {
       return this.unexpectedLength(8);
     }
@@ -164,7 +164,7 @@ class Decoder {
     return f64[0];
   }
 
-  decodeUint8() {
+  unpackUint8() {
     if (this.length <= this.offset) {
       return this.unexpectedLength(1);
     }
@@ -176,7 +176,7 @@ class Decoder {
     return num;
   }
 
-  decodeUint16() {
+  unpackUint16() {
     if (this.length < this.offset + 2) {
       return this.unexpectedLength(2);
     }
@@ -189,7 +189,7 @@ class Decoder {
     return num;
   }
 
-  decodeUint32() {
+  unpackUint32() {
     if (this.length < this.offset + 4) {
       return this.unexpectedLength(4);
     }
@@ -204,7 +204,7 @@ class Decoder {
     return num;
   }
 
-  decodeUint64() {
+  unpackUint64() {
     if (this.length < this.offset + 8) {
       return this.unexpectedLength(8);
     }
@@ -224,7 +224,7 @@ class Decoder {
     return u64[0];
   }
 
-  decodeInt8() {
+  unpackInt8() {
     if (this.length <= this.offset) {
       return this.unexpectedLength(1);
     }
@@ -236,7 +236,7 @@ class Decoder {
     return num;
   }
 
-  decodeInt16() {
+  unpackInt16() {
     if (this.length < this.offset + 2) {
       return this.unexpectedLength(2);
     }
@@ -249,7 +249,7 @@ class Decoder {
     return num;
   }
 
-  decodeInt32() {
+  unpackInt32() {
     if (this.length < this.offset + 4) {
       return this.unexpectedLength(4);
     }
@@ -264,7 +264,7 @@ class Decoder {
     return num;
   }
 
-  decodeInt64() {
+  unpackInt64() {
     if (this.length < this.offset + 8) {
       return this.unexpectedLength(8);
     }
@@ -284,7 +284,7 @@ class Decoder {
     return i64[0];
   }
 
-  decodeBin(length) {
+  unpackBin(length) {
     if (this.length < this.offset + length) {
       return this.unexpectedLength(length);
     }
@@ -295,7 +295,7 @@ class Decoder {
     return new FastBuffer(this.buffer.buffer, start, length);
   }
 
-  decodeStr(length) {
+  unpackStr(length) {
     if (this.length < this.offset + length) {
       return this.unexpectedLength(length);
     }
@@ -305,7 +305,7 @@ class Decoder {
       : this.buffer.utf8Slice(this.offset, this.offset += length);
   }
 
-  decodeArray(size) {
+  unpackArray(size) {
     const array = new Array(size);
     for (let i = 0; i < size; i++) {
       array[i] = this.parse();
@@ -314,7 +314,7 @@ class Decoder {
     return array;
   }
 
-  decodeMap(size) {
+  unpackMap(size) {
     const map = {};
     while (size > 0) {
       size -= 1;
@@ -324,7 +324,7 @@ class Decoder {
     return map;
   }
 
-  decodeExt(length) {
+  unpackExt(length) {
     if (this.length < this.offset + length) {
       return this.unexpectedLength(length);
     }
@@ -335,7 +335,7 @@ class Decoder {
     if (this.codecs) {
       const codec = this.codecs.get(type);
       if (codec !== void 0) {
-        return codec.decode(this, length);
+        return codec.unpack(this, length);
       }
     }
 
@@ -346,4 +346,4 @@ class Decoder {
   }
 }
 
-module.exports = Decoder;
+module.exports = Unpacker;

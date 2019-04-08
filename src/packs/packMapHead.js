@@ -1,9 +1,8 @@
 'use strict';
-/* istanbul ignore file */
 
 const { CHR } = require('../binary');
 
-const encodeMapHeader = (len) => {
+const packMapHead = (len) => {
   if (len === 0) return '\x80';
   // fixmap
   if (len < 0x10) {
@@ -23,4 +22,4 @@ const encodeMapHeader = (len) => {
     + CHR(len & 0xff);
 };
 
-module.exports = encodeMapHeader;
+module.exports = packMapHead;

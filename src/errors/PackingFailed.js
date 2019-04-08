@@ -2,10 +2,10 @@
 
 const MsgPackError = require('./MsgPackError');
 
-class EncodingFailed extends MsgPackError {
+class PackingFailed extends MsgPackError {
   static withValue(value) {
     return new this(`Could not encode: ${typeof value}`);
   }
 }
 
-module.exports = EncodingFailed;
+module.exports = PackingFailed;

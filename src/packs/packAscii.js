@@ -1,9 +1,8 @@
 'use strict';
-/* istanbul ignore file */
 
 const { CHR } = require('../binary');
 
-const encodeAscii = (str) => {
+const packAscii = (str) => {
   const len = str.length;
   // fixstr
   if (len < 0x20) {
@@ -32,4 +31,4 @@ const encodeAscii = (str) => {
     + str;
 };
 
-module.exports = encodeAscii;
+module.exports = packAscii;

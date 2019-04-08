@@ -2,7 +2,7 @@
 
 const { CHR } = require('../binary');
 
-const encodeInt64 = (hi, lo) =>
+const packInt64 = (hi, lo) =>
   CHR(hi >> 24 & 0xff)
     + CHR(hi >> 16 & 0xff)
     + CHR(hi >> 8 & 0xff)
@@ -12,4 +12,4 @@ const encodeInt64 = (hi, lo) =>
     + CHR(lo >> 8 & 0xff)
     + CHR(lo & 0xff);
 
-module.exports = encodeInt64;
+module.exports = packInt64;

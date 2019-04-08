@@ -1,9 +1,8 @@
 'use strict';
-/* istanbul ignore file */
 
 const Long = require('long');
 
-function decodeLong() {
+function unpackLong() {
   if (this.length < this.offset + 8) {
     return this.unexpectedLength(8);
   }
@@ -24,4 +23,4 @@ function decodeLong() {
   return num;
 }
 
-module.exports = decodeLong;
+module.exports = unpackLong;
